@@ -5,5 +5,5 @@ Feature: upload
 
   Scenario: upload
     Given I have "test.upload" file
-    When I upload "test.upload" file to "uploaded/" location
-    Then I can find "test.upload+suffix" file in "uploaded/" location
+    When I upload "test.upload" file
+    Then I can find file that name starts with "test" in "uploaded/" location

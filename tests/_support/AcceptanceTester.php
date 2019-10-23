@@ -1,4 +1,4 @@
-<?php
+<<?php
 
 
 /**
@@ -18,10 +18,12 @@
 */
 class AcceptanceTester extends \Codeception\Actor
 {
+    const TEST_UPLOADED_DIR = "files/";
     use _generated\AcceptanceTesterActions;
 
     /**
      * @Given I have :arg1 path
+     * @param $arg1
      */
     public function iHavePath($arg1)
     {
@@ -30,6 +32,7 @@ class AcceptanceTester extends \Codeception\Actor
 
     /**
      * @When I unpack it to :arg1 path
+     * @param $arg1
      */
     public function iUnpackItToPath($arg1)
     {
@@ -38,6 +41,7 @@ class AcceptanceTester extends \Codeception\Actor
 
     /**
      * @Then :arg1 dir is created
+     * @param $arg1
      */
     public function dirIsCreated($arg1)
     {
@@ -46,6 +50,8 @@ class AcceptanceTester extends \Codeception\Actor
 
     /**
      * @Then content of unzipped :arg1 and :arg2 are the same
+     * @param $arg1
+     * @param $arg2
      */
     public function contentOfUnzippedAndAreTheSame($arg1, $arg2)
     {
@@ -53,29 +59,41 @@ class AcceptanceTester extends \Codeception\Actor
     }
 
     /**
-     * @Given I have :arg1 file
+     * @Given I have :filename file
+     * @param $filename
      */
-    public function iHaveFile($arg1)
+    public function iHaveFile($filename)
     {
-        Codeception\PHPUnit\TestCase::assertFileExists(__DIR__. '/../_data/' . $arg1);
+        Codeception\PHPUnit\TestCase::assertFileExists(__DIR__. '/../_data/' . $filename);
     }
 
     /**
-     * @When I upload :arg1 file to :arg2 location
+     * @When I upload :filename file
+     * @param $filename
      */
-    public function iUploadFileToLocation($arg1, $arg2)
+    public function iUploadFile($filename)
     {
         $this->amOnPage("/");
-        $this->attachFile('input[@type="file"]', $arg1);
+        $this->attachFile("micro_service[microService]", $filename);
         $this->click('Submit');
     }
 
     /**
-     * @Then I can find :arg1 file in :arg2 location
+     * @Then I can find file that name starts with :prefix in :uploadDir location
+     * @param $prefix
+     * @param $uploadDir
      */
-    public function iCanFindFileInLocation($arg1, $arg2)
+    public function iCanFindFileThatNameStartsWithInLocation($prefix, $uploadDir)
     {
-        Codeception\PHPUnit\TestCase::assertFileExists($arg2 . "/". $arg1);
+        Codeception\PHPUnit\TestCase::assertStringStartsWith($prefix, $this->getLastFileName($uploadDir));
     }
 
+    /**
+     * @param string $subDir
+     * @return mixed
+     */
+    private function getLastFileName(string $subDir)
+    {
+        return scandir(self::TEST_UPLOADED_DIR . $subDir, SCANDIR_SORT_DESCENDING)[0];
+    }
 }

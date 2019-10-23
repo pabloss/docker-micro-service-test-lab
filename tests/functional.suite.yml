@@ -12,4 +12,6 @@ modules:
               app_path: 'src'
               environment: 'test'
         - \Helper\Functional
-    step_decorators: ~        
+        - Filesystem
+        - Asserts
+    step_decorators: ~

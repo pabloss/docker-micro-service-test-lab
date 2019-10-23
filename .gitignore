@@ -80,3 +80,8 @@ gen
 # Embedded web-server pid file
 /.web-server-pid
 
+tests/_data/uploaded/*
+!tests/_data/uploaded/.gitkeep
+
+files/uploaded/*
+!files/uploaded/.gitkeep
