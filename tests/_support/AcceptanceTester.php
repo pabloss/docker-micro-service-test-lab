@@ -1,5 +1,7 @@
 <<?php
 
+use App\Files\Unpack;
+
 
 /**
  * Inherited Methods
@@ -21,41 +23,64 @@ class AcceptanceTester extends \Codeception\Actor
     const TEST_UPLOADED_DIR = "files/";
     use _generated\AcceptanceTesterActions;
 
+    /** @var string */
+    private $filePath;
+
     /**
-     * @Given I have :arg1 path
-     * @param $arg1
+     * @Given I have :filename path
+     * @param $filename
      */
-    public function iHavePath($arg1)
+    public function iHavePath($filename)
     {
-        throw new \PHPUnit\Framework\IncompleteTestError("Step `I have :arg1 path` is not defined");
+        Codeception\PHPUnit\TestCase::assertFileExists(__DIR__. '/../_data/' . $filename);
+        $this->filePath = __DIR__. '/../_data/' . $filename;
     }
 
     /**
-     * @When I unpack it to :arg1 path
-     * @param $arg1
+     * @When I unpack it to :toDirPath path
+     * @param $toDirPath
      */
-    public function iUnpackItToPath($arg1)
+    public function iUnpackItToPath($toDirPath)
     {
-        throw new \PHPUnit\Framework\IncompleteTestError("Step `I unpack it to :arg1 path` is not defined");
+        $this->cleanDir(__DIR__. '/../_data/unpacked/');
+
+        $service = new Unpack();
+        $service->unzip($this->filePath, __DIR__. '/../_data/'.$toDirPath);
     }
 
     /**
-     * @Then :arg1 dir is created
-     * @param $arg1
+     * @Then :dirName dir is created
+     * @param $dirName
      */
-    public function dirIsCreated($arg1)
+    public function dirIsCreated($dirName)
     {
-        throw new \PHPUnit\Framework\IncompleteTestError("Step `:arg1 dir is created` is not defined");
+        $this->assertTrue(file_exists(__DIR__. '/../_data/' . $dirName));
+        $this->assertTrue(is_dir(__DIR__. '/../_data/' . $dirName));
     }
 
     /**
-     * @Then content of unzipped :arg1 and :arg2 are the same
-     * @param $arg1
-     * @param $arg2
+     * @Then content of unzipped :zipFilePath and :unzippedFilePath are the same
+     * @param $zipFilePath
+     * @param $unzippedFilePath
      */
-    public function contentOfUnzippedAndAreTheSame($arg1, $arg2)
+    public function contentOfUnzippedAndAreTheSame($zipFilePath, $unzippedFilePath)
     {
-        throw new \PHPUnit\Framework\IncompleteTestError("Step `content of unzipped :arg1 and :arg2 are the same` is not defined");
+        // unpack it in test, scan target dir and compare file contents
+        $zip = new ZipArchive();
+        $scanned_directory= array_diff(scandir(__DIR__. '/../_data/'.$unzippedFilePath), ['..', '.']);
+
+        if ($zip->open(__DIR__. '/../_data/'.$zipFilePath) === true) {
+            $this->assertEquals($zip->numFiles, count($scanned_directory));
+            foreach ($scanned_directory as $file) {
+                for($i = 0; $i < $zip->numFiles; $i++) {
+                    $filename = $zip->getNameIndex($i);
+                    if($file === $filename){
+                        $this->assertEquals(sha1_file(__DIR__. '/../_data/unpacked/test/'.$file), sha1_file(__DIR__. '/../_data/unpacked/test/'.$filename));
+                    }
+                }
+            }
+            $zip->close();
+        }
     }
 
     /**
