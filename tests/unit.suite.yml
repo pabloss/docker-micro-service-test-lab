@@ -8,4 +8,5 @@ modules:
         - Asserts
         - \Helper\Unit
         - Filesystem
+        - Cli
     step_decorators: ~

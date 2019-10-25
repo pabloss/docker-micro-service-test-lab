@@ -14,4 +14,5 @@ modules:
         - \Helper\Functional
         - Filesystem
         - Asserts
+        - Cli
     step_decorators: ~

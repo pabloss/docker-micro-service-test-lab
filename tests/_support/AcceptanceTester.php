@@ -1,6 +1,7 @@
 <<?php
 
 use App\Files\Unpack;
+use Codeception\Scenario;
 
 
 /**
@@ -25,6 +26,13 @@ class AcceptanceTester extends \Codeception\Actor
 
     /** @var string */
     private $filePath;
+    private $deployCommand;
+
+    public function __construct(Scenario $scenario)
+    {
+        parent::__construct($scenario);
+        $this->deployCommand = new DeployCommand();
+    }
 
     /**
      * @Given I have :filename path
