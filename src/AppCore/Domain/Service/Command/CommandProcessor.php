@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Command;
+namespace App\AppCore\Domain\Service\Command;
 
 class CommandProcessor
 {

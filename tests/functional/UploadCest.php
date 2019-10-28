@@ -6,14 +6,16 @@ declare(strict_types=1);
  */
 class UploadCest
 {
-    const TEST_UPLOADED_DIR = "tests/_data/";
+    const TEST_UPLOADED_DIR = "files/";
 
     public function _after(\AcceptanceTester $I)
     {
-        file_put_contents($this->getUploadedDirName().".gitkeep", "");
+        $I->dir(self::TEST_UPLOADED_DIR . 'unpacked/');
+        $I->dir(self::TEST_UPLOADED_DIR . 'uploaded/');
     }
 
     // tests
+
     /**
      * @param FunctionalTester $I
      */
@@ -21,7 +23,7 @@ class UploadCest
     {
         $I->cleanDir($this->getUploadedDirName());
         $I->amOnPage("/");
-        $I->seeFileFound("test.upload", self::TEST_UPLOADED_DIR);
+        $I->seeFileFound("test.upload", "tests/_data/");
         $I->attachFile("micro_service[microService]", "test.upload");
         $I->click("Submit");
         $I->assertStringStartsWith("test", $this->getLastFileName());
@@ -34,7 +36,7 @@ class UploadCest
      */
     private function getLastFileName()
     {
-        return scandir(self::TEST_UPLOADED_DIR . "uploaded/", SCANDIR_SORT_DESCENDING)[0];
+        return array_diff(scandir("tests/_data/"."uploaded/", SCANDIR_SORT_DESCENDING),  ['..', '.'])[0];
     }
 
     /**

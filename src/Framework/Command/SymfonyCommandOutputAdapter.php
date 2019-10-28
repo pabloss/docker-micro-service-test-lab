@@ -1,8 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Command;
+namespace App\Framework\Command;
 
+use App\AppCore\Domain\Service\Command\OutputAdapterInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class SymfonyCommandOutputAdapter implements OutputAdapterInterface

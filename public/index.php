@@ -1,8 +1,12 @@
 <?php
-
 use App\Kernel;
 use Symfony\Component\Debug\Debug;
 use Symfony\Component\HttpFoundation\Request;
+
+define('C3_CODECOVERAGE_ERROR_LOG_FILE', __DIR__.'/c3_error.log'); //Optional (if not set the default c3 output dir will be used)
+include __DIR__. '/../c3.php';
+
+define('MY_APP_STARTED', true);
 
 require dirname(__DIR__).'/config/bootstrap.php';
 

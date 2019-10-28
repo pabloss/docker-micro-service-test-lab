@@ -5,6 +5,7 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     uploaded_directory: '%kernel.project_dir%/files/uploaded'
+    unpacked_directory: '%kernel.project_dir%/files/unpacked'
 
 services:
     # default configuration for services in *this* file
@@ -20,8 +21,8 @@ services:
 
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class
-    App\Controller\:
-        resource: '../src/Controller'
+    App\Framework\Controller\:
+        resource: '../src/Framework/Controller'
         tags: ['controller.service_arguments']
 
     # add more service definitions when explicit configuration is needed

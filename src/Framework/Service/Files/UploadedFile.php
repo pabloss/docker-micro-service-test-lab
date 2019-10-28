@@ -1,13 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Files;
+namespace App\Framework\Service\Files;
 
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile as BaseUploadedFile;
 
 class UploadedFile
 {
+    const ZIP_MIME_TYPE = 'application/zip';
+
     /** @var BaseUploadedFile */
     private $baseUploadedFile;
 
@@ -15,12 +17,18 @@ class UploadedFile
     private $uuid;
 
     /**
+     * @var string
+     */
+    private $targetDir;
+
+    /**
      * UploadedFile constructor.
      * @param BaseUploadedFile $baseUploadedFile
      */
-    public function __construct(BaseUploadedFile $baseUploadedFile)
+    public function __construct(string $targetDir, BaseUploadedFile $baseUploadedFile)
     {
         $this->baseUploadedFile = $baseUploadedFile;
+        $this->targetDir = $targetDir;
         $this->uuid = uniqid();
     }
 
@@ -64,5 +72,13 @@ class UploadedFile
             return \end($parts);
         }
         return $this->baseUploadedFile->getExtension();
+    }
+
+    /**
+     * @return string
+     */
+    public function getTargetFile(): string
+    {
+        return $this->targetDir . '/' . $this->getUniqueFileName();
     }
 }

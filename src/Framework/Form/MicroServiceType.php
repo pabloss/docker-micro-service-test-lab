@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Form;
+namespace App\Framework\Form;
 
-use App\Entity\MicroService;
+use App\Framework\Entity\MicroService;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;

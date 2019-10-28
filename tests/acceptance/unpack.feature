@@ -5,6 +5,6 @@ Feature: unpack
 
   Scenario: unpack
     Given I have "packed/test.zip" path
-    When I unpack it to "unpacked/" path
+    When I unpack it to "unpacked/test" path
     Then "unpacked/test" dir is created
     And content of unzipped "packed/test.zip" and "unpacked/test" are the same

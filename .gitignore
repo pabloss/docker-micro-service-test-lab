@@ -86,5 +86,8 @@ tests/_data/uploaded/*
 files/uploaded/*
 !files/uploaded/.gitkeep
 
+files/unpacked/*
+!files/unpacked/.gitkeep
+
 tests/_data/unpacked/*
 !tests/_data/unpacked/.gitkeep

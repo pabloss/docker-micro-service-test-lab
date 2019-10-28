@@ -1,39 +1,45 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace App\Framework\Controller;
 
-use App\Entity\MicroService;
-use App\Form\MicroServiceType;
+use App\AppCore\Domain\Service\Files\Dir;
+use App\AppCore\Domain\Service\Files\File;
+use App\AppCore\Domain\Service\Files\Unpack;
+use App\Framework\Entity\MicroService;
+use App\Framework\Form\MicroServiceType;
+use App\Framework\Service\Files\UploadedFile;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
-use App\Files\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse as RedirectResponseAlias;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Request;
 
 
 /**
  * Class AppController
- * @package App\Controller
+ * @package App\Framework\Controller
  */
 class AppController extends AbstractController
 {
     /**
      * @Route("/", name="app")
      * @param Request $request
+     * @param Unpack $unpack
+     * @param Dir $dir
+     * @param File $file
      * @return RedirectResponseAlias|Response
      */
-    public function index(Request $request)
+    public function index(Request $request, Unpack $unpack, Dir $dir, File $file)
     {
         $microService = new MicroService();
         $form = $this->createForm(MicroServiceType::class, $microService);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var UploadedFile $uploadedFile */
-            $uploadedFile = new UploadedFile($form['microService']->getData());
+            /** @var \App\Framework\Service\Files\UploadedFile $uploadedFile */
+            $uploadedFile = new UploadedFile($this->getParameter('uploaded_directory'), $form['microService']->getData());
 
             if ($uploadedFile) {
                 try {
@@ -47,6 +53,10 @@ class AppController extends AbstractController
                 }
 
                 $microService->setMicroServicePackedFilename($uploadedFile->getUniqueFileName());
+                if ($file->isMimeTypeOf(UploadedFile::ZIP_MIME_TYPE, $uploadedFile->getTargetFile())) {
+                    $dir->sureTargetDirExists($unpack->getTargetDir($this->getParameter('unpacked_directory'), $uploadedFile->getTargetFile()));
+                    $unpack->unzip($uploadedFile->getTargetFile(), $unpack->getTargetDir($this->getParameter('unpacked_directory'), $uploadedFile->getTargetFile()));
+                }
             }
         }
 

@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Entity;
+namespace App\Framework\Entity;
 
 
 /**
  * Class MicroService
- * @package App\Entity
+ * @package App\Framework\Entity
  */
 class MicroService
 {

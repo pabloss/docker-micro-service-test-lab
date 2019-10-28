@@ -1,6 +1,8 @@
-<<?php
+<?php
 
-use App\Files\Unpack;
+use App\AppCore\Domain\Service\Command\CommandProcessor;
+use App\AppCore\Domain\Service\Files\Dir;
+use App\AppCore\Domain\Service\Files\Unpack;
 use Codeception\Scenario;
 
 
@@ -22,16 +24,23 @@ use Codeception\Scenario;
 class AcceptanceTester extends \Codeception\Actor
 {
     const TEST_UPLOADED_DIR = "files/";
+    const DATA_DIR = __DIR__ . '/../_data/';
+    const TEST_DOCKER_IMAGE = 'bulletinboard:1.0';
+    const TEST_DOCKER_CONTAINER_SEARCH = "docker ps -a | grep '".self::TEST_DOCKER_IMAGE."' | awk '{print $1}'";
+    const UNPACKED_TARGET_DIR = self::DATA_DIR . 'unpacked/test/';
+
     use _generated\AcceptanceTesterActions;
 
     /** @var string */
     private $filePath;
-    private $deployCommand;
+    private $proc_open;
+    private $pipes;
+    private $zip;
 
     public function __construct(Scenario $scenario)
     {
         parent::__construct($scenario);
-        $this->deployCommand = new DeployCommand();
+        $this->zip = new ZipArchive();
     }
 
     /**
@@ -40,8 +49,8 @@ class AcceptanceTester extends \Codeception\Actor
      */
     public function iHavePath($filename)
     {
-        Codeception\PHPUnit\TestCase::assertFileExists(__DIR__. '/../_data/' . $filename);
-        $this->filePath = __DIR__. '/../_data/' . $filename;
+        Codeception\PHPUnit\TestCase::assertFileExists(self::DATA_DIR . $filename);
+        $this->filePath = self::DATA_DIR . $filename;
     }
 
     /**
@@ -50,10 +59,10 @@ class AcceptanceTester extends \Codeception\Actor
      */
     public function iUnpackItToPath($toDirPath)
     {
-        $this->cleanDir(__DIR__. '/../_data/unpacked/');
-
         $service = new Unpack();
-        $service->unzip($this->filePath, __DIR__. '/../_data/'.$toDirPath);
+        $dirService = new Dir();
+        $dirService->sureTargetDirExists( self::DATA_DIR .$toDirPath);
+        $service->unzip($this->filePath, self::DATA_DIR .$toDirPath);
     }
 
     /**
@@ -62,33 +71,33 @@ class AcceptanceTester extends \Codeception\Actor
      */
     public function dirIsCreated($dirName)
     {
-        $this->assertTrue(file_exists(__DIR__. '/../_data/' . $dirName));
-        $this->assertTrue(is_dir(__DIR__. '/../_data/' . $dirName));
+        $this->assertTrue(file_exists(self::DATA_DIR . $dirName));
+        $this->assertTrue(is_dir(self::DATA_DIR . $dirName));
     }
 
     /**
      * @Then content of unzipped :zipFilePath and :unzippedFilePath are the same
      * @param $zipFilePath
      * @param $unzippedFilePath
+     *
+     * @after checkDirs
      */
     public function contentOfUnzippedAndAreTheSame($zipFilePath, $unzippedFilePath)
     {
-        // unpack it in test, scan target dir and compare file contents
-        $zip = new ZipArchive();
-        $scanned_directory= array_diff(scandir(__DIR__. '/../_data/'.$unzippedFilePath), ['..', '.']);
-
-        if ($zip->open(__DIR__. '/../_data/'.$zipFilePath) === true) {
-            $this->assertEquals($zip->numFiles, count($scanned_directory));
-            foreach ($scanned_directory as $file) {
-                for($i = 0; $i < $zip->numFiles; $i++) {
-                    $filename = $zip->getNameIndex($i);
-                    if($file === $filename){
-                        $this->assertEquals(sha1_file(__DIR__. '/../_data/unpacked/test/'.$file), sha1_file(__DIR__. '/../_data/unpacked/test/'.$filename));
+        // unpack it in test, scan target dir and compare unzippedFileName contents
+        if ($this->zip->open(self::DATA_DIR .$zipFilePath) === true) {
+            $this->assertEquals($this->zip->numFiles, count($this->getUnzippedDirContent($unzippedFilePath)));
+            foreach ($this->getUnzippedDirContent($unzippedFilePath) as $unzippedFileName) {
+                for($i = 0; $i < $this->zip->numFiles; $i++) {
+                    if($unzippedFileName === $this->getInternalUnzippedFile($i)){
+                        $this->assertEquals(sha1_file(self::UNPACKED_TARGET_DIR .$unzippedFileName), sha1_file(self::UNPACKED_TARGET_DIR . $this->zip->getNameIndex($i)));
                     }
                 }
             }
-            $zip->close();
+            $this->zip->close();
         }
+        $this->docker();
+        $this->dir(self::DATA_DIR . 'unpacked/');
     }
 
     /**
@@ -97,10 +106,12 @@ class AcceptanceTester extends \Codeception\Actor
      */
     public function iHaveFile($filename)
     {
-        Codeception\PHPUnit\TestCase::assertFileExists(__DIR__. '/../_data/' . $filename);
+        Codeception\PHPUnit\TestCase::assertFileExists(self::DATA_DIR . $filename);
     }
 
     /**
+     * @before checkDirs
+     *
      * @When I upload :filename file
      * @param $filename
      */
@@ -112,6 +123,9 @@ class AcceptanceTester extends \Codeception\Actor
     }
 
     /**
+     * @before checkDirs
+     * @after checkDirs
+     *
      * @Then I can find file that name starts with :prefix in :uploadDir location
      * @param $prefix
      * @param $uploadDir
@@ -119,6 +133,9 @@ class AcceptanceTester extends \Codeception\Actor
     public function iCanFindFileThatNameStartsWithInLocation($prefix, $uploadDir)
     {
         Codeception\PHPUnit\TestCase::assertStringStartsWith($prefix, $this->getLastFileName($uploadDir));
+        // clenup docker
+        $this->docker();
+        $this->checkDirs();
     }
 
     /**
@@ -127,6 +144,111 @@ class AcceptanceTester extends \Codeception\Actor
      */
     private function getLastFileName(string $subDir)
     {
-        return scandir(self::TEST_UPLOADED_DIR . $subDir, SCANDIR_SORT_DESCENDING)[0];
+        return array_diff(scandir(self::TEST_UPLOADED_DIR . $subDir, SCANDIR_SORT_DESCENDING), ['..', '.', '.gitkeep'])[0];
+    }
+
+    /**
+     * @Then I see uploaded and unpacked file in :uploadedDir dir
+     * @param string $unpackedDir
+     */
+    public function iSeeUploadedAndUnpackedFileInDir(string $unpackedDir)
+    {
+        $this->seeFileFound(self::TEST_UPLOADED_DIR . $unpackedDir.'/'.$this->getBasenameWithoutExtension($this->getLastFileName($unpackedDir)));
+    }
+
+    /**
+     * @param string $filePath
+     * @return string
+     */
+    private function getBasenameWithoutExtension(string $filePath): string
+    {
+        return \basename($filePath, '.' . $this->getExtension($filePath));
+    }
+
+    /**
+     * @param string $filePath
+     * @return mixed
+     */
+    private function getExtension(string $filePath)
+    {
+        return \pathinfo($filePath)['extension'] ?? '';
+    }
+
+
+    /**
+     * @param $arg1
+     * @todo change name of arg1
+     * @When I deploy file in :arg1 dir
+     */
+    public function iDeployFileInDir($arg1)
+    {
+        flush();
+        // run  docker
+        $this->proc_open = proc_open(
+            "bin/console deploy bulletinboard:1.0 8080 9090 bb " .
+            self::TEST_UPLOADED_DIR . 'unpacked/'.$this->getBasenameWithoutExtension($this->getLastFileName('unpacked'))."/docker_build/bulletin-board-app/" .
+            " 2>&1",
+            CommandProcessor::DESCRIPTOR_SPECS,
+            $this->pipes,
+            realpath('./'),
+            []
+        );
+    }
+
+    /**
+     * @after checkDirs
+     * @Then I see deploy process in console
+     */
+    public function iSeeDeployProcessInConsole()
+    {
+        if (is_resource($this->proc_open)) {
+            $i = 0;
+            while (($s = fgets($this->pipes[1]))) {
+                if(empty(\trim($s))){
+                    continue;
+                }
+                $this->assertIsString($s) ;
+                $this->assertNotEmpty($s) ;
+                $this->assertStringNotContainsString("does not exist", $s) ;
+                $this->assertStringNotContainsString("missing", $s) ;
+                $this->assertStringNotContainsString("requires at least", $s) ;
+
+                flush();
+                $i++;
+            }
+            if(0 === $i){
+                $this->fail("0 spins of loop");
+            }
+        }
+        // clenup docker
+        $this->docker();
+        $this->checkDirs();
+    }
+
+    /**
+     * @todo a może raz check Dir albo wcale by robiła to apka
+     */
+    protected function checkDirs()
+    {
+        $this->dir(self::TEST_UPLOADED_DIR . 'uploaded/');
+        $this->dir(self::TEST_UPLOADED_DIR . 'unpacked/');
+    }
+
+    /**
+     * @param $unzippedFilePath
+     * @return array
+     */
+    protected function getUnzippedDirContent($unzippedFilePath): array
+    {
+        return array_diff(scandir(self::DATA_DIR . $unzippedFilePath), ['..', '.']);
+    }
+
+    /**
+     * @param int $i
+     * @return false|string
+     */
+    protected function getInternalUnzippedFile(int $i)
+    {
+        return $this->zip->getNameIndex($i);
     }
 }
