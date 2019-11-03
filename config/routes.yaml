@@ -1,3 +1,7 @@
-#index:
+#app:
 #    path: /
-#    controller: App\Framework\Controller\DefaultController::index
+#    controller: App\Framework\Controller\AppController::index
+#
+#photos.upload:
+#  path: /upload
+#  controller: App\Framework\Controller\AppController::upload

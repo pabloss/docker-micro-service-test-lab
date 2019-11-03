@@ -1,5 +1,15 @@
-<h1>Adding a new product</h1>
+{% extends 'base.html.twig' %}
+ {% block stylesheets %}
+     {{ parent() }}
+ {% endblock %}
 
-{{ form_start(form) }}
-{{ form_row(form.microService) }}
-{{ form_end(form) }}
+
+{% block content %}
+    <h1>Adding a new product</h1>
+    <div id="app">
+        <upload></upload>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

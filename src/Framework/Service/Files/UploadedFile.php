@@ -22,14 +22,32 @@ class UploadedFile
     private $targetDir;
 
     /**
+     * @var self
+     */
+    private static $instance;
+
+    /**
      * UploadedFile constructor.
+     * @param string $targetDir
      * @param BaseUploadedFile $baseUploadedFile
      */
-    public function __construct(string $targetDir, BaseUploadedFile $baseUploadedFile)
+    private function __construct(string $targetDir, BaseUploadedFile $baseUploadedFile)
     {
         $this->baseUploadedFile = $baseUploadedFile;
         $this->targetDir = $targetDir;
         $this->uuid = uniqid();
+    }
+
+    /**
+     * @param Params $params
+     * @return UploadedFile
+     */
+    public static function instance(Params $params ): self
+    {
+        if(null === self::$instance){
+            self::$instance = new self($params->getTargetDir(), $params->getUploadedFile());
+        }
+        return self::$instance;
     }
 
     /**
