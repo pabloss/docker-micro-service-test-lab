@@ -3,21 +3,23 @@ declare(strict_types=1);
 
 namespace App\Framework\Controller;
 
-use App\AppCore\Domain\Service\Files\Dir;
-use App\AppCore\Domain\Service\Files\File;
-use App\AppCore\Domain\Service\Files\Unpack;
+use App\Framework\Application\DeployProcessApplication;
+use App\Framework\Application\UnpackZippedFileApplication;
 use App\Framework\Entity\MicroService;
+use App\Framework\Event\FileUploadedEvent;
 use App\Framework\Form\MicroServiceType;
 use App\Framework\Service\Files\Params;
 use App\Framework\Service\Files\UploadedFile;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile as BaseUploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse as RedirectResponseAlias;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\File\UploadedFile as BaseUploadedFile;
 
 /**
  * Class AppController
@@ -50,13 +52,12 @@ class AppController extends AbstractController
     /**
      * @Route("/upload", name="photos.upload")
      * @param Request $request
-     * @param Unpack $unpack
-     * @param Dir $dir
-     * @param File $file
+     * @param EventDispatcherInterface $dispatcher
      * @return RedirectResponseAlias|Response
      */
-    public function upload(Request $request, Unpack $unpack, Dir $dir, File $file)
+    public function upload(Request $request, EventDispatcherInterface $dispatcher)
     {
+
         if($this->isFileUploaded($request)){
             return $this->json([]);
         }
@@ -74,10 +75,9 @@ class AppController extends AbstractController
 
             $microService = new MicroService();
             $microService->setMicroServicePackedFilename($this->uploadedFile($request)->getUniqueFileName());
-            if ($file->isMimeTypeOf(UploadedFile::ZIP_MIME_TYPE, $this->uploadedFile($request)->getTargetFile())) {
-                $dir->sureTargetDirExists($unpack->getTargetDir($this->getParameter('unpacked_directory'), $this->uploadedFile($request)->getTargetFile()));
-                $unpack->unzip($this->uploadedFile($request)->getTargetFile(), $unpack->getTargetDir($this->getParameter('unpacked_directory'), $this->uploadedFile($request)->getTargetFile()));
-            }
+
+            $event = new FileUploadedEvent($request->files->all());
+            $dispatcher->dispatch($event, FileUploadedEvent::NAME);
         }
 
         return $this->redirectToRoute("app");

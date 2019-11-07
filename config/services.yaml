@@ -25,5 +25,24 @@ services:
         resource: '../src/Framework/Controller'
         tags: ['controller.service_arguments']
 
+    ZMQContext:
+        class: 'ZMQContext'
+
+    App\AppCore\Domain\Service\Context:
+        class: 'App\AppCore\Domain\Service\Context'
+        arguments:
+            $context: '@ZMQContext'
+
+    App\Framework\Application\UnpackZippedFileApplication:
+        arguments:
+            $unpacked_directory: '%unpacked_directory%'
+            $uploaded_directory: '%uploaded_directory%'
+
+
+    App\Framework\Application\DeployProcessApplication:
+        arguments:
+            $unpacked_directory: '%unpacked_directory%'
+            $uploaded_directory: '%uploaded_directory%'
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

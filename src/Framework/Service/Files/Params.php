@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Framework\Service\Files;
 
-use Symfony\Component\HttpFoundation\File\UploadedFile as UploadedFileAlias;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class Params
 {
@@ -13,7 +13,7 @@ class Params
     private $targetDir;
 
     /**
-     * @var UploadedFileAlias
+     * @var UploadedFile
      */
     private $uploadedFile;
 
@@ -25,15 +25,15 @@ class Params
     /**
      * Params constructor.
      * @param string $targetDir
-     * @param UploadedFileAlias $uploadedFile
+     * @param UploadedFile $uploadedFile
      */
-    private function __construct(string $targetDir, UploadedFileAlias $uploadedFile)
+    private function __construct(string $targetDir, UploadedFile $uploadedFile)
     {
         $this->targetDir = $targetDir;
         $this->uploadedFile = $uploadedFile;
     }
 
-    public static function createInstance(string $targetDir, UploadedFileAlias $uploadedFile): void
+    public static function createInstance(string $targetDir, UploadedFile $uploadedFile): void
     {
         if(null === self::$instance){
             self::$instance = new self($targetDir, $uploadedFile);
@@ -57,9 +57,9 @@ class Params
     }
 
     /**
-     * @return UploadedFileAlias
+     * @return UploadedFile
      */
-    public function getUploadedFile(): UploadedFileAlias
+    public function getUploadedFile(): UploadedFile
     {
         return $this->uploadedFile;
     }

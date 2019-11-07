@@ -2,6 +2,9 @@
     "behat/gherkin": {
         "version": "v4.6.0"
     },
+    "cboden/ratchet": {
+        "version": "v0.4.1"
+    },
     "codeception/c3": {
         "version": "2.4.1"
     },
@@ -55,6 +58,9 @@
     },
     "egulias/email-validator": {
         "version": "2.1.11"
+    },
+    "evenement/evenement": {
+        "version": "v3.0.1"
     },
     "facebook/webdriver": {
         "version": "1.7.1"
@@ -172,6 +178,33 @@
     },
     "ralouphie/getallheaders": {
         "version": "3.0.3"
+    },
+    "ratchet/rfc6455": {
+        "version": "v0.2.5"
+    },
+    "react/cache": {
+        "version": "v1.0.0"
+    },
+    "react/dns": {
+        "version": "v1.2.0"
+    },
+    "react/event-loop": {
+        "version": "v1.1.0"
+    },
+    "react/promise": {
+        "version": "v2.7.1"
+    },
+    "react/promise-timer": {
+        "version": "v1.5.1"
+    },
+    "react/socket": {
+        "version": "v1.3.0"
+    },
+    "react/stream": {
+        "version": "v1.1.0"
+    },
+    "react/zmq": {
+        "version": "v0.4.0"
     },
     "sebastian/code-unit-reverse-lookup": {
         "version": "1.0.1"

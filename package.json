@@ -3,7 +3,7 @@
         "@symfony/webpack-encore": "^0.21.0",
         "jquery": "^3.3.1",
         "node-sass": "^4.13.0",
-        "sass-loader": "^7.0.1",
+        "sass-loader": "^7.3.1",
         "vue": "^2.5.17",
         "vue-loader": "^15.0.11",
         "vue-template-compiler": "^2.5.17",
@@ -19,7 +19,11 @@
     },
     "dependencies": {
         "axios": "^0.18.0",
+        "core-js": "^3.3.6",
         "vue-axios": "^2.1.4",
-        "vue-router": "^3.0.1"
+        "vue-bash": "^2.0.2",
+        "vue-router": "^3.0.1",
+        "vue-terminal": "^1.1.0",
+        "vue-terminal-unix": "^1.0.10"
     }
 }
