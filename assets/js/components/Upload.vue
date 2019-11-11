@@ -1,5 +1,4 @@
 <template>
-    <div id="app">
         <div class="container">
             <!--UPLOAD-->
             <form id="upload" enctype="multipart/form-data" novalidate v-if="isInitial || isSaving">
@@ -31,7 +30,6 @@
                 <pre>{{ uploadError }}</pre>
             </div>
         </div>
-    </div>
 </template>
 
 <script>

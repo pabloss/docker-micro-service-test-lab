@@ -33,13 +33,6 @@ class Params
         $this->uploadedFile = $uploadedFile;
     }
 
-    public static function createInstance(string $targetDir, UploadedFile $uploadedFile): void
-    {
-        if(null === self::$instance){
-            self::$instance = new self($targetDir, $uploadedFile);
-        }
-    }
-
     /**
      * @return Params
      */

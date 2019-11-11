@@ -5,6 +5,12 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     uploaded_directory: 'tests/_data/uploaded'
+    unpacked_directory: 'tests/_data/unpacked'
+        bind_host: 127.0.0.1
+        bind_port: 5555
+        ws_port: 4444
+        ws_broadcast_address: 0.0.0.0
+
 services:
     # default configuration for services in *this* file
     _defaults:
@@ -22,6 +28,32 @@ services:
     App\Framework\Controller\:
         resource: '../src/Framework/Controller'
         tags: ['controller.service_arguments']
+
+    ZMQContext:
+        class: 'ZMQContext'
+
+        App\AppCore\Domain\Service\Context:
+            class: 'App\AppCore\Domain\Service\WebSockets\Context\Context'
+            arguments:
+                $context: '@ZMQContext'
+
+        App\Framework\Application\UnpackZippedFileApplication:
+            arguments:
+                $unpacked_directory: '%unpacked_directory%'
+                $uploaded_directory: '%uploaded_directory%'
+
+
+        App\Framework\Application\DeployProcessApplication:
+            arguments:
+                $unpacked_directory: '%unpacked_directory%'
+                $uploaded_directory: '%uploaded_directory%'
+
+        App\AppCore\Domain\Service\WebSockets\WebSocketProcessor:
+            arguments:
+                $bindHost: '%bind_host%'
+                $bindPort: '%bind_port%'
+                $wsPort: '%ws_port%'
+                $wsBroadcastAddress: '%ws_broadcast_address%'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

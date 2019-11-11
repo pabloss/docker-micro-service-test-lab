@@ -3,15 +3,11 @@ declare(strict_types=1);
 
 namespace App\Framework\Controller;
 
-use App\Framework\Application\DeployProcessApplication;
-use App\Framework\Application\UnpackZippedFileApplication;
 use App\Framework\Entity\MicroService;
 use App\Framework\Event\FileUploadedEvent;
 use App\Framework\Form\MicroServiceType;
-use App\Framework\Service\Files\Params;
 use App\Framework\Service\Files\UploadedFile;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile as BaseUploadedFile;
@@ -58,29 +54,29 @@ class AppController extends AbstractController
     public function upload(Request $request, EventDispatcherInterface $dispatcher)
     {
 
-        if($this->isFileUploaded($request)){
+        if(false === $this->isFileUploaded($request)){
             return $this->json([]);
         }
 
-        if ($this->uploadedFile($request)) {
+        if ($this->uploadedFile($request->files->all())) {
             try {
-                $this->uploadedFile($request)->move(
-                    $this->getParameter('uploaded_directory'),
-                    $this->uploadedFile($request)->getUniqueFileName()
-                );
+                $this->uploadedFile($request->files->all())
+                    ->move(
+                        $this->getParameter('uploaded_directory'),
+                        $this->uploadedFile($request->files->all())->getUniqueFileName()
+                    );
             } catch (FileException $e) {
                 // ... handle exception if something happens during file upload
                 return new JsonResponse([$e->getMessage(). "\n" . $e->getTraceAsString()], Response::HTTP_INTERNAL_SERVER_ERROR);
             }
 
             $microService = new MicroService();
-            $microService->setMicroServicePackedFilename($this->uploadedFile($request)->getUniqueFileName());
+            $microService->setMicroServicePackedFilename($this->uploadedFile($request->files->all())->getUniqueFileName());
 
             $event = new FileUploadedEvent($request->files->all());
             $dispatcher->dispatch($event, FileUploadedEvent::NAME);
         }
 
-        return $this->redirectToRoute("app");
     }
 
     /**
@@ -89,24 +85,18 @@ class AppController extends AbstractController
      */
     protected function isFileUploaded(Request $request): bool
     {
-        return !isset($request->files->all()[self::FILES]) || !($request->files->all()[self::FILES] instanceof BaseUploadedFile);
+        return isset($request->files->all()[self::FILES]) && ($request->files->all()[self::FILES] instanceof BaseUploadedFile);
     }
 
     /**
-     * @param Request $request
-     */
-    protected function createParams(Request $request): void
-    {
-        Params::createInstance($this->getParameter('uploaded_directory'), $request->files->all()[self::FILES]);
-    }
-
-    /**
-     * @param Request $request
+     * @param array $filesBag
      * @return UploadedFile
      */
-    protected function uploadedFile(Request $request): UploadedFile
+    protected function uploadedFile(array $filesBag): UploadedFile
     {
-        $this->createParams($request);
-        return UploadedFile::instance(Params::getInstance());
+        return  UploadedFile::fromTargetDirAndBaseUploadedFile(
+            $this->getParameter('uploaded_directory'),
+            $filesBag[UploadedFile::FILES]
+        );
     }
 }

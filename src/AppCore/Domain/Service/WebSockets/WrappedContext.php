@@ -1,16 +1,19 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Framework\Command;
+namespace App\AppCore\Domain\Service\WebSockets;
 
-use App\AppCore\Domain\Service\Command\OutputAdapterInterface;
 use App\AppCore\Domain\Service\WebSockets\Context\Context;
 use App\AppCore\Domain\Service\WebSockets\Context\Wrapper;
 
-class SocketOutputAdapter implements OutputAdapterInterface
+/**
+ * Class WrappedContext
+ * @package App\AppCore\Domain\Service\WebSockets
+ */
+class WrappedContext
 {
     /**
-     * @var \App\AppCore\Domain\Service\WebSockets\Context
+     * @var Context
      */
     private $context;
 
@@ -20,9 +23,9 @@ class SocketOutputAdapter implements OutputAdapterInterface
     private $wrapper;
 
     /**
-     * SocketOutputAdapter constructor.
+     * WrappedContext constructor.
      * @param Context $context
-     * @param \App\AppCore\Domain\Service\WebSockets\Context\Wrapper $wrapper
+     * @param Wrapper $wrapper
      */
     public function __construct(Context $context, Wrapper $wrapper)
     {
@@ -31,12 +34,11 @@ class SocketOutputAdapter implements OutputAdapterInterface
     }
 
     /**
-     * @param string $message
+     * @param array $entryData
      * @throws \ZMQSocketException
      */
-    public function writeln(string $message)
+    public function send(array $entryData)
     {
-        $entryData['log'] = $message;
         $this->context->send($this->wrapper->wrap($entryData));
     }
 }

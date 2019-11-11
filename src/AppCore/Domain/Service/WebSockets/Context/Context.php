@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\AppCore\Domain\Service;
+namespace App\AppCore\Domain\Service\WebSockets\Context;
 
 class Context
 {

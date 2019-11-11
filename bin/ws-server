@@ -2,10 +2,10 @@
 <?php
 declare(strict_types=1);
 
-use Ratchet\Server\IoServer;
+use App\AppCore\Domain\Service\WebSockets\Pusher;
 use Ratchet\Http\HttpServer;
+use Ratchet\Server\IoServer;
 use Ratchet\WebSocket\WsServer;
-use App\Framework\Service\WebSockets\Pusher;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 Pusher::getInstance();

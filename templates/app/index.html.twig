@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
  {% block stylesheets %}
      {{ parent() }}
+
  {% endblock %}
 
 
@@ -8,10 +9,26 @@
     <h1>Adding a new product</h1>
     <div id="app">
         <upload></upload>
+
+        <!-- component template -->
+        <!-- demo root element -->
+        <div id="demo">
+            <form id="search">
+                Search <input name="query" v-model="searchQuery">
+            </form>
+            <grid
+                    :heroes="gridData"
+                    :columns="gridColumns"
+                    :filter-key="searchQuery"
+                    :max="max"
+                    :progress="progress"
+            >
+            </grid>
+        </div>
+
+        <terminal :prompt="' '" :show-initial-cd="false" :show-help-message="false" :show-header="false" :greeting="false" :log="log"></terminal>
     </div>
 {% endblock %}
 {% block javascripts %}
-{#    <script src="https://gist.githubusercontent.com/cboden/fcae978cfc016d506639c5241f94e772/raw/e974ce895df527c83b8e010124a034cfcf6c9f4b/autobahn.js"></script>#}
-
     {{ parent() }}
 {% endblock %}

@@ -40,6 +40,7 @@ class CommandProcessor
         );
         if (is_resource($process)) {
             while ($s = fgets($pipes[self::STDOUT])) {
+                \sleep(1);
                 $this->outputAdapter->writeln($s);
                 flush();
             }

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Framework\Subscriber;
 
+use App\AppCore\Domain\Service\WebSockets\WrappedContext;
 use App\Framework\Application\UnpackZippedFileApplication;
 use App\Framework\Event\FileUploadedEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -15,12 +16,19 @@ class UnpackFileSubscriber implements EventSubscriberInterface
     private $unpackZippedFileApplication;
 
     /**
+     * @var WrappedContext
+     */
+    private $context;
+
+    /**
      * UnpackFileSubscriber constructor.
      * @param UnpackZippedFileApplication $unpackZippedFileApplication
+     * @param WrappedContext $context
      */
-    public function __construct(UnpackZippedFileApplication $unpackZippedFileApplication)
+    public function __construct(UnpackZippedFileApplication $unpackZippedFileApplication, WrappedContext $context)
     {
         $this->unpackZippedFileApplication = $unpackZippedFileApplication;
+        $this->context = $context;
     }
 
 
@@ -31,9 +39,14 @@ class UnpackFileSubscriber implements EventSubscriberInterface
         ];
     }
 
+    /**
+     * @param FileUploadedEvent $event
+     * @throws \ZMQSocketException
+     */
     public function onUploadedFile(FileUploadedEvent $event)
     {
-        $this->unpackZippedFileApplication->unzipToTargetDir($event->getPhpFiles());
+        $params = $this->unpackZippedFileApplication->unzipToTargetDir($event->getPhpFiles());
+        $this->context->send($params->toArray());
     }
 
 }

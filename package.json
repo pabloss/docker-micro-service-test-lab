@@ -19,7 +19,7 @@
     },
     "dependencies": {
         "axios": "^0.18.0",
-        "core-js": "^3.3.6",
+        "core-js": "2",
         "vue-axios": "^2.1.4",
         "vue-bash": "^2.0.2",
         "vue-router": "^3.0.1",

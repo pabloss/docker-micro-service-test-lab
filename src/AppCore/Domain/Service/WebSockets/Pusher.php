@@ -1,8 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Framework\Service\WebSockets;
+namespace App\AppCore\Domain\Service\WebSockets;
 
+use App\AppCore\Domain\Service\WebSockets\Context\Wrapper;
 use Ratchet\ConnectionInterface;
 use Ratchet\Wamp\WampServerInterface;
 
@@ -24,11 +25,11 @@ class Pusher implements WampServerInterface {
         $entryData = json_decode($entry, true);
 
         // If the lookup topic object isn't set there is no one to publish to
-        if (!array_key_exists($entryData['msg'], $this->subscribedTopics)) {
+        if (!array_key_exists($entryData[Wrapper::TOPIC_ENTRY_DATA_KEY], $this->subscribedTopics)) {
             return;
         }
 
-        $topic = $this->subscribedTopics[$entryData['msg']];
+        $topic = $this->subscribedTopics[$entryData[Wrapper::TOPIC_ENTRY_DATA_KEY]];
 
         // re-send the data to all the clients subscribed to that category
         $topic->broadcast($entryData);

@@ -4,24 +4,20 @@ declare(strict_types=1);
 namespace App\Framework\Application;
 
 use App\AppCore\Domain\Service\Command\CommandProcessor;
-use App\AppCore\Domain\Service\Context;
 use App\AppCore\Domain\Service\Files\Unpack;
-use App\Framework\Command\SocketOutputAdapter;
-use App\Framework\Service\Files\Params;
 use App\Framework\Service\Files\UploadedFile;
 
 class DeployProcessApplication
 {
-    const FILES = 'files';
-    /**
-     * @var Context
-     */
-    private $context;
-
     /**
      * @var Unpack
      */
     private $unpack;
+
+    /**
+     * @var CommandProcessor
+     */
+    private $commandProcessor;
 
     /**
      * @var string
@@ -35,37 +31,37 @@ class DeployProcessApplication
 
     /**
      * DeployProcessApplication constructor.
-     * @param Context $context
      * @param Unpack $unpack
+     * @param CommandProcessor $commandProcessor
      * @param string $unpacked_directory
      * @param string $uploaded_directory
      */
     public function __construct(
-        Context $context,
         Unpack $unpack,
+        CommandProcessor $commandProcessor,
         string $unpacked_directory,
         string $uploaded_directory
     ) {
-        $this->context = $context;
         $this->unpack = $unpack;
         $this->unpacked_directory = $unpacked_directory;
         $this->uploaded_directory = $uploaded_directory;
+        $this->commandProcessor = $commandProcessor;
     }
-
 
     public function deploy(array $filesBag)
     {
-        $commandProcessor = new CommandProcessor(new SocketOutputAdapter($this->context));
         $tag = 'tag' . \uniqid();
         $containerName = 'container' . \uniqid();
-        $commandProcessor->processRealTimeOutput(
+
+        $this->commandProcessor->processRealTimeOutput(
             $this->getBuildCommandStr(
                 $tag,
-                $this->unpack->getTargetDir($this->unpacked_directory, $this->uploadedFile($filesBag)->getTargetFile()) .
+                $this->getTargetDir($filesBag) .
                 '/docker_build/bulletin-board-app/'
             )
         );
-        $commandProcessor->processRealTimeOutput(
+
+        $this->commandProcessor->processRealTimeOutput(
             $this->getRunCommandStr(
                 $containerName,
                 $tag
@@ -103,20 +99,20 @@ class DeployProcessApplication
 
     /**
      * @param array $filesBag
-     * @return UploadedFile
+     * @return string
      */
-    protected function uploadedFile(array $filesBag): UploadedFile
+    private function getTargetFile(array $filesBag): string
     {
-        $this->createParams($filesBag);
-        return UploadedFile::instance(Params::getInstance());
+        return UploadedFile::fromTargetDirAndBaseUploadedFile($this->uploaded_directory,
+            $filesBag[UploadedFile::FILES])->getTargetFile();
     }
-
 
     /**
      * @param array $filesBag
+     * @return string|\ZipArchive
      */
-    protected function createParams(array $filesBag): void
+    private function getTargetDir(array $filesBag)
     {
-        Params::createInstance($this->uploaded_directory, $filesBag[self::FILES]);
+        return $this->unpack->getTargetDir($this->unpacked_directory, $this->getTargetFile($filesBag));
     }
 }

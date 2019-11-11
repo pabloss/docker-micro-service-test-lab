@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile as BaseUploadedFile;
 class UploadedFile
 {
     const ZIP_MIME_TYPE = 'application/zip';
+    const FILES = 'files';
 
     /** @var BaseUploadedFile */
     private $baseUploadedFile;
@@ -46,6 +47,19 @@ class UploadedFile
     {
         if(null === self::$instance){
             self::$instance = new self($params->getTargetDir(), $params->getUploadedFile());
+        }
+        return self::$instance;
+    }
+
+    /**
+     * @param string $targetDir
+     * @param BaseUploadedFile $uploadedFile
+     * @return UploadedFile
+     */
+    public static function fromTargetDirAndBaseUploadedFile(string $targetDir, BaseUploadedFile $uploadedFile): self
+    {
+        if(null === self::$instance){
+            self::$instance = new self($targetDir, $uploadedFile);
         }
         return self::$instance;
     }

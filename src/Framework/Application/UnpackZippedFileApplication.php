@@ -6,13 +6,10 @@ namespace App\Framework\Application;
 use App\AppCore\Domain\Service\Files\Dir;
 use App\AppCore\Domain\Service\Files\File;
 use App\AppCore\Domain\Service\Files\Unpack;
-use App\Framework\Service\Files\Params;
 use App\Framework\Service\Files\UploadedFile;
 
 class UnpackZippedFileApplication
 {
-
-    const FILES = 'files';
     /**
      * @var Unpack
      */
@@ -61,30 +58,50 @@ class UnpackZippedFileApplication
     }
 
 
-    public function unzipToTargetDir(array $filesBag)
+    public function unzipToTargetDir(array $filesBag): UnzippedFileParams
     {
-        if ($this->file->isMimeTypeOf(UploadedFile::ZIP_MIME_TYPE, $this->uploadedFile($filesBag)->getTargetFile())) {
-            $this->dir->sureTargetDirExists($this->unpack->getTargetDir($this->unpacked_directory, $this->uploadedFile($filesBag)->getTargetFile()));
-            $this->unpack->unzip($this->uploadedFile($filesBag)->getTargetFile(), $this->unpack->getTargetDir($this->unpacked_directory, $this->uploadedFile($filesBag)->getTargetFile()));
+        if (
+            $this->file->isMimeTypeOf(
+                UploadedFile::ZIP_MIME_TYPE,
+                $this->getUploadedFile($filesBag)->getTargetFile()
+            )
+        ) {
+            $this->dir->sureTargetDirExists(
+                $this->getTargetDir($filesBag)
+            );
+            $this->unpack->unzip(
+                $this->getUploadedFile($filesBag)->getTargetFile(),
+                $this->getTargetDir($filesBag)
+            );
         }
+
+        return new UnzippedFileParams(
+            $this->getTargetDir($filesBag),
+            $this->getUploadedFile($filesBag)->getTargetFile(),
+        );
     }
 
     /**
      * @param array $filesBag
      * @return UploadedFile
      */
-    protected function uploadedFile(array $filesBag): UploadedFile
+    private function getUploadedFile(array $filesBag): UploadedFile
     {
-        $this->createParams($filesBag);
-        return UploadedFile::instance(Params::getInstance());
+        return UploadedFile::fromTargetDirAndBaseUploadedFile(
+            $this->uploaded_directory,
+            $filesBag[UploadedFile::FILES]
+        );
     }
-
 
     /**
      * @param array $filesBag
+     * @return string|\ZipArchive
      */
-    protected function createParams(array $filesBag): void
+    private function getTargetDir(array $filesBag)
     {
-        Params::createInstance($this->uploaded_directory, $filesBag[self::FILES]);
+        return $this->unpack->getTargetDir(
+            $this->unpacked_directory,
+            $this->getUploadedFile($filesBag)->getTargetFile()
+        );
     }
 }
