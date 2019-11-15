@@ -3,10 +3,11 @@ declare(strict_types=1);
 
 namespace App\AppCore\Domain\Service\Command\WebSocketAdapter;
 
+use App\AppCore\Domain\Service\Command\FetchOutInterface;
 use App\AppCore\Domain\Service\Command\OutputAdapterInterface;
 use App\AppCore\Domain\Service\WebSockets\WrappedContext;
 
-abstract class AbstractSocketOutputAdapter implements OutputAdapterInterface
+abstract class AbstractSocketOutputAdapter implements OutputAdapterInterface, FetchOutInterface
 {
     /**
      * @var WrappedContext

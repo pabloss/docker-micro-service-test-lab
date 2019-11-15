@@ -40,8 +40,8 @@ class SocketErrorOutputAdapter extends AbstractSocketOutputAdapter
      */
     protected function createEntry(string $message): array
     {
-        $entryData = [];
-        $entryData[self::ERROR_KEY] = $message;
-        return $entryData;
+        return [
+            self::ERROR_KEY => $message
+        ];
     }
 }

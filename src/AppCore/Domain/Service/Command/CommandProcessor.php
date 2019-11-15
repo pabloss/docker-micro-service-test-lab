@@ -17,26 +17,17 @@ class CommandProcessor
     ];
 
     /**
-     * @var OutputAdapterInterface
+     * @var FetchOutInterface
      */
-    private $stdOutOutputAdapter;
-
-    /**
-     * @var OutputAdapterInterface
-     */
-    private $stdErrOutputAdapter;
+    private $fetchOut;
 
     /**
      * CommandProcessor constructor.
-     * @param OutputAdapterInterface $stdOutOutputAdapter
-     * @param OutputAdapterInterface $stdErrOutputAdapter
+     * @param FetchOutInterface $fetchOut
      */
-    public function __construct(
-        OutputAdapterInterface $stdOutOutputAdapter,
-        OutputAdapterInterface $stdErrOutputAdapter
-    ) {
-        $this->stdOutOutputAdapter = $stdOutOutputAdapter;
-        $this->stdErrOutputAdapter = $stdErrOutputAdapter;
+    public function __construct(FetchOutInterface $fetchOut)
+    {
+        $this->fetchOut = $fetchOut;
     }
 
     public function processRealTimeOutput(string $command)
@@ -50,40 +41,9 @@ class CommandProcessor
             []
         );
         if (is_resource($process)) {
-            while (
-                $this->stdOutOutputAdapter->fetchedOut($pipes) ||
-                $this->stdErrOutputAdapter->fetchedOut($pipes)
-            ) {
+            while ($this->fetchOut->fetchedOut($pipes)) {
                 \sleep(1);
             }
         }
-    }
-
-    /**
-     * @param int $from
-     * @param int $to
-     * @return string
-     */
-    public static function getBashOutRedirect(int $from, int $to): string
-    {
-        return "$from>&$to";
-    }
-
-    /**
-     * @param $pipes
-     * @return false|string
-     */
-    private function fetchStdOut($pipes)
-    {
-        return fgets($pipes[self::STDOUT]);
-    }
-
-    /**
-     * @param $pipes
-     * @return false|string
-     */
-    private function fetchStdErr($pipes)
-    {
-        return fgets($pipes[self::STDERR]);
     }
 }

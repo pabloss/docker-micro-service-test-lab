@@ -45,7 +45,7 @@ class SocketProgressBarOutputAdapter extends AbstractSocketOutputAdapter
      */
     public function writeln(string $message)
     {
-        $this->moveProgress();
+        $this->calculateProgress();
         parent::writeln($message);
     }
 
@@ -65,14 +65,14 @@ class SocketProgressBarOutputAdapter extends AbstractSocketOutputAdapter
      */
     protected function createEntry(string $message): array
     {
-        $entryData = [];
-        $entryData[self::LOG_KEY] = $message;
-        $entryData[self::PROGRESS_KEY] = $this->progressBar->getProgress();
-        $entryData[self::MAX_PROGRESS_KEY] = $this->progressBar->getMaxSteps();
-        return $entryData;
+        return [
+            self::LOG_KEY =>            $message,
+            self::PROGRESS_KEY =>       $this->progressBar->getProgress(),
+            self::MAX_PROGRESS_KEY =>   $this->progressBar->getMaxSteps()
+        ];
     }
 
-    private function moveProgress(): void
+    private function calculateProgress(): void
     {
         if ($this->counter === 0) {
             $this->progressBar->start();
