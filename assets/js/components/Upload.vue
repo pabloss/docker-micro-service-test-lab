@@ -96,11 +96,7 @@
                 this.save(formData);
             },
             upload(formData) {
-                const url = `http://${this.$BASE_HOST}/upload`;
-                return this.axios.post(url, formData)
-                // get data
-                    .then(x => x.data)
-                    ;
+                return this.axios.post(`http://${this.$BASE_HOST}/upload`, formData).then(x => x.data);
             }
         },
         mounted() {
