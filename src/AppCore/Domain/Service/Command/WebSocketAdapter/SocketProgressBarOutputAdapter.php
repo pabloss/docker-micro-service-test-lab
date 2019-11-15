@@ -1,15 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Framework\Command;
+namespace App\AppCore\Domain\Service\Command\WebSocketAdapter;
 
-use App\AppCore\Domain\Service\Command\OutputAdapterInterface;
-use App\AppCore\Domain\Service\WebSockets\Context\Context;
-use App\AppCore\Domain\Service\WebSockets\Context\Wrapper;
+use App\AppCore\Domain\Service\Command\CommandProcessor;
 use App\AppCore\Domain\Service\WebSockets\WrappedContext;
 use Symfony\Component\Console\Helper\ProgressBar;
 
-class SocketProgressBarOutputAdapter  implements OutputAdapterInterface
+class SocketProgressBarOutputAdapter extends AbstractSocketOutputAdapter
 {
     const LOG_KEY = 'log';
     const PROGRESS_KEY = 'progress';
@@ -18,7 +16,7 @@ class SocketProgressBarOutputAdapter  implements OutputAdapterInterface
     /**
      * @var WrappedContext
      */
-    private $context;
+    protected $context;
 
     /**
      * @var int
@@ -31,23 +29,15 @@ class SocketProgressBarOutputAdapter  implements OutputAdapterInterface
     private $progressBar;
 
     /**
-     * @var Wrapper
-     */
-    private $wrapper;
-
-    /**
      * SocketProgressBarOutputAdapter constructor.
      * @param WrappedContext $context
      * @param ProgressBar $progressBar
-     * @param Wrapper $wrapper
      */
-    public function __construct(WrappedContext $context, ProgressBar $progressBar, Wrapper $wrapper)
+    public function __construct(WrappedContext $context, ProgressBar $progressBar)
     {
         $this->context = $context;
         $this->progressBar = $progressBar;
-        $this->wrapper = $wrapper;
     }
-
 
     /**
      * @param string $message
@@ -56,14 +46,24 @@ class SocketProgressBarOutputAdapter  implements OutputAdapterInterface
     public function writeln(string $message)
     {
         $this->moveProgress();
-        $this->context->send($this->createEntry($message));
+        parent::writeln($message);
+    }
+
+    /**
+     * @param $pipes
+     * @return bool
+     * @throws \ZMQSocketException
+     */
+    public function fetchedOut($pipes): bool
+    {
+        return parent::fetchedOut(fgets($pipes[CommandProcessor::STDOUT]));
     }
 
     /**
      * @param string $message
      * @return array
      */
-    private function createEntry(string $message): array
+    protected function createEntry(string $message): array
     {
         $entryData = [];
         $entryData[self::LOG_KEY] = $message;
@@ -77,7 +77,7 @@ class SocketProgressBarOutputAdapter  implements OutputAdapterInterface
         if ($this->counter === 0) {
             $this->progressBar->start();
         } elseif ($this->counter > $this->progressBar->getMaxSteps()) {
-            $this->progressBar->setMaxSteps(2*$this->progressBar->getMaxSteps());
+            $this->progressBar->setMaxSteps(2 * $this->progressBar->getMaxSteps());
         }
         $this->progressBar->advance();
         $this->counter++;
