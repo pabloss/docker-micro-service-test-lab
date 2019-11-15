@@ -46,7 +46,7 @@ const vue = new Vue({
                     vue.progress = data.progress;
                     vue.max = data.max;
                     vue.error = data.error;
-                    if(data[this.$targetFileKey] && data[this.$targetDirKey]){
+                    if(data[vue.$targetFileKey] && data[vue.$targetDirKey]){
                         vue.gridData.push(data);
                     }
                 });
