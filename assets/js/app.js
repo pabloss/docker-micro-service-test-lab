@@ -31,7 +31,7 @@ const vue = new Vue({
             max: null,
             error: null,
             searchQuery: '',
-            gridColumns: [targetFile, targetDir, progress],
+            gridColumns: [this.$targetFileKey, this.$targetDirKey, this.$progressKey],
             gridData: [],
             init: true,
         }
