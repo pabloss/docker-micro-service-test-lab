@@ -15,9 +15,7 @@ Vue.prototype.$targetFileKey = 'target_file';
 Vue.prototype.$targetDirKey = 'target_dir';
 Vue.prototype.$progressKey = 'progress';
 Vue.prototype.$BASE_HOST = 'service-test-lab-new.local';
-const targetFile = 'target_file';
-const targetDir = 'target_dir';
-const progress = 'progress';
+
 /**
  * Create a fresh Vue Application instance
  */
@@ -48,7 +46,7 @@ const vue = new Vue({
                     vue.progress = data.progress;
                     vue.max = data.max;
                     vue.error = data.error;
-                    if(data[targetFile] && data[targetDir]){
+                    if(data[this.$targetFileKey] && data[this.$targetDirKey]){
                         vue.gridData.push(data);
                     }
                 });
