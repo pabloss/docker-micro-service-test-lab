@@ -6,4 +6,5 @@ namespace App\AppCore\Domain\Service\Command;
 interface OutputAdapterInterface
 {
     public function writeln(string $message);
+    public function fetchedOut($pipes): bool;
 }

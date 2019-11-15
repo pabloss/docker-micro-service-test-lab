@@ -16,16 +16,27 @@ class CommandProcessor
         self::STDERR => ["pipe", "w"]    // stderr is a pipe that the child will write to
     ];
 
-    /** @var OutputAdapterInterface */
-    private $outputAdapter;
+    /**
+     * @var OutputAdapterInterface
+     */
+    private $stdOutOutputAdapter;
+
+    /**
+     * @var OutputAdapterInterface
+     */
+    private $stdErrOutputAdapter;
 
     /**
      * CommandProcessor constructor.
-     * @param OutputAdapterInterface $outputAdapter
+     * @param OutputAdapterInterface $stdOutOutputAdapter
+     * @param OutputAdapterInterface $stdErrOutputAdapter
      */
-    public function __construct(OutputAdapterInterface $outputAdapter)
-    {
-        $this->outputAdapter = $outputAdapter;
+    public function __construct(
+        OutputAdapterInterface $stdOutOutputAdapter,
+        OutputAdapterInterface $stdErrOutputAdapter
+    ) {
+        $this->stdOutOutputAdapter = $stdOutOutputAdapter;
+        $this->stdErrOutputAdapter = $stdErrOutputAdapter;
     }
 
     public function processRealTimeOutput(string $command)
@@ -39,10 +50,11 @@ class CommandProcessor
             []
         );
         if (is_resource($process)) {
-            while ($s = fgets($pipes[self::STDOUT])) {
+            while (
+                $this->stdOutOutputAdapter->fetchedOut($pipes) ||
+                $this->stdErrOutputAdapter->fetchedOut($pipes)
+            ) {
                 \sleep(1);
-                $this->outputAdapter->writeln($s);
-                flush();
             }
         }
     }
@@ -55,5 +67,23 @@ class CommandProcessor
     public static function getBashOutRedirect(int $from, int $to): string
     {
         return "$from>&$to";
+    }
+
+    /**
+     * @param $pipes
+     * @return false|string
+     */
+    private function fetchStdOut($pipes)
+    {
+        return fgets($pipes[self::STDOUT]);
+    }
+
+    /**
+     * @param $pipes
+     * @return false|string
+     */
+    private function fetchStdErr($pipes)
+    {
+        return fgets($pipes[self::STDERR]);
     }
 }
