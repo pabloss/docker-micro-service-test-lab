@@ -5,12 +5,16 @@ import './service/autobahn';
 import Vue from 'vue';
 import axios from 'axios';
 import vueAxios from 'vue-axios';
-import {upload} from './service/file-upload.service';
 import Upload from './components/Upload';
 import Terminal from './components/Terminal';
 import Grid from "./components/Grid";
 
-Vue.use(vueAxios, axios, upload);
+Vue.use(vueAxios, axios);
+
+Vue.prototype.$targetFileKey = 'target_file';
+Vue.prototype.$targetDirKey = 'target_dir';
+Vue.prototype.$progressKey = 'progress';
+Vue.prototype.$BASE_HOST = 'service-test-lab-new.local';
 const targetFile = 'target_file';
 const targetDir = 'target_dir';
 const progress = 'progress';
@@ -25,19 +29,25 @@ const vue = new Vue({
             log: null,
             progress: null,
             max: null,
+            error: null,
             searchQuery: '',
             gridColumns: [targetFile, targetDir, progress],
-            gridData: []
+            gridData: [],
+            init: true,
         }
     },
     mounted() {
-        const conn = new ab.Session('ws://service-test-lab-new.local:4444',
+        const conn = new ab.Session('ws://'+this.$BASE_HOST+':4444',
             function () {
                 conn.subscribe('entry_data', function (topic, data) {
                     // This is where you would add the new article to the DOM (beyond the scope of this tutorial)
-                    vue.log = data.log;
+                    if(data.log){
+                        vue.log = data.log;
+                        vue.init = false;
+                    }
                     vue.progress = data.progress;
                     vue.max = data.max;
+                    vue.error = data.error;
                     if(data[targetFile] && data[targetDir]){
                         vue.gridData.push(data);
                     }

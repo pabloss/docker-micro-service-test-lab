@@ -16,7 +16,8 @@
             <td v-for="key in columns">
                 <span v-if="key !== 'progress'">{{entry[key]}}</span>
                 <span v-if="key === 'progress'">
-                    <progress :value="progress" :max="max"></progress>
+                    <button v-if="init || error" @click="deploy(entry['target_dir'])">{{buttonText}}</button>
+                    <progress v-else :value="progress" :max="max"></progress>
                 </span>
             </td>
         </tr>
@@ -32,13 +33,15 @@
             columns: Array,
             filterKey: String,
             progress: Number,
-            max: Number
+            max: Number,
+            error: String,
+            init: Boolean,
         },
         data: function () {
             const sortOrders = {};
             this.columns.forEach(function (key) {
                 sortOrders[key] = 1
-            })
+            });
             return {
                 sortKey: '',
                 sortOrders: sortOrders
@@ -65,7 +68,14 @@
                     })
                 }
                 return heroes
-            }
+            },
+            buttonText: function(){
+                if(this.error){
+                    return 'Error!';
+                } else {
+                    return 'Deploy';
+                }
+            },
         },
         filters: {
             capitalize: function (str) {
@@ -76,6 +86,10 @@
             sortBy: function (key) {
                 this.sortKey = key;
                 this.sortOrders[key] = this.sortOrders[key] * -1
+            },
+            deploy: function (targetDir) {
+                const url = `http://${this.$BASE_HOST}/deploy/`;
+                this.axios.get(url + targetDir).then(x => x.data);
             }
         }
     }
