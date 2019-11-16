@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Framework\Controller;
 
+use App\Framework\Application\DeployProcessApplication;
 use App\Framework\Entity\MicroService;
 use App\Framework\Event\FileUploadedEvent;
-use App\Framework\Form\MicroServiceType;
 use App\Framework\Service\Files\UploadedFile;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -31,9 +31,7 @@ class AppController extends AbstractController
      */
     public function index()
     {
-        return $this->render('app/index.html.twig', [
-            'form' => $this->createForm(MicroServiceType::class, new MicroService())->createView(),
-        ]);
+        return $this->render('app/index.html.twig');
     }
 
     /**
@@ -77,6 +75,20 @@ class AppController extends AbstractController
             $dispatcher->dispatch($event, FileUploadedEvent::NAME);
         }
 
+        return new Response();
+
+    }
+
+    /**
+     * @Route("/deploy/{targetDir}", name="deploy")
+     * @param string $targetDir
+     * @param DeployProcessApplication $application
+     * @return Response
+     */
+    public function deploy(string $targetDir, DeployProcessApplication $application)
+    {
+        $application->deploy($this->getParameter('unpacked_directory').'/'.$targetDir);
+        return new Response();
     }
 
     /**

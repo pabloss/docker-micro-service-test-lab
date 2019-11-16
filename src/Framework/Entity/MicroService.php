@@ -16,14 +16,6 @@ class MicroService
     private $microServicePackedFilename;
 
     /**
-     * @return string
-     */
-    public function getMicroServicePackedFilename(): string
-    {
-        return $this->microServicePackedFilename;
-    }
-
-    /**
      * @param string $microServicePackedFilename
      * @return $this
      */
