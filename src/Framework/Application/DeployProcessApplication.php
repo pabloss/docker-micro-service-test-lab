@@ -5,8 +5,9 @@ namespace App\Framework\Application;
 
 use App\AppCore\Domain\Service\Command\CommandProcessor;
 use App\AppCore\Domain\Service\Files\Dir;
-use App\AppCore\Domain\Service\Files\Unpack;
-use App\Framework\Service\Files\UploadedFile;
+use App\Framework\Application\Stages\Deploy\BuildProcess;
+use App\Framework\Application\Stages\Deploy\RunProcess;
+use League\Pipeline\Pipeline;
 
 class DeployProcessApplication
 {
@@ -26,6 +27,11 @@ class DeployProcessApplication
     private $dir;
 
     /**
+     * @var Pipeline
+     */
+    private $pipe;
+
+    /**
      * DeployProcessApplication constructor.
      * @param CommandProcessor $commandProcessor
      * @param CommandStringFactory $factory
@@ -36,25 +42,17 @@ class DeployProcessApplication
         $this->commandProcessor = $commandProcessor;
         $this->factory = $factory;
         $this->dir = $dir;
+        $this->pipe = (new Pipeline())
+            ->pipe(new BuildProcess($this->commandProcessor, $this->factory))
+            ->pipe(new RunProcess($this->commandProcessor, $this->factory));
     }
 
     public function deploy(string $targetDir)
     {
-        $tag = 'tag' . \uniqid();
-        $containerName = 'container' . \uniqid();
-
-        $this->commandProcessor->processRealTimeOutput(
-            $this->factory->getBuildCommandStr(
-                $tag,
-                $this->dir->findParentDir($targetDir, 'Dockerfile')
-            )
-        );
-
-        $this->commandProcessor->processRealTimeOutput(
-            $this->factory->getRunCommandStr(
-                $containerName,
-                $tag
-            )
-        );
+        $this->pipe->process([
+            'tag' => $tag = 'tag' . \uniqid(),
+            'container' => $containerName = 'container' . \uniqid(),
+            'target_dir' => $this->dir->findParentDir($targetDir, 'Dockerfile')
+        ]);
     }
 }
