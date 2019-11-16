@@ -3,17 +3,17 @@ declare(strict_types=1);
 
 namespace App\AppCore\Domain\Service\Command\WebSocketAdapter;
 
-use App\AppCore\Domain\Service\Command\CommandProcessor;
-use App\AppCore\Domain\Service\Command\FetchOutInterface;
 use App\AppCore\Domain\Service\Command\OutputAdapterInterface;
+
 use App\AppCore\Domain\Service\WebSockets\WrappedContext;
 use Symfony\Component\Console\Helper\ProgressBar;
 
-class SocketProgressBarOutputAdapter implements OutputAdapterInterface, FetchOutInterface
+class SocketProgressBarOutputAdapter implements OutputAdapterInterface
 {
     const LOG_KEY = 'log';
     const PROGRESS_KEY = 'progress';
     const MAX_PROGRESS_KEY = 'max';
+    const DIR_KEY = 'dir';
 
     /**
      * @var WrappedContext
@@ -43,40 +43,27 @@ class SocketProgressBarOutputAdapter implements OutputAdapterInterface, FetchOut
 
     /**
      * @param string $message
+     * @param string $dir
      * @throws \ZMQSocketException
      */
-    public function writeln(string $message)
+    public function writeln(string $message, string $dir)
     {
         $this->calculateProgress();
-        $this->context->send($this->createEntry($message));
-    }
-
-    /**
-     * @param $pipes
-     * @return bool
-     * @throws \ZMQSocketException
-     */
-    public function fetchedOut($pipes): bool
-    {
-        $out = fgets($pipes[CommandProcessor::STDOUT]);
-        flush();
-        if(isset($out) && \is_string($out)){
-            $this->writeln($out);
-            return true;
-        }
-        return false;
+        $this->context->send($this->createEntry($message, $dir));
     }
 
     /**
      * @param string $message
+     * @param string $dir
      * @return array
      */
-    protected function createEntry(string $message): array
+    private function createEntry(string $message, string $dir): array
     {
         return [
             self::LOG_KEY =>            $message,
             self::PROGRESS_KEY =>       $this->progressBar->getProgress(),
-            self::MAX_PROGRESS_KEY =>   $this->progressBar->getMaxSteps()
+            self::MAX_PROGRESS_KEY =>   $this->progressBar->getMaxSteps(),
+            self::DIR_KEY => $dir
         ];
     }
 

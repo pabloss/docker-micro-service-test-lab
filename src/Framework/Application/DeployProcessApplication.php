@@ -6,6 +6,7 @@ namespace App\Framework\Application;
 use App\AppCore\Domain\Service\Command\CommandProcessor;
 use App\AppCore\Domain\Service\Files\Dir;
 use App\Framework\Application\Stages\Deploy\BuildProcess;
+use App\Framework\Application\Stages\Deploy\CommandStringFactory;
 use App\Framework\Application\Stages\Deploy\RunProcess;
 use League\Pipeline\Pipeline;
 
@@ -50,8 +51,8 @@ class DeployProcessApplication
     public function deploy(string $targetDir)
     {
         $this->pipe->process([
-            'tag' => $tag = 'tag' . \uniqid(),
-            'container' => $containerName = 'container' . \uniqid(),
+            'tag' => 'tag' . \uniqid(),
+            'container' => 'container' . \uniqid(),
             'target_dir' => $this->dir->findParentDir($targetDir, 'Dockerfile')
         ]);
     }

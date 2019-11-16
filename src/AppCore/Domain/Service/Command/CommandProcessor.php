@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\AppCore\Domain\Service\Command;
 
+use App\AppCore\Domain\Service\Command\WebSocketAdapter\OutputAdapterFactory;
+
 class CommandProcessor
 {
     // the name of the command (the part after "bin/console")
@@ -17,20 +19,25 @@ class CommandProcessor
     ];
 
     /**
-     * @var FetchOutInterface
+     * @var OutputAdapterFactory
      */
-    private $fetchOut;
+    private $factory;
 
     /**
      * CommandProcessor constructor.
-     * @param FetchOutInterface $fetchOut
+     * @param OutputAdapterFactory $factory
      */
-    public function __construct(FetchOutInterface $fetchOut)
+    public function __construct(OutputAdapterFactory $factory)
     {
-        $this->fetchOut = $fetchOut;
+        $this->factory = $factory;
     }
 
-    public function processRealTimeOutput(string $command)
+    /**
+     * @param string $command
+     * @param string $dir
+     * @throws \ZMQSocketException
+     */
+    public function processRealTimeOutput(string $command, string $dir)
     {
         flush();
         $process = proc_open(
@@ -41,9 +48,30 @@ class CommandProcessor
             []
         );
         if (is_resource($process)) {
-            while ($this->fetchOut->fetchedOut($pipes)) {
+            while (
+                $this->fetchedOut($pipes, self::STDOUT, $dir) ||
+                $this->fetchedOut($pipes, self::STDERR, $dir)
+            ) {
                 \sleep(1);
             }
         }
+    }
+
+    /**
+     * @param $pipes
+     * @param int $stdCode
+     * @param string $dir
+     * @return bool
+     * @throws \ZMQSocketException
+     */
+    public function fetchedOut($pipes, int $stdCode, string $dir): bool
+    {
+        $out = fgets($pipes[$stdCode]);
+        flush();
+        if(isset($out) && \is_string($out)){
+            $this->factory->getByOut($stdCode)->writeln($out, $dir);
+            return true;
+        }
+        return false;
     }
 }

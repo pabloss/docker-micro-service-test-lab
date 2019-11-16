@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Framework\Application\Stages\Deploy;
 
 use App\AppCore\Domain\Service\Command\CommandProcessor;
-use App\Framework\Application\CommandStringFactory;
 
 class BuildProcess
 {
@@ -29,14 +28,19 @@ class BuildProcess
         $this->factory = $factory;
     }
 
-
+    /**
+     * @param $payload
+     * @return mixed
+     * @throws \ZMQSocketException
+     */
     public function __invoke($payload)
     {
         $this->commandProcessor->processRealTimeOutput(
             $this->factory->getBuildCommandStr(
                 $payload['tag'],
                 $payload['target_dir']
-            )
+            ),
+            $payload['target_dir']
         );
         return $payload;
     }

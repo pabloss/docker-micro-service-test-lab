@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Framework\Application;
+namespace App\Framework\Application\Stages\Deploy;
 
 class CommandStringFactory
 {

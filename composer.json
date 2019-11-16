@@ -11,6 +11,7 @@
         "ext-zip": "*",
         "ext-zmq": "*",
         "cboden/ratchet": "^0.4.1",
+        "league/pipeline": "^1.0",
         "react/zmq": "^0.4.0",
         "sensio/framework-extra-bundle": "^5.1",
         "symfony/apache-pack": "^1.0",

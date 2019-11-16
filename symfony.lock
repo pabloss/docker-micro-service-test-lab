@@ -104,6 +104,9 @@
     "hoa/ustring": {
         "version": "4.17.01.16"
     },
+    "league/pipeline": {
+        "version": "1.0.0"
+    },
     "monolog/monolog": {
         "version": "1.25.1"
     },

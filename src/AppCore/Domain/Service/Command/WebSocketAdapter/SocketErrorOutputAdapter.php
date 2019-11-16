@@ -3,14 +3,13 @@ declare(strict_types=1);
 
 namespace App\AppCore\Domain\Service\Command\WebSocketAdapter;
 
-use App\AppCore\Domain\Service\Command\CommandProcessor;
-use App\AppCore\Domain\Service\Command\FetchOutInterface;
 use App\AppCore\Domain\Service\Command\OutputAdapterInterface;
 use App\AppCore\Domain\Service\WebSockets\WrappedContext;
 
-class SocketErrorOutputAdapter implements OutputAdapterInterface, FetchOutInterface
+class SocketErrorOutputAdapter implements OutputAdapterInterface
 {
     const ERROR_KEY = 'error';
+    const DIR_KEY = 'dir';
 
     /**
      * @var WrappedContext
@@ -28,37 +27,24 @@ class SocketErrorOutputAdapter implements OutputAdapterInterface, FetchOutInterf
 
     /**
      * @param string $message
+     * @param string $dir
      * @throws \ZMQSocketException
      */
-    public function writeln(string $message)
+    public function writeln(string $message, string $dir)
     {
-        $this->context->send($this->createEntry($message));
-    }
-
-    /**
-     * @param $pipes
-     * @return bool
-     * @throws \ZMQSocketException
-     */
-    public function fetchedOut($pipes): bool
-    {
-        $out = fgets($pipes[CommandProcessor::STDERR]);
-        flush();
-        if(isset($out) && \is_string($out)){
-            $this->writeln($out);
-            return true;
-        }
-        return false;
+        $this->context->send($this->createEntry($message, $dir));
     }
 
     /**
      * @param string $message
+     * @param string $dir
      * @return array
      */
-    protected function createEntry(string $message): array
+    private function createEntry(string $message, string $dir): array
     {
         return [
-            self::ERROR_KEY => $message
+            self::ERROR_KEY => $message,
+            self::DIR_KEY => $dir
         ];
     }
 }
