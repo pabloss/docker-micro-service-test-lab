@@ -35,18 +35,12 @@ services:
     ZMQContext:
         class: 'ZMQContext'
 
-    App\AppCore\Domain\Service\WebSockets\Context:
+    App\AppCore\Domain\Service\WebSockets\Context\Context:
         class: 'App\AppCore\Domain\Service\WebSockets\Context\Context'
         arguments:
             $context: '@ZMQContext'
 
     App\Framework\Application\UnpackZippedFileApplication:
-        arguments:
-            $unpacked_directory: '%unpacked_directory%'
-            $uploaded_directory: '%uploaded_directory%'
-
-
-    App\Framework\Application\DeployProcessApplication:
         arguments:
             $unpacked_directory: '%unpacked_directory%'
             $uploaded_directory: '%uploaded_directory%'
@@ -62,8 +56,14 @@ services:
         arguments:
             $max: 20
             $output: '@Symfony\Component\Console\Output\NullOutput'
+    App\AppCore\Domain\Service\Command\WebSocketAdapter\AdaptersContainer:
+        arguments:
+          $input:
+            - '@App\AppCore\Domain\Service\Command\WebSocketAdapter\SocketErrorOutputAdapter'
+            - '@App\AppCore\Domain\Service\Command\WebSocketAdapter\SocketProgressBarOutputAdapter'
+
     App\AppCore\Domain\Service\Command\CommandProcessor:
         arguments:
-            $outputAdapter: '@App\Framework\Command\SocketProgressBarOutputAdapter'
+            $fetchOut: '@App\AppCore\Domain\Service\Command\WebSocketAdapter\AdaptersContainer'
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
