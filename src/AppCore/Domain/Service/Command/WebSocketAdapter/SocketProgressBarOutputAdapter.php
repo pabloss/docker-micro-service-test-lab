@@ -4,10 +4,12 @@ declare(strict_types=1);
 namespace App\AppCore\Domain\Service\Command\WebSocketAdapter;
 
 use App\AppCore\Domain\Service\Command\CommandProcessor;
+use App\AppCore\Domain\Service\Command\FetchOutInterface;
+use App\AppCore\Domain\Service\Command\OutputAdapterInterface;
 use App\AppCore\Domain\Service\WebSockets\WrappedContext;
 use Symfony\Component\Console\Helper\ProgressBar;
 
-class SocketProgressBarOutputAdapter extends AbstractSocketOutputAdapter
+class SocketProgressBarOutputAdapter implements OutputAdapterInterface, FetchOutInterface
 {
     const LOG_KEY = 'log';
     const PROGRESS_KEY = 'progress';
@@ -46,7 +48,7 @@ class SocketProgressBarOutputAdapter extends AbstractSocketOutputAdapter
     public function writeln(string $message)
     {
         $this->calculateProgress();
-        parent::writeln($message);
+        $this->context->send($this->createEntry($message));
     }
 
     /**
@@ -56,7 +58,13 @@ class SocketProgressBarOutputAdapter extends AbstractSocketOutputAdapter
      */
     public function fetchedOut($pipes): bool
     {
-        return parent::fetchedOut(fgets($pipes[CommandProcessor::STDOUT]));
+        $out = fgets($pipes[CommandProcessor::STDOUT]);
+        flush();
+        if(isset($out) && \is_string($out)){
+            $this->writeln($out);
+            return true;
+        }
+        return false;
     }
 
     /**
