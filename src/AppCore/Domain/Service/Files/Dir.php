@@ -16,4 +16,23 @@ class Dir
         }
         return $extractToDir;
     }
+
+    public function findFile(string $dir, string $fileToFind)
+    {
+            $tree = glob(rtrim($dir, '/') . '/*');
+            if (is_array($tree)) {
+                foreach($tree as $file) {
+                    if (is_dir($file)) {
+                        return $this->findFile($file, $fileToFind);
+                    } elseif (is_file($file) && $fileToFind === \basename($file)) {
+                        return $file;
+                    }
+                }
+            }
+    }
+
+    public function findParentDir(string $dir, string $fileToFind)
+    {
+        return \dirname($this->findFile($dir, $fileToFind));
+    }
 }
