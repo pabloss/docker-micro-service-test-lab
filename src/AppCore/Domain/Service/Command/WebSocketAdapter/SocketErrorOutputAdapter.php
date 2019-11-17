@@ -9,7 +9,7 @@ use App\AppCore\Domain\Service\WebSockets\WrappedContext;
 class SocketErrorOutputAdapter implements OutputAdapterInterface
 {
     const ERROR_KEY = 'error';
-    const DIR_KEY = 'dir';
+    const DIR_KEY = 'target_dir';
 
     /**
      * @var WrappedContext
