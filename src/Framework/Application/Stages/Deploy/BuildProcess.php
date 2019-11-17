@@ -40,7 +40,7 @@ class BuildProcess
                 $payload['tag'],
                 $payload['target_dir']
             ),
-            $payload['target_dir']
+            \basename($payload['target_dir'])
         );
         return $payload;
     }
