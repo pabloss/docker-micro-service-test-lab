@@ -16,8 +16,8 @@
             <td v-for="key in columns">
                 <span v-if="key !== 'progress'">{{entry[key]}}</span>
                 <span v-if="key === 'progress'">
-                    <button v-if="entry['init']" @click="deploy(entry['target_dir'])">{{buttonText}}</button>
-                    <progress v-else :value="entry['progress']" :max="entry['max']"></progress>
+                    <button v-if="entry['init']||entry['progress']=== entry['max']" @click="deploy(entry['target_dir'])">{{buttonText(entry['progress'],entry['max'])}}</button>
+                    <progress v-else-if="entry['progress']!== entry['max']" :value="entry['progress']" :max="entry['max']"></progress>
                 </span>
             </td>
         </tr>
@@ -64,14 +64,7 @@
                     })
                 }
                 return heroes
-            },
-            buttonText: function(){
-                if(this.error){
-                    return 'Error!';
-                } else {
-                    return 'Deploy';
-                }
-            },
+            }
         },
         filters: {
             capitalize: function (str) {
@@ -86,7 +79,16 @@
             deploy: function (targetDir) {
                 const url = `http://${this.$BASE_HOST}/deploy/`;
                 this.axios.get(url + targetDir).then(x => x.data);
-            }
+            },
+            buttonText: function(progress,max){
+                if(this.error) {
+                    return 'Error!';
+                } else if(progress === max){
+                    return 'Deployed!';
+                } else {
+                    return 'Deploy';
+                }
+            },
         }
     }
 </script>

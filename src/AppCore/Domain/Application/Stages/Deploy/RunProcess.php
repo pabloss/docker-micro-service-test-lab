@@ -1,11 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Framework\Application\Stages\Deploy;
+namespace App\AppCore\Domain\Application\Stages\Deploy;
 
+use App\AppCore\Domain\Application\DeployProcessApplication;
 use App\AppCore\Domain\Service\Command\CommandProcessor;
 
-class BuildProcess
+class RunProcess
 {
     /**
      * @var CommandProcessor
@@ -18,7 +19,7 @@ class BuildProcess
     private $factory;
 
     /**
-     * BuildProcess constructor.
+     * RunProcess constructor.
      * @param CommandProcessor $commandProcessor
      * @param CommandStringFactory $factory
      */
@@ -30,19 +31,16 @@ class BuildProcess
 
     /**
      * @param $payload
-     * @return mixed
      * @throws \ZMQSocketException
      */
     public function __invoke($payload)
     {
         $this->commandProcessor->processRealTimeOutput(
-            $this->factory->getBuildCommandStr(
-                $payload['tag'],
-                $payload['target_dir']
+            $this->factory->getRunCommandStr(
+                $payload[DeployProcessApplication::CONTAINER_KEY],
+                $payload[DeployProcessApplication::TAG_KEY]
             ),
-            \basename($payload['index'])
+            \basename($payload[DeployProcessApplication::INDEX_KEY])
         );
-        return $payload;
     }
-
 }

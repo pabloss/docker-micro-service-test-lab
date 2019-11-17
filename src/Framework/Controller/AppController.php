@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Framework\Controller;
 
-use App\Framework\Application\DeployProcessApplication;
+use App\AppCore\Domain\Application\DeployProcessApplication;
 use App\Framework\Entity\MicroService;
 use App\Framework\Event\FileUploadedEvent;
 use App\Framework\Service\Files\UploadedFile;

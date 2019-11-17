@@ -13,7 +13,7 @@ class SocketProgressBarOutputAdapter implements OutputAdapterInterface
     const LOG_KEY = 'log';
     const PROGRESS_KEY = 'progress';
     const MAX_PROGRESS_KEY = 'max';
-    const DIR_KEY = 'index';
+    const INDEX_KEY = 'index';
 
     /**
      * @var WrappedContext
@@ -63,7 +63,7 @@ class SocketProgressBarOutputAdapter implements OutputAdapterInterface
             self::LOG_KEY =>            $message,
             self::PROGRESS_KEY =>       $this->progressBar->getProgress(),
             self::MAX_PROGRESS_KEY =>   $this->progressBar->getMaxSteps(),
-            self::DIR_KEY => $dir
+            self::INDEX_KEY =>          $dir
         ];
     }
 

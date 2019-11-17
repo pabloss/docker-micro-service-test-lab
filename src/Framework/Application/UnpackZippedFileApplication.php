@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Framework\Application;
 
+use App\AppCore\Domain\Application\Stages\Unpack\UnzippedFileParams;
 use App\AppCore\Domain\Service\Files\Dir;
 use App\AppCore\Domain\Service\Files\File;
 use App\AppCore\Domain\Service\Files\Unpack;

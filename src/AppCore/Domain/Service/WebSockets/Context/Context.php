@@ -5,9 +5,11 @@ namespace App\AppCore\Domain\Service\WebSockets\Context;
 
 class Context
 {
-    const PORT_TO_CONNECT_SOCKET = "5555";
-    const HOST_TO_CONNECT_SOCKET = "127.0.0.1";
     const PUSHER_NAME = 'pusher.local';
+
+    private $bindHost = '127.0.0.1';
+    private $bindPort = 5555;
+
     /**
      * @var \ZMQContext
      */
@@ -21,13 +23,17 @@ class Context
     /**
      * Context constructor.
      * @param \ZMQContext $context
+     * @param string $bindHost
+     * @param int $bindPort
      * @throws \ZMQSocketException
      */
-    public function __construct(\ZMQContext $context)
+    public function __construct(\ZMQContext $context, string $bindHost, int $bindPort)
     {
         $this->context = $context;
+        $this->bindPort = $bindPort;
+        $this->bindHost = $bindHost;
         $this->socket = $this->context->getSocket(\ZMQ::SOCKET_PUSH, self::PUSHER_NAME);
-        $this->socket->connect("tcp://" . self::HOST_TO_CONNECT_SOCKET . ":" . self::PORT_TO_CONNECT_SOCKET);
+        $this->socket->connect("tcp://" . $this->bindHost . ":" . $this->bindPort);
     }
 
     /**

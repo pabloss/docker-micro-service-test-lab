@@ -36,6 +36,8 @@ services:
         class: 'App\AppCore\Domain\Service\WebSockets\Context\Context'
         arguments:
             $context: '@ZMQContext'
+            $bindHost: '%bind_host%'
+            $bindPort: '%bind_port%'
 
     App\Framework\Application\UnpackZippedFileApplication:
         arguments:

@@ -1,10 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Framework\Application;
+namespace App\AppCore\Domain\Application\Stages\Unpack;
 
 class UnzippedFileParams
 {
+    const TARGET_DIR_KEY = 'target_dir';
+    const TARGET_FILE_KEY = 'target_file';
     /**
      * @var string
      */
@@ -47,8 +49,8 @@ class UnzippedFileParams
     public function toArray(): array
     {
         return [
-            'target_dir' => $this->getTargetDir(),
-            'target_file' => $this->getTargetFile(),
+            self::TARGET_DIR_KEY =>  $this->getTargetDir(),
+            self::TARGET_FILE_KEY => $this->getTargetFile(),
         ];
     }
 }

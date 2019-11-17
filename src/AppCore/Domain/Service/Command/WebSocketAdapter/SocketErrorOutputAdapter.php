@@ -9,7 +9,7 @@ use App\AppCore\Domain\Service\WebSockets\WrappedContext;
 class SocketErrorOutputAdapter implements OutputAdapterInterface
 {
     const ERROR_KEY = 'error';
-    const DIR_KEY = 'index';
+    const INDEX_KEY = 'index';
 
     /**
      * @var WrappedContext
@@ -44,7 +44,7 @@ class SocketErrorOutputAdapter implements OutputAdapterInterface
     {
         return [
             self::ERROR_KEY => $message,
-            self::DIR_KEY => $dir
+            self::INDEX_KEY => $dir
         ];
     }
 }

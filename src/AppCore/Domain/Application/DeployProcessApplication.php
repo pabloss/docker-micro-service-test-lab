@@ -1,17 +1,22 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Framework\Application;
+namespace App\AppCore\Domain\Application;
 
+use App\AppCore\Domain\Application\Stages\Deploy\BuildProcess;
+use App\AppCore\Domain\Application\Stages\Deploy\CommandStringFactory;
+use App\AppCore\Domain\Application\Stages\Deploy\RunProcess;
 use App\AppCore\Domain\Service\Command\CommandProcessor;
 use App\AppCore\Domain\Service\Files\Dir;
-use App\Framework\Application\Stages\Deploy\BuildProcess;
-use App\Framework\Application\Stages\Deploy\CommandStringFactory;
-use App\Framework\Application\Stages\Deploy\RunProcess;
 use League\Pipeline\Pipeline;
 
 class DeployProcessApplication
 {
+    const TARGET_DIR_KEY = 'target_dir';
+    const INDEX_KEY = 'index';
+    const CONTAINER_KEY = 'container';
+    const TAG_KEY = 'tag';
+
     /**
      * @var CommandProcessor
      */
@@ -51,10 +56,10 @@ class DeployProcessApplication
     public function deploy(string $targetDir)
     {
         $this->pipe->process([
-            'tag' => 'tag' . \uniqid(),
-            'container' => 'container' . \uniqid(),
-            'target_dir' => $this->dir->findParentDir($targetDir, 'Dockerfile'),
-            'index' => $targetDir,
+            self::TAG_KEY =>        'tag' . \uniqid(),
+            self::CONTAINER_KEY =>  'container' . \uniqid(),
+            self::TARGET_DIR_KEY => $this->dir->findParentDir($targetDir, 'Dockerfile'),
+            self::INDEX_KEY =>      $targetDir,
         ]);
     }
 }
