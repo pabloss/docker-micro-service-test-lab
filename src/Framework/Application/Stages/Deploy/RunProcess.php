@@ -39,7 +39,7 @@ class RunProcess
                 $payload['container'],
                 $payload['tag']
             ),
-            \basename($payload['target_dir'])
+            \basename($payload['index'])
         );
     }
 }

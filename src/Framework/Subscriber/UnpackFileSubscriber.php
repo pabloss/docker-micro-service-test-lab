@@ -46,7 +46,7 @@ class UnpackFileSubscriber implements EventSubscriberInterface
     public function onUploadedFile(FileUploadedEvent $event)
     {
         $params = $this->unpackZippedFileApplication->unzipToTargetDir($event->getPhpFiles());
-        $this->context->send($params->toArray());
+        $this->context->send(\array_merge($params->toArray(), ['index' => $params->getTargetDir()]));
     }
 
 }

@@ -10,8 +10,6 @@
     <div id="app">
         <upload></upload>
 
-        <!-- component template -->
-        <!-- demo root element -->
         <div id="demo">
             <form id="search">
                 Search <input name="query" v-model="searchQuery">
@@ -20,10 +18,6 @@
                     :heroes="gridData"
                     :columns="gridColumns"
                     :filter-key="searchQuery"
-                    :max="max"
-                    :progress="progress"
-                    :error="error"
-                    :init="init"
             >
             </grid>
         </div>

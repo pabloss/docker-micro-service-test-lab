@@ -13,7 +13,7 @@ class SocketProgressBarOutputAdapter implements OutputAdapterInterface
     const LOG_KEY = 'log';
     const PROGRESS_KEY = 'progress';
     const MAX_PROGRESS_KEY = 'max';
-    const DIR_KEY = 'target_dir';
+    const DIR_KEY = 'index';
 
     /**
      * @var WrappedContext

@@ -53,7 +53,8 @@ class DeployProcessApplication
         $this->pipe->process([
             'tag' => 'tag' . \uniqid(),
             'container' => 'container' . \uniqid(),
-            'target_dir' => $this->dir->findParentDir($targetDir, 'Dockerfile')
+            'target_dir' => $this->dir->findParentDir($targetDir, 'Dockerfile'),
+            'index' => $targetDir,
         ]);
     }
 }

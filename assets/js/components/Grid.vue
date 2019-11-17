@@ -16,8 +16,8 @@
             <td v-for="key in columns">
                 <span v-if="key !== 'progress'">{{entry[key]}}</span>
                 <span v-if="key === 'progress'">
-                    <button v-if="init || error" @click="deploy(entry['target_dir'])">{{buttonText}}</button>
-                    <progress v-else :value="progress" :max="max"></progress>
+                    <button v-if="entry['init']" @click="deploy(entry['target_dir'])">{{buttonText}}</button>
+                    <progress v-else :value="entry['progress']" :max="entry['max']"></progress>
                 </span>
             </td>
         </tr>
@@ -32,10 +32,6 @@
             heroes: Array,
             columns: Array,
             filterKey: String,
-            progress: Number,
-            max: Number,
-            error: String,
-            init: Boolean,
         },
         data: function () {
             const sortOrders = {};
