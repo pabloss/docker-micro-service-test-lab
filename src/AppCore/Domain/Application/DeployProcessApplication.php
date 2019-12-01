@@ -45,7 +45,7 @@ class DeployProcessApplication
         ;
     }
 
-    public function deploy(string $targetDir)
+    public function run(string $targetDir)
     {
         $this->pipe->process([
             self::FILE_KEY => $this->dir->findParentDir($targetDir, 'zip.json'),

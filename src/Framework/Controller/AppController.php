@@ -43,7 +43,7 @@ class AppController extends AbstractController
      */
     public function test(string $targetDir, TestProcessApplication $application)
     {
-        $application->deploy($this->getParameter('unpacked_directory').'/'.$targetDir);
+        $application->run($this->getParameter('unpacked_directory').'/'.$targetDir);
         return new Response();
     }
 
@@ -91,7 +91,7 @@ class AppController extends AbstractController
      */
     public function deploy(string $targetDir, DeployProcessApplication $application)
     {
-        $application->deploy($this->getParameter('unpacked_directory').'/'.$targetDir);
+        $application->run($this->getParameter('unpacked_directory').'/'.$targetDir);
         return new Response();
     }
 
