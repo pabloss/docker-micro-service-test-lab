@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\AppCore\Domain\Application;
 
-use App\AppCore\Domain\Application\Stages\Deploy\CommandStringFactory;
 use App\AppCore\Domain\Application\Stages\Test\TestProcess;
 use App\AppCore\Domain\Service\Command\CommandProcessor;
 use App\AppCore\Domain\Service\Files\Dir;
@@ -20,11 +19,6 @@ class TestProcessApplication
     private $commandProcessor;
 
     /**
-     * @var CommandStringFactory
-     */
-    private $factory;
-
-    /**
      * @var Dir
      */
     private $dir;
@@ -37,16 +31,14 @@ class TestProcessApplication
     /**
      * DeployProcessApplication constructor.
      * @param CommandProcessor $commandProcessor
-     * @param CommandStringFactory $factory
      * @param Dir $dir
      */
-    public function __construct(CommandProcessor $commandProcessor, CommandStringFactory $factory, Dir $dir)
+    public function __construct(CommandProcessor $commandProcessor, Dir $dir)
     {
         $this->commandProcessor = $commandProcessor;
-        $this->factory = $factory;
         $this->dir = $dir;
         $this->pipe = (new Pipeline())
-            ->pipe(new TestProcess($this->commandProcessor, $this->factory))
+            ->pipe(new TestProcess($this->commandProcessor))
         ;
     }
 

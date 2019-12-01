@@ -14,19 +14,12 @@ class RunProcess
     private $commandProcessor;
 
     /**
-     * @var CommandStringFactory
-     */
-    private $factory;
-
-    /**
      * RunProcess constructor.
      * @param CommandProcessor $commandProcessor
-     * @param CommandStringFactory $factory
      */
-    public function __construct(CommandProcessor $commandProcessor, CommandStringFactory $factory)
+    public function __construct(CommandProcessor $commandProcessor)
     {
         $this->commandProcessor = $commandProcessor;
-        $this->factory = $factory;
     }
 
     /**
@@ -36,11 +29,51 @@ class RunProcess
     public function __invoke($payload)
     {
         $this->commandProcessor->processRealTimeOutput(
-            $this->factory->getRunCommandStr(
-                $payload[DeployProcessApplication::CONTAINER_KEY],
-                $payload[DeployProcessApplication::TAG_KEY]
+            $this->getRunCommandStr(
+                $this->getContainerName($payload),
+                $this->getTag($payload)
             ),
-            \basename($payload[DeployProcessApplication::INDEX_KEY])
+            $this->getIndex($payload)
         );
+    }
+
+    /**
+     * @param string $containerName
+     * @param string $tag
+     * @return string
+     */
+    public function getRunCommandStr(string $containerName, string $tag): string
+    {
+        // docker image build -t {tag} .
+        // docker container run --publish {out_port}:{in_port} --detach --name {container_name} {tag}
+        return
+            "docker container run --detach --name {$containerName} {$tag}" ;
+    }
+
+    /**
+     * @param $payload
+     * @return mixed
+     */
+    private function getContainerName($payload)
+    {
+        return $payload[DeployProcessApplication::CONTAINER_KEY];
+    }
+
+    /**
+     * @param $payload
+     * @return mixed
+     */
+    private function getTag($payload)
+    {
+        return $payload[DeployProcessApplication::TAG_KEY];
+    }
+
+    /**
+     * @param $payload
+     * @return string
+     */
+    private function getIndex($payload): string
+    {
+        return \basename($payload[DeployProcessApplication::INDEX_KEY]);
     }
 }

@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\AppCore\Domain\Application\Stages\Test;
 
 use App\AppCore\Domain\Application\TestProcessApplication;
-use App\AppCore\Domain\Application\Stages\Deploy\CommandStringFactory;
 use App\AppCore\Domain\Service\Command\CommandProcessor;
 
 class TestProcess
@@ -14,20 +13,14 @@ class TestProcess
      */
     private $commandProcessor;
 
-    /**
-     * @var CommandStringFactory
-     */
-    private $factory;
 
     /**
      * RunProcess constructor.
      * @param CommandProcessor $commandProcessor
-     * @param CommandStringFactory $factory
      */
-    public function __construct(CommandProcessor $commandProcessor, CommandStringFactory $factory)
+    public function __construct(CommandProcessor $commandProcessor)
     {
         $this->commandProcessor = $commandProcessor;
-        $this->factory = $factory;
     }
 
     /**
@@ -37,10 +30,40 @@ class TestProcess
     public function __invoke($payload)
     {
         $this->commandProcessor->processRealTimeOutput(
-            $this->factory->getTestCommandStr(
-                $payload[TestProcessApplication::FILE_KEY]
+            $this->getTestCommandStr(
+                $this->getTestFilePath($payload)
             ),
-            \basename($payload[TestProcessApplication::INDEX_KEY])
+            $this->getIndex($payload)
         );
+    }
+
+    /**
+     * @param string $testFilePath
+     * @return string
+     */
+    public function getTestCommandStr(string $testFilePath): string
+    {
+        // /bin/bash {$confFile}
+        return
+            "/bin/bash {$testFilePath}" ;
+    }
+
+
+    /**
+     * @param $payload
+     * @return mixed
+     */
+    private function getTestFilePath($payload)
+    {
+        return $payload[TestProcessApplication::FILE_KEY];
+    }
+
+    /**
+     * @param $payload
+     * @return string
+     */
+    private function getIndex($payload): string
+    {
+        return \basename($payload[TestProcessApplication::INDEX_KEY]);
     }
 }

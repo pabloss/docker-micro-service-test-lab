@@ -14,19 +14,12 @@ class BuildProcess
     private $commandProcessor;
 
     /**
-     * @var CommandStringFactory
-     */
-    private $factory;
-
-    /**
      * BuildProcess constructor.
      * @param CommandProcessor $commandProcessor
-     * @param CommandStringFactory $factory
      */
-    public function __construct(CommandProcessor $commandProcessor, CommandStringFactory $factory)
+    public function __construct(CommandProcessor $commandProcessor)
     {
         $this->commandProcessor = $commandProcessor;
-        $this->factory = $factory;
     }
 
     /**
@@ -37,13 +30,46 @@ class BuildProcess
     public function __invoke($payload)
     {
         $this->commandProcessor->processRealTimeOutput(
-            $this->factory->getBuildCommandStr(
-                $payload[DeployProcessApplication::TAG_KEY],
-                $payload[DeployProcessApplication::TARGET_DIR_KEY]
+            $this->getBuildCommandStr(
+                $this->getTag($payload),
+                $this->getDockerFile($payload)
             ),
-            \basename($payload[DeployProcessApplication::INDEX_KEY])
+            $this->getIndex($payload)
         );
         return $payload;
+    }
+
+    public function getBuildCommandStr(string $tag, string $dockerFile): string
+    {
+        return
+            "docker image build -t {$tag} {$dockerFile}" ;
+    }
+
+    /**
+     * @param $payload
+     * @return mixed
+     */
+    private function getTag($payload)
+    {
+        return $payload[DeployProcessApplication::TAG_KEY];
+    }
+
+    /**
+     * @param $payload
+     * @return mixed
+     */
+    private function getDockerFile($payload)
+    {
+        return $payload[DeployProcessApplication::TARGET_DIR_KEY];
+    }
+
+    /**
+     * @param $payload
+     * @return string
+     */
+    private function getIndex($payload): string
+    {
+        return \basename($payload[DeployProcessApplication::INDEX_KEY]);
     }
 
 }
