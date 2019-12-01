@@ -18,6 +18,8 @@
                 <span v-if="key === 'progress'">
                     <button v-if="entry['init']||entry['progress']=== entry['max']" @click="deploy(entry['target_dir'])">{{buttonText(entry['progress'],entry['max'])}}</button>
                     <progress v-else-if="entry['progress']!== entry['max']" :value="entry['progress']" :max="entry['max']"></progress>
+
+                    <button @click="test(entry['target_dir'])">Test</button>
                 </span>
             </td>
         </tr>
@@ -78,6 +80,10 @@
             },
             deploy: function (targetDir) {
                 const url = `http://${this.$BASE_HOST}/deploy/`;
+                this.axios.get(url + targetDir).then(x => x.data);
+            },
+            test: function(targetDir){
+                const url = `http://${this.$BASE_HOST}/test/`;
                 this.axios.get(url + targetDir).then(x => x.data);
             },
             buttonText: function(progress,max){

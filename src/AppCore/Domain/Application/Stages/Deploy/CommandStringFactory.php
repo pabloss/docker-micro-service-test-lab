@@ -28,4 +28,26 @@ class CommandStringFactory
         return
             "docker container run --detach --name {$containerName} {$tag}" ;
     }
+
+    /**
+     * @param string $confFile
+     * @return string
+     */
+    public function getUpCommandStr(string $confFile): string
+    {
+        // docker-compose -f {$confFile}  up -d --force-recreate
+        return
+            "docker-compose -f {$confFile}  up -d --force-recreate" ;
+    }
+
+    /**
+     * @param string $confFile
+     * @return string
+     */
+    public function getTestCommandStr(string $confFile): string
+    {
+        // /bin/bash {$confFile}
+        return
+            "/bin/bash {$confFile}" ;
+    }
 }

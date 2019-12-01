@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Framework\Controller;
 
 use App\AppCore\Domain\Application\DeployProcessApplication;
+use App\AppCore\Domain\Application\TestProcessApplication;
 use App\Framework\Entity\MicroService;
 use App\Framework\Event\FileUploadedEvent;
 use App\Framework\Service\Files\UploadedFile;
@@ -35,12 +36,15 @@ class AppController extends AbstractController
     }
 
     /**
-     * @Route("/test", name="test")
+     * @Route("/test/{targetDir}", name="test")
+     * @param string $targetDir
+     * @param TestProcessApplication $application
      * @return RedirectResponseAlias|Response
      */
-    public function test()
+    public function test(string $targetDir, TestProcessApplication $application)
     {
-        return new JsonResponse("test");
+        $application->deploy($this->getParameter('unpacked_directory').'/'.$targetDir);
+        return new Response();
     }
 
     /**
