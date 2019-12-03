@@ -40,7 +40,7 @@ class UploadedFileTest extends \Codeception\Test\Unit
     // tests
     public function testGetUniqueFileNameWhenNameIsNotASCII()
     {
-        $fileName = 'zażółć gęślą jaźń';
+        $fileName = 'test-';
         $extension = 'xxxffff';
 
         /** @var BaseUploadedFile $baseUploadedFile */

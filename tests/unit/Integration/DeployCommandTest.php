@@ -36,7 +36,11 @@ class DeployCommandTest extends \Codeception\Test\Unit
 
         flush();
         $process = proc_open(
-            "bin/console deploy " . self::TEST_DOCKER_IMAGE . " 8080 9090 bb " . self::TEST_UPLOADED_DIR . "docker_build/bulletin-board-app 2>&1",
+            " docker-compose -f " .
+            self::TEST_UPLOADED_DIR .
+            "/micro-service-1/docker-compose.yml".
+            " up -d --force-recreate" .
+            " 2>&1",
             CommandProcessor::DESCRIPTOR_SPECS,
             $pipes,
             realpath('./'),
