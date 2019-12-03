@@ -10,8 +10,8 @@ Feature: deploy_uploaded_unpacked_docker
 
 
   Scenario: try deploy deploy_uploaded_unpacked_docker
-    Given I have "packed/docker_build.zip" file
-    When I upload "packed/docker_build.zip" file
+    Given I have "packed/micro-service-1.zip" file
+    When I upload "packed/micro-service-1.zip" file
     And I deploy file in "unpacked" dir
     Then I see uploaded and unpacked file in "unpacked" dir
     And I see deploy process in console

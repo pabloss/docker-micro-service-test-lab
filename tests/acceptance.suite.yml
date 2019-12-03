@@ -7,8 +7,10 @@
 actor: AcceptanceTester
 modules:
     enabled:
-        - PhpBrowser:
+        - WebDriver:
             url: http://service-test-lab-new.local/
+            browser: chrome # 'chrome' or 'firefox'
+            port: 2121
         - \Helper\Acceptance
         - Filesystem
         - Asserts

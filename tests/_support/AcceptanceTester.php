@@ -118,8 +118,7 @@ class AcceptanceTester extends \Codeception\Actor
     public function iUploadFile($filename)
     {
         $this->amOnPage("/");
-        $this->attachFile("micro_service[microService]", $filename);
-        $this->click('Submit');
+        $this->attachFile('input[type="file"]', $filename);
     }
 
     /**
@@ -132,6 +131,7 @@ class AcceptanceTester extends \Codeception\Actor
      */
     public function iCanFindFileThatNameStartsWithInLocation($prefix, $uploadDir)
     {
+        $this->wait(5);
         Codeception\PHPUnit\TestCase::assertStringStartsWith($prefix, $this->getLastFileName($uploadDir));
         // clenup docker
         $this->docker();
@@ -182,11 +182,14 @@ class AcceptanceTester extends \Codeception\Actor
      */
     public function iDeployFileInDir($arg1)
     {
+        $this->wait(5);
         flush();
         // run  docker
         $this->proc_open = proc_open(
-            "bin/console deploy bulletinboard:1.0 8080 9090 bb " .
-            self::TEST_UPLOADED_DIR . 'unpacked/'.$this->getBasenameWithoutExtension($this->getLastFileName('unpacked'))."/docker_build/bulletin-board-app/" .
+            " docker-compose -f " .
+            self::TEST_UPLOADED_DIR . 'unpacked/'.$this->getBasenameWithoutExtension($this->getLastFileName('unpacked'))."/micro-service-1/" .
+            "docker-compose.yml".
+            "   up -d --force-recreate" .
             " 2>&1",
             CommandProcessor::DESCRIPTOR_SPECS,
             $this->pipes,
