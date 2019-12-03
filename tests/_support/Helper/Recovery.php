@@ -18,7 +18,7 @@ trait Recovery
 
     public function __construct()
     {
-        $this->dockerImage = 'bulletinboard:1.0';
+        $this->dockerImage = 'micro-service-';
         $this->dockerSearch = "docker ps -a | grep '" . $this->dockerImage . "' | awk '{print $1}'";
     }
 

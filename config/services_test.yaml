@@ -3,6 +3,9 @@
 
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+imports:
+    - { resource: services.yaml }
+
 parameters:
     uploaded_directory: 'tests/_data/uploaded'
     unpacked_directory: 'tests/_data/unpacked'
@@ -10,59 +13,3 @@ parameters:
     bind_port: 5555
     ws_port: 4444
     ws_broadcast_address: 0.0.0.0
-
-services:
-    # default configuration for services in *this* file
-    _defaults:
-        autowire: true      # Automatically injects dependencies in your services.
-        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
-
-    # makes classes in src/ available to be used as services
-    # this creates a service per class whose id is the fully-qualified class name
-    App\:
-        resource: '../src/*'
-        exclude: '../src/Framework/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
-
-    # controllers are imported separately to make sure services can be injected
-    # as action arguments even if you don't extend any base controller class
-    App\Framework\Controller\:
-        resource: '../src/Framework/Controller'
-        tags: ['controller.service_arguments']
-
-    ZMQContext:
-        class: 'ZMQContext'
-
-    App\AppCore\Domain\Service\WebSockets\Context\Context:
-        class: 'App\AppCore\Domain\Service\WebSockets\Context\Context'
-        arguments:
-            $context: '@ZMQContext'
-            $bindHost: '%bind_host%'
-            $bindPort: '%bind_port%'
-
-    App\Framework\Application\UnpackZippedFileApplication:
-        arguments:
-            $unpacked_directory: '%unpacked_directory%'
-            $uploaded_directory: '%uploaded_directory%'
-
-    App\AppCore\Domain\Service\WebSockets\WebSocketProcessor:
-        arguments:
-            $bindHost: '%bind_host%'
-            $bindPort: '%bind_port%'
-            $wsPort: '%ws_port%'
-            $wsBroadcastAddress: '%ws_broadcast_address%'
-
-    Symfony\Component\Console\Helper\ProgressBar:
-        arguments:
-            $max: 20
-            $output: '@Symfony\Component\Console\Output\NullOutput'
-    App\AppCore\Domain\Service\Command\WebSocketAdapter\AdaptersContainer:
-        arguments:
-            $input:
-                - '@App\AppCore\Domain\Service\Command\WebSocketAdapter\SocketErrorOutputAdapter'
-                - '@App\AppCore\Domain\Service\Command\WebSocketAdapter\SocketProgressBarOutputAdapter'
-
-    App\AppCore\Domain\Service\Command\CommandProcessor:
-        arguments:
-            $fetchOut: '@App\AppCore\Domain\Service\Command\WebSocketAdapter\AdaptersContainer'
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones

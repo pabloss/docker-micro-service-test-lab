@@ -36,8 +36,11 @@ class Params
     /**
      * @return Params
      */
-    public static function getInstance(): self
+    public static function getInstance(string $targetDir, UploadedFile $uploadedFile): self
     {
+        if(null === self::$instance){
+            self::$instance = new self($targetDir, $uploadedFile);
+        }
         return self::$instance;
     }
 
