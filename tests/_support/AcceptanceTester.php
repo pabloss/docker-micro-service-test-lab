@@ -187,9 +187,11 @@ class AcceptanceTester extends \Codeception\Actor
         // run  docker
         $this->proc_open = proc_open(
             " docker-compose -f " .
-            self::TEST_UPLOADED_DIR . 'unpacked/'.$this->getBasenameWithoutExtension($this->getLastFileName('unpacked'))."/micro-service-1/" .
-            "docker-compose.yml".
-            "   up -d --force-recreate" .
+            self::TEST_UPLOADED_DIR .
+            'unpacked/' .
+            $this->getBasenameWithoutExtension($this->getLastFileName('unpacked')).
+            "/micro-service-1/docker-compose.yml".
+            " up -d --force-recreate" .
             " 2>&1",
             CommandProcessor::DESCRIPTOR_SPECS,
             $this->pipes,
