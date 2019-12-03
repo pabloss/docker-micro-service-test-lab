@@ -9,7 +9,7 @@ extensions:
     enabled:
         - Codeception\Extension\RunFailed
 coverage:
-    c3_url: 'http://service-test-lab-new.local/'
+    c3_url: 'http://service-test-lab-new.local'
     enabled: true
     remote: true
     include:

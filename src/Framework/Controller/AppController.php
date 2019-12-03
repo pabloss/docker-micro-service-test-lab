@@ -96,6 +96,16 @@ class AppController extends AbstractController
     }
 
     /**
+     * @Route("/c3/report/{suffix}", name="c3")
+     * @return Response
+     */
+    public function c3(string  $suffix)
+    {
+        return new Response();
+    }
+
+
+    /**
      * @param Request $request
      * @return bool
      */
