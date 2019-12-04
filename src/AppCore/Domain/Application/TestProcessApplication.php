@@ -5,6 +5,7 @@ namespace App\AppCore\Domain\Application;
 
 use App\AppCore\Domain\Application\Stages\Test\TestProcess;
 use App\AppCore\Domain\Service\Command\CommandProcessor;
+use App\AppCore\Domain\Service\Command\CommandProcessorInterface;
 use App\AppCore\Domain\Service\Files\Dir;
 use League\Pipeline\Pipeline;
 
@@ -14,7 +15,7 @@ class TestProcessApplication implements TestProcessApplicationInterface
     const FILE_KEY = 'file';
 
     /**
-     * @var CommandProcessor
+     * @var CommandProcessorInterface
      */
     private $commandProcessor;
 
@@ -30,10 +31,11 @@ class TestProcessApplication implements TestProcessApplicationInterface
 
     /**
      * DeployProcessApplication constructor.
-     * @param CommandProcessor $commandProcessor
-     * @param Dir $dir
+     *
+     * @param CommandProcessorInterface $commandProcessor
+     * @param Dir                       $dir
      */
-    public function __construct(CommandProcessor $commandProcessor, Dir $dir)
+    public function __construct(CommandProcessorInterface $commandProcessor, Dir $dir)
     {
         $this->commandProcessor = $commandProcessor;
         $this->dir = $dir;

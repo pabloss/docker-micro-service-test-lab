@@ -4,28 +4,32 @@ declare(strict_types=1);
 namespace App\Framework\Subscriber;
 
 use App\AppCore\Domain\Service\WebSockets\WrappedContext;
+use App\AppCore\Domain\Service\WebSockets\WrappedContextInterface;
 use App\Framework\Application\UnpackZippedFileApplication;
+use App\Framework\Application\UnpackZippedFileApplicationInterface;
 use App\Framework\Event\FileUploadedEvent;
+use App\Framework\Event\FileUploadedEventInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class UnpackFileSubscriber implements EventSubscriberInterface, UnpackFileSubscriberInterface
 {
     /**
-     * @var UnpackZippedFileApplication
+     * @var UnpackZippedFileApplicationInterface
      */
     private $unpackZippedFileApplication;
 
     /**
-     * @var WrappedContext
+     * @var WrappedContextInterface
      */
     private $context;
 
     /**
      * UnpackFileSubscriber constructor.
-     * @param UnpackZippedFileApplication $unpackZippedFileApplication
-     * @param WrappedContext $context
+     *
+     * @param UnpackZippedFileApplicationInterface $unpackZippedFileApplication
+     * @param WrappedContextInterface              $context
      */
-    public function __construct(UnpackZippedFileApplication $unpackZippedFileApplication, WrappedContext $context)
+    public function __construct(UnpackZippedFileApplicationInterface $unpackZippedFileApplication, WrappedContextInterface $context)
     {
         $this->unpackZippedFileApplication = $unpackZippedFileApplication;
         $this->context = $context;
@@ -40,10 +44,11 @@ class UnpackFileSubscriber implements EventSubscriberInterface, UnpackFileSubscr
     }
 
     /**
-     * @param FileUploadedEvent $event
+     * @param FileUploadedEventInterface $event
+     *
      * @throws \ZMQSocketException
      */
-    public function onUploadedFile(FileUploadedEvent $event)
+    public function onUploadedFile(FileUploadedEventInterface $event)
     {
         $params = $this->unpackZippedFileApplication->unzipToTargetDir($event->getPhpFiles());
         $this->context->send(\array_merge($params->toArray(), ['index' => $params->getTargetDir()]));

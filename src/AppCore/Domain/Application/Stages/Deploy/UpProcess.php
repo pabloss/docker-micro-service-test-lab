@@ -5,6 +5,7 @@ namespace App\AppCore\Domain\Application\Stages\Deploy;
 
 use App\AppCore\Domain\Application\DeployProcessApplication;
 use App\AppCore\Domain\Service\Command\CommandProcessor;
+use App\AppCore\Domain\Service\Command\CommandProcessorInterface;
 
 class UpProcess implements UpProcessInterface
 {
@@ -13,15 +14,15 @@ class UpProcess implements UpProcessInterface
     const STDERR_TO_STDOUT_REDIRECTION = CommandProcessor::STDERR . ">&" . CommandProcessor::STDOUT;
 
     /**
-     * @var CommandProcessor
+     * @var CommandProcessorInterface
      */
     private $commandProcessor;
 
     /**
      * RunProcess constructor.
-     * @param CommandProcessor $commandProcessor
+     * @param CommandProcessorInterface $commandProcessor
      */
-    public function __construct(CommandProcessor $commandProcessor)
+    public function __construct(CommandProcessorInterface $commandProcessor)
     {
         $this->commandProcessor = $commandProcessor;
     }

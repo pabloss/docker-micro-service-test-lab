@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace App\AppCore\Domain\Service\WebSockets;
 
 use App\AppCore\Domain\Service\WebSockets\Context\Context;
+use App\AppCore\Domain\Service\WebSockets\Context\ContextInterface;
 use App\AppCore\Domain\Service\WebSockets\Context\Wrapper;
+use App\AppCore\Domain\Service\WebSockets\Context\WrapperInterface;
 
 /**
  * Class WrappedContext
@@ -13,21 +15,22 @@ use App\AppCore\Domain\Service\WebSockets\Context\Wrapper;
 class WrappedContext implements WrappedContextInterface
 {
     /**
-     * @var Context
+     * @var ContextInterface
      */
     private $context;
 
     /**
-     * @var Wrapper
+     * @var WrapperInterface
      */
     private $wrapper;
 
     /**
      * WrappedContext constructor.
-     * @param Context $context
-     * @param Wrapper $wrapper
+     *
+     * @param ContextInterface $context
+     * @param WrapperInterface $wrapper
      */
-    public function __construct(Context $context, Wrapper $wrapper)
+    public function __construct(ContextInterface $context, WrapperInterface $wrapper)
     {
         $this->context = $context;
         $this->wrapper = $wrapper;

@@ -6,6 +6,7 @@ namespace App\AppCore\Domain\Service\Command\WebSocketAdapter;
 use App\AppCore\Domain\Service\Command\OutputAdapterInterface;
 
 use App\AppCore\Domain\Service\WebSockets\WrappedContext;
+use App\AppCore\Domain\Service\WebSockets\WrappedContextInterface;
 use Symfony\Component\Console\Helper\ProgressBar;
 
 class SocketProgressBarOutputAdapter implements OutputAdapterInterface
@@ -16,7 +17,7 @@ class SocketProgressBarOutputAdapter implements OutputAdapterInterface
     const INDEX_KEY = 'index';
 
     /**
-     * @var WrappedContext
+     * @var WrappedContextInterface
      */
     protected $context;
 
@@ -32,10 +33,11 @@ class SocketProgressBarOutputAdapter implements OutputAdapterInterface
 
     /**
      * SocketProgressBarOutputAdapter constructor.
-     * @param WrappedContext $context
-     * @param ProgressBar $progressBar
+     *
+     * @param WrappedContextInterface $context
+     * @param ProgressBar             $progressBar
      */
-    public function __construct(WrappedContext $context, ProgressBar $progressBar)
+    public function __construct(WrappedContextInterface $context, ProgressBar $progressBar)
     {
         $this->context = $context;
         $this->progressBar = $progressBar;

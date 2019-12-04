@@ -5,6 +5,7 @@ namespace App\AppCore\Domain\Service\Command\WebSocketAdapter;
 
 use App\AppCore\Domain\Service\Command\OutputAdapterInterface;
 use App\AppCore\Domain\Service\WebSockets\WrappedContext;
+use App\AppCore\Domain\Service\WebSockets\WrappedContextInterface;
 
 class SocketErrorOutputAdapter implements OutputAdapterInterface
 {
@@ -12,15 +13,16 @@ class SocketErrorOutputAdapter implements OutputAdapterInterface
     const INDEX_KEY = 'index';
 
     /**
-     * @var WrappedContext
+     * @var WrappedContextInterface
      */
     protected $context;
 
     /**
      * SocketErrorOutputAdapter constructor.
-     * @param WrappedContext $context
+     *
+     * @param WrappedContextInterface $context
      */
-    public function __construct(WrappedContext $context)
+    public function __construct(WrappedContextInterface $context)
     {
         $this->context = $context;
     }

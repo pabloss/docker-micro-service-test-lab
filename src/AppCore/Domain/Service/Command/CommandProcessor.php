@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\AppCore\Domain\Service\Command;
 
 use App\AppCore\Domain\Service\Command\WebSocketAdapter\OutputAdapterFactory;
+use App\AppCore\Domain\Service\Command\WebSocketAdapter\OutputAdapterFactoryInterface;
 
 class CommandProcessor implements CommandProcessorInterface
 {
@@ -19,15 +20,16 @@ class CommandProcessor implements CommandProcessorInterface
     ];
 
     /**
-     * @var OutputAdapterFactory
+     * @var OutputAdapterFactoryInterface
      */
     private $factory;
 
     /**
      * CommandProcessor constructor.
-     * @param OutputAdapterFactory $factory
+     *
+     * @param OutputAdapterFactoryInterface $factory
      */
-    public function __construct(OutputAdapterFactory $factory)
+    public function __construct(OutputAdapterFactoryInterface $factory)
     {
         $this->factory = $factory;
     }

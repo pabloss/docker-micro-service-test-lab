@@ -5,19 +5,20 @@ namespace App\AppCore\Domain\Application\Stages\Deploy;
 
 use App\AppCore\Domain\Application\DeployProcessApplication;
 use App\AppCore\Domain\Service\Command\CommandProcessor;
+use App\AppCore\Domain\Service\Command\CommandProcessorInterface;
 
 class BuildProcess implements BuildProcessInterface
 {
     /**
-     * @var CommandProcessor
+     * @var CommandProcessorInterface
      */
     private $commandProcessor;
 
     /**
      * BuildProcess constructor.
-     * @param CommandProcessor $commandProcessor
+     * @param CommandProcessorInterface $commandProcessor
      */
-    public function __construct(CommandProcessor $commandProcessor)
+    public function __construct(CommandProcessorInterface $commandProcessor)
     {
         $this->commandProcessor = $commandProcessor;
     }
