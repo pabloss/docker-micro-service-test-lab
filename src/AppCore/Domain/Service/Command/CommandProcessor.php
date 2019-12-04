@@ -5,7 +5,7 @@ namespace App\AppCore\Domain\Service\Command;
 
 use App\AppCore\Domain\Service\Command\WebSocketAdapter\OutputAdapterFactory;
 
-class CommandProcessor
+class CommandProcessor implements CommandProcessorInterface
 {
     // the name of the command (the part after "bin/console")
     const STDIN = 0;

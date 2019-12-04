@@ -5,7 +5,7 @@ namespace App\Framework\Event;
 
 use Symfony\Contracts\EventDispatcher\Event;
 
-class FileUploadedEvent extends Event
+class FileUploadedEvent extends Event implements FileUploadedEventInterface
 {
     public const NAME = 'file.uploaded';
 

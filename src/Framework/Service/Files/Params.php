@@ -5,7 +5,7 @@ namespace App\Framework\Service\Files;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-class Params
+class Params implements ParamsInterface
 {
     /**
      * @var string

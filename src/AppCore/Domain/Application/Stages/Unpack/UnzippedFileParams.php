@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\AppCore\Domain\Application\Stages\Unpack;
 
-class UnzippedFileParams
+class UnzippedFileParams implements UnzippedFileParamsInterface
 {
     const TARGET_DIR_KEY = 'target_dir';
     const TARGET_FILE_KEY = 'target_file';

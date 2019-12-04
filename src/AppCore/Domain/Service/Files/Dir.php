@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\AppCore\Domain\Service\Files;
 
-class Dir
+class Dir implements DirInterface
 {
     /**
      * @param string $extractToDir

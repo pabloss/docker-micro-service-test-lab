@@ -5,7 +5,7 @@ namespace App\AppCore\Domain\Service\Command\WebSocketAdapter;
 
 use App\AppCore\Domain\Service\Command\CommandProcessor;
 
-class OutputAdapterFactory
+class OutputAdapterFactory implements OutputAdapterFactoryInterface
 {
     /**
      * @var SocketProgressBarOutputAdapter

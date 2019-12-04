@@ -8,7 +8,7 @@ use App\AppCore\Domain\Service\Command\CommandProcessor;
 use App\AppCore\Domain\Service\Files\Dir;
 use League\Pipeline\Pipeline;
 
-class DeployProcessApplication
+class DeployProcessApplication implements DeployProcessApplicationInterface
 {
     const TARGET_DIR_KEY = 'target_dir';
     const INDEX_KEY = 'index';

@@ -8,7 +8,7 @@ namespace App\Framework\Entity;
  * Class MicroService
  * @package App\Framework\Entity
  */
-class MicroService
+class MicroService implements MicroServiceInterface
 {
     /**
      * @var string

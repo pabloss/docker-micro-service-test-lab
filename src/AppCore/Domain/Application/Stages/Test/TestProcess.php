@@ -6,7 +6,7 @@ namespace App\AppCore\Domain\Application\Stages\Test;
 use App\AppCore\Domain\Application\TestProcessApplication;
 use App\AppCore\Domain\Service\Command\CommandProcessor;
 
-class TestProcess
+class TestProcess implements TestProcessInterface
 {
     /**
      * @var CommandProcessor

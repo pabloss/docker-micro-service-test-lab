@@ -10,7 +10,7 @@ use App\AppCore\Domain\Service\WebSockets\Context\Wrapper;
  * Class WrappedContext
  * @package App\AppCore\Domain\Service\WebSockets
  */
-class WrappedContext
+class WrappedContext implements WrappedContextInterface
 {
     /**
      * @var Context

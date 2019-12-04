@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\AppCore\Domain\Service\Files;
 
-class Unpack
+class Unpack implements UnpackInterface
 {
     private $zipArchive;
     /**

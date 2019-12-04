@@ -6,7 +6,7 @@ namespace App\AppCore\Domain\Application\Stages\Deploy;
 use App\AppCore\Domain\Application\DeployProcessApplication;
 use App\AppCore\Domain\Service\Command\CommandProcessor;
 
-class RunProcess
+class RunProcess implements RunProcessInterface
 {
     /**
      * @var CommandProcessor

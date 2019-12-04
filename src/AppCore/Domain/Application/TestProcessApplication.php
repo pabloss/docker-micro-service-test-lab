@@ -8,7 +8,7 @@ use App\AppCore\Domain\Service\Command\CommandProcessor;
 use App\AppCore\Domain\Service\Files\Dir;
 use League\Pipeline\Pipeline;
 
-class TestProcessApplication
+class TestProcessApplication implements TestProcessApplicationInterface
 {
     const INDEX_KEY = 'index';
     const FILE_KEY = 'file';

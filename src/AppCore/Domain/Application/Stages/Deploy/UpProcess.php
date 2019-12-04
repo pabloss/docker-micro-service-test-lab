@@ -6,7 +6,7 @@ namespace App\AppCore\Domain\Application\Stages\Deploy;
 use App\AppCore\Domain\Application\DeployProcessApplication;
 use App\AppCore\Domain\Service\Command\CommandProcessor;
 
-class UpProcess
+class UpProcess implements UpProcessInterface
 {
     const FILE_KEY = "file";
     const PACKAGE_CONF_FILE_NAME = "zip.json";

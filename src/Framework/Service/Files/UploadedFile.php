@@ -6,7 +6,7 @@ namespace App\Framework\Service\Files;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile as BaseUploadedFile;
 
-class UploadedFile
+class UploadedFile implements UploadedFileInterface
 {
     const ZIP_MIME_TYPE = 'application/zip';
     const FILES = 'files';

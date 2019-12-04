@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Framework\Command;
 
 use App\AppCore\Domain\Service\WebSockets\WebSocketProcessor;
+use App\AppCore\Domain\Service\WebSockets\WebSocketProcessorInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -11,16 +12,16 @@ use Symfony\Component\Console\Output\OutputInterface;
 class WSServerCommand extends Command
 {
     /**
-     * @var WebSocketProcessor
+     * @var WebSocketProcessorInterface
      */
     private $webSocketProcessor;
     protected static $defaultName = 'ws-server';
 
     /**
      * WSServerCommand constructor.
-     * @param WebSocketProcessor $webSocketProcessor
+     * @param WebSocketProcessorInterface $webSocketProcessor
      */
-    public function __construct(WebSocketProcessor $webSocketProcessor)
+    public function __construct(WebSocketProcessorInterface $webSocketProcessor)
     {
         parent::__construct(self::$defaultName);
         $this->webSocketProcessor = $webSocketProcessor;

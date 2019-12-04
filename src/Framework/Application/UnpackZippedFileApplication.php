@@ -4,25 +4,29 @@ declare(strict_types=1);
 namespace App\Framework\Application;
 
 use App\AppCore\Domain\Application\Stages\Unpack\UnzippedFileParams;
+use App\AppCore\Domain\Application\Stages\Unpack\UnzippedFileParamsInterface;
 use App\AppCore\Domain\Service\Files\Dir;
+use App\AppCore\Domain\Service\Files\DirInterface;
 use App\AppCore\Domain\Service\Files\File;
+use App\AppCore\Domain\Service\Files\FileInterface;
 use App\AppCore\Domain\Service\Files\Unpack;
+use App\AppCore\Domain\Service\Files\UnpackInterface;
 use App\Framework\Service\Files\UploadedFile;
 
-class UnpackZippedFileApplication
+class UnpackZippedFileApplication implements UnpackZippedFileApplicationInterface
 {
     /**
-     * @var Unpack
+     * @var UnpackInterface
      */
     private $unpack;
 
     /**
-     * @var File
+     * @var FileInterface
      */
     private $file;
 
     /**
-     * @var Dir
+     * @var DirInterface
      */
     private $dir;
 
@@ -38,16 +42,16 @@ class UnpackZippedFileApplication
 
     /**
      * UnpackZippedFileApplication constructor.
-     * @param Unpack $unpack
-     * @param File $file
-     * @param Dir $dir
+     * @param UnpackInterface $unpack
+     * @param FileInterface $file
+     * @param DirInterface $dir
      * @param string $unpacked_directory
      * @param string $uploaded_directory
      */
     public function __construct(
-        Unpack $unpack,
-        File $file,
-        Dir $dir,
+        UnpackInterface $unpack,
+        FileInterface $file,
+        DirInterface $dir,
         string $unpacked_directory,
         string $uploaded_directory
     ) {
@@ -59,7 +63,7 @@ class UnpackZippedFileApplication
     }
 
 
-    public function unzipToTargetDir(array $filesBag): UnzippedFileParams
+    public function unzipToTargetDir(array $filesBag): UnzippedFileParamsInterface
     {
         if (
             $this->file->isMimeTypeOf(

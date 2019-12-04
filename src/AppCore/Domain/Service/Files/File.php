@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\AppCore\Domain\Service\Files;
 
-class File
+class File implements FileInterface
 {
     /**
      * @param string $filePath

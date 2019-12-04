@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\AppCore\Domain\Service\WebSockets\Context;
 
-class Context
+class Context implements ContextInterface
 {
     const PUSHER_NAME = 'pusher.local';
 

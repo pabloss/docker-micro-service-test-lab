@@ -57,7 +57,7 @@ class SocketProgressBarOutputAdapter implements OutputAdapterInterface
      * @param string $dir
      * @return array
      */
-    private function createEntry(string $message, string $dir): array
+    public function createEntry(string $message, string $dir): array
     {
         return [
             self::LOG_KEY =>            $message,

@@ -8,7 +8,7 @@ use App\Framework\Application\UnpackZippedFileApplication;
 use App\Framework\Event\FileUploadedEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class UnpackFileSubscriber implements EventSubscriberInterface
+class UnpackFileSubscriber implements EventSubscriberInterface, UnpackFileSubscriberInterface
 {
     /**
      * @var UnpackZippedFileApplication

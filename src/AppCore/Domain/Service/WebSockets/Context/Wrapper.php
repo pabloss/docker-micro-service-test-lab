@@ -7,7 +7,7 @@ namespace App\AppCore\Domain\Service\WebSockets\Context;
  * Class Wrapper
  * @package App\AppCore\Domain\Service\WebSockets
  */
-class Wrapper
+class Wrapper implements WrapperInterface
 {
     const TOPIC_ENTRY_DATA_KEY = 'topic';
     const TOPIC_ENTRY_DATA_VALUE = 'entry_data';
