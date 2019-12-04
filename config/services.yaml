@@ -58,5 +58,10 @@ services:
         arguments:
             $max: 20
             $output: '@Symfony\Component\Console\Output\NullOutput'
+    App\AppCore\Domain\Service\Command\WebSocketAdapter\OutputAdapterFactory:
+        arguments:
+            $socketProgressBarOutputAdapter: '@App\AppCore\Domain\Service\Command\WebSocketAdapter\SocketProgressBarOutputAdapter'
+            $socketErrorOutputAdapter: '@App\AppCore\Domain\Service\Command\WebSocketAdapter\SocketErrorOutputAdapter'
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
