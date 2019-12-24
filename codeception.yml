@@ -11,7 +11,7 @@ extensions:
 coverage:
     c3_url: 'http://service-test-lab-new.local'
     enabled: true
-    remote: true
+    remote: false
     include:
         - src/*
     exclude:
