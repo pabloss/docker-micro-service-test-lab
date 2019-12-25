@@ -5,6 +5,7 @@ namespace App\AppCore\Domain\Service\Command\WebSocketAdapter;
 
 use App\AppCore\Domain\Service\Command\CommandProcessor;
 use App\AppCore\Domain\Service\Command\OutputAdapterInterface;
+use App\AppCore\Domain\Service\Command\WebSocketAdapter\Exception\WrongStdException;
 
 class OutputAdapterFactory implements OutputAdapterFactoryInterface
 {
@@ -43,6 +44,8 @@ class OutputAdapterFactory implements OutputAdapterFactoryInterface
             case CommandProcessor::STDERR:
                 return $this->socketErrorOutputAdapter;
                 break;
+            default:
+                throw new WrongStdException();
         }
 
     }
