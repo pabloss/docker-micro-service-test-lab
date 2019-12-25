@@ -16,3 +16,6 @@ coverage:
         - src/*
     exclude:
         - var/*
+        - src/AppCore/Domain/Service/WebSockets/WebSocketProcessor.php
+        - src/AppCore/Domain/Service/WebSockets/Context/Context.php
+        - src/Kernel.php
