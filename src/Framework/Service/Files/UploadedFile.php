@@ -25,7 +25,7 @@ class UploadedFile implements UploadedFileInterface
     /**
      * @var self
      */
-    private static $instance;
+    protected static $instance;
 
     /**
      * UploadedFile constructor.

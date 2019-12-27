@@ -65,6 +65,10 @@ class UnpackZippedFileApplication implements UnpackZippedFileApplicationInterfac
 
     public function unzipToTargetDir(array $filesBag): UnzippedFileParamsInterface
     {
+        \var_dump($this->file->isMimeTypeOf(
+            UploadedFile::ZIP_MIME_TYPE,
+            $this->getUploadedFile($filesBag)->getTargetFile()
+        ));
         if (
             $this->file->isMimeTypeOf(
                 UploadedFile::ZIP_MIME_TYPE,

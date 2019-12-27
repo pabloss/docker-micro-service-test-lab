@@ -1,7 +1,7 @@
 <?php namespace Files;
 
 use App\Framework\Service\Files\Params;
-use App\Framework\Service\Files\UploadedFile;
+use App\Tests\unit\App\Framework\Application\UploadedFile;
 use Codeception\Stub;
 use Symfony\Component\HttpFoundation\File\UploadedFile as BaseUploadedFile;
 
@@ -31,6 +31,7 @@ class UploadedFileTest extends \Codeception\Test\Unit
             'getClientOriginalName' => $fileName,
             'getExtension' => $extension,
         ]);
+        UploadedFile::nullForInstance();
         $uploadedFile = UploadedFile::instance(Params::getInstance('', $baseUploadedFile));
 
         self::assertStringStartsWith($fileName, $uploadedFile->getUniqueFileName());
