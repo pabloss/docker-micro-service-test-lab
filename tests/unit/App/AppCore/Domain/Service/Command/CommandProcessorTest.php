@@ -1,6 +1,7 @@
 <?php namespace App\AppCore\Domain\Service\Command;
 
 use App\AppCore\Domain\Service\Command\WebSocketAdapter\OutputAdapterFactory;
+use Codeception\Stub;
 
 class CommandProcessorTest extends \Codeception\Test\Unit
 {
@@ -20,7 +21,7 @@ class CommandProcessorTest extends \Codeception\Test\Unit
     // tests
     public function testSomeFeature()
     {
-        $processor = new CommandProcessor($this->make(OutputAdapterFactory::class));
-        $processor->processRealTimeOutput('', '');
+        $processor = new CommandProcessor($this->make(OutputAdapterFactory::class, ['getByOut' => Stub::makeEmpty(OutputAdapterInterface::class)]));
+        $processor->processRealTimeOutput('echo', '');
     }
 }

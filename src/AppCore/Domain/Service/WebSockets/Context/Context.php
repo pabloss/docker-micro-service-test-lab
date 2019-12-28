@@ -3,6 +3,12 @@ declare(strict_types=1);
 
 namespace App\AppCore\Domain\Service\WebSockets\Context;
 
+/**
+ * Class Context
+ *
+ * @package App\AppCore\Domain\Service\WebSockets\Context
+ * @codeCoverageIgnore
+ */
 class Context implements ContextInterface
 {
     const PUSHER_NAME = 'pusher.local';

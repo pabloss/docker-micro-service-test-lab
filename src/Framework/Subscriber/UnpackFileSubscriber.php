@@ -11,6 +11,12 @@ use App\Framework\Event\FileUploadedEvent;
 use App\Framework\Event\FileUploadedEventInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
+/**
+ * Class UnpackFileSubscriber
+ *
+ * @package App\Framework\Subscriber
+ * @codeCoverageIgnore
+ */
 class UnpackFileSubscriber implements EventSubscriberInterface, UnpackFileSubscriberInterface
 {
     /**

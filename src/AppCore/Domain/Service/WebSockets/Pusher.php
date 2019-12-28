@@ -7,6 +7,12 @@ use App\AppCore\Domain\Service\WebSockets\Context\Wrapper;
 use Ratchet\ConnectionInterface;
 use Ratchet\Wamp\WampServerInterface;
 
+/**
+ * Class Pusher
+ *
+ * @package App\AppCore\Domain\Service\WebSockets
+ * @codeCoverageIgnore
+ */
 class Pusher implements WampServerInterface, PusherInterface {
     /**
      * A lookup of all the topics clients have subscribed to

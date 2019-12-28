@@ -11,6 +11,12 @@ use React\EventLoop\Factory;
 use React\Socket\Server;
 use React\ZMQ\Context;
 
+/**
+ * Class WebSocketProcessor
+ *
+ * @package App\AppCore\Domain\Service\WebSockets
+ * @codeCoverageIgnore
+ */
 class WebSocketProcessor implements WebSocketProcessorInterface
 {
     private $bindHost = '127.0.0.1';

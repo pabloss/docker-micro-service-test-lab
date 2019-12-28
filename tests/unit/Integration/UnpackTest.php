@@ -61,4 +61,12 @@ class UnpackTest extends \Codeception\Test\Unit
             $zip->close();
         }
     }
+
+    public function testFailUnzip()
+    {
+        $service = new Unpack();
+
+        // When
+        $this->assertFalse($service->unzip(__FILE__, ''));
+    }
 }

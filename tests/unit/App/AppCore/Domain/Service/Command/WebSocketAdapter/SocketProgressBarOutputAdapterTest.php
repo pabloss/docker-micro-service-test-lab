@@ -3,6 +3,7 @@
 use App\AppCore\Domain\Service\WebSockets\WrappedContext;
 use Codeception\Stub;
 use Codeception\Stub\Expected;
+use DG\BypassFinals;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
@@ -18,6 +19,7 @@ class SocketProgressBarOutputAdapterTest extends \Codeception\Test\Unit
     
     protected function _before()
     {
+        BypassFinals::enable();
     }
 
     protected function _after()
@@ -29,11 +31,10 @@ class SocketProgressBarOutputAdapterTest extends \Codeception\Test\Unit
     {
 
         $consoleOutput = Stub::make(NullOutput::class, ['isDecorated' => false]);
-        $progressBar = new ProgressBar(
-            $consoleOutput
-        );
+        $progressBar = $this->construct(ProgressBar::class, ['output' => $consoleOutput], [
+            'getMaxSteps' => 1
+        ]);
 
-        $progressBar->setMaxSteps(1);
         $adapter = new SocketProgressBarOutputAdapter(
             $this->make(WrappedContext::class, [
                 'send' => Expected::atLeastOnce()

@@ -7,6 +7,7 @@ namespace App\Framework\Entity;
 /**
  * Class MicroService
  * @package App\Framework\Entity
+ * @codeCoverageIgnore
  */
 class MicroService implements MicroServiceInterface
 {

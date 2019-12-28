@@ -16,11 +16,11 @@ coverage:
         - src/*
     exclude:
         - var/*
-        - src/AppCore/Domain/Service/WebSockets/WebSocketProcessor.php
-        - src/AppCore/Domain/Service/WebSockets/Context/Context.php
+#        - src/AppCore/Domain/Service/WebSockets/WebSocketProcessor.php
+#        - src/AppCore/Domain/Service/WebSockets/Context/Context.php
         - src/Kernel.php
-        - src/Framework/Command/*
-        - src/Framework/Entity/*
-        - src/Framework/Event/*
-        - src/Framework/Subscriber/*
-        - src/Framework/Controller/*
+#        - src/Framework/Command/*
+#        - src/Framework/Entity/*
+#        - src/Framework/Event/*
+#        - src/Framework/Subscriber/*
+#        - src/Framework/Controller/*
