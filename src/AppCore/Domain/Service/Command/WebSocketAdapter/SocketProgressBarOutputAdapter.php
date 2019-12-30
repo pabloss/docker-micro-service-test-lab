@@ -27,7 +27,7 @@ class SocketProgressBarOutputAdapter implements OutputAdapterInterface
     private $counter = 0;
 
     /**
-     * @var ProgressBar
+     * @var ProgressBarAdapter
      */
     private $progressBar;
 
@@ -35,7 +35,7 @@ class SocketProgressBarOutputAdapter implements OutputAdapterInterface
      * SocketProgressBarOutputAdapter constructor.
      *
      * @param WrappedContextInterface $context
-     * @param ProgressBar             $progressBar
+     * @param ProgressBarAdapter      $progressBar
      * todo: include lib in wrapper
      */
     public function __construct(WrappedContextInterface $context, ProgressBarAdapter $progressBar)
