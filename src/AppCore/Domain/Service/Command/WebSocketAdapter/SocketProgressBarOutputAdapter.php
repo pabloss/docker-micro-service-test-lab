@@ -36,8 +36,9 @@ class SocketProgressBarOutputAdapter implements OutputAdapterInterface
      *
      * @param WrappedContextInterface $context
      * @param ProgressBar             $progressBar
+     * todo: include lib in wrapper
      */
-    public function __construct(WrappedContextInterface $context, ProgressBar $progressBar)
+    public function __construct(WrappedContextInterface $context, ProgressBarAdapter $progressBar)
     {
         $this->context = $context;
         $this->progressBar = $progressBar;

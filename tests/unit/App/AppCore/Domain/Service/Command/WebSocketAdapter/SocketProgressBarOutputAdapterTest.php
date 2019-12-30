@@ -31,7 +31,13 @@ class SocketProgressBarOutputAdapterTest extends \Codeception\Test\Unit
     {
 
         $consoleOutput = Stub::make(NullOutput::class, ['isDecorated' => false]);
-        $progressBar = $this->construct(ProgressBar::class, ['output' => $consoleOutput], [
+        $progressBar = $this->construct(ProgressBarAdapter::class, ['progressBar' => $this->make(ProgressBar::class, [
+            'getProgress' => 1,
+            'getMaxSteps' => 3,
+            'start' => Expected::atLeastOnce(),
+            'advance' => Expected::atLeastOnce(),
+            'setMaxSteps' => Expected::atLeastOnce(),
+        ])], [
             'getMaxSteps' => 1
         ]);
 
