@@ -103,3 +103,5 @@ yarn-error.log
 /phpunit.xml
 .phpunit.result.cache
 ###< phpunit/phpunit ###
+/tests/_data/micro-service-*
+!/tests/_data/micro-service-1.zip
