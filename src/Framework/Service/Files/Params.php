@@ -26,6 +26,7 @@ class Params implements ParamsInterface
      * Params constructor.
      * @param string $targetDir
      * @param UploadedFile $uploadedFile
+     *  todo: include lib in wrapper
      */
     private function __construct(string $targetDir, UploadedFile $uploadedFile)
     {
