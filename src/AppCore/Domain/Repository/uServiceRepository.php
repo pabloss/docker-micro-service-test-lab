@@ -27,9 +27,10 @@ class uServiceRepository
     /**
      * uServiceRepository constructor.
      *
-     * @param PersistGateway $gateway
+     * @param PersistGatewayInterface     $gateway
+     * @param DomainEntityMapperInterface $mapper
      */
-    public function __construct(PersistGateway $gateway, DomainEntityMapper $mapper)
+    public function __construct(PersistGatewayInterface $gateway, DomainEntityMapperInterface $mapper)
     {
         $this->gateway = $gateway;
         $this->mapper = $mapper;

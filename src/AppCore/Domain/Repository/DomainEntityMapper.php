@@ -5,7 +5,7 @@ namespace App\AppCore\Domain\Repository;
 
 use App\AppCore\Domain\Actors\uService;
 
-class DomainEntityMapper
+class DomainEntityMapper implements DomainEntityMapperInterface
 {
     public function domain2Entity(string $id, uService $domain): uServiceEntity
     {
