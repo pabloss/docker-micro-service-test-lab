@@ -1,5 +1,7 @@
 <?php namespace App\AppCore\Domain\Repository;
 
+use Codeception\Util\Autoload;
+
 class PersistGatewayTest extends \Codeception\Test\Unit
 {
     /**
@@ -9,6 +11,7 @@ class PersistGatewayTest extends \Codeception\Test\Unit
     
     protected function _before()
     {
+        Autoload::addNamespace(__NAMESPACE__, __DIR__);
     }
 
     protected function _after()

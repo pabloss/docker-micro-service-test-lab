@@ -2,11 +2,8 @@
 
 use App\AppCore\Domain\Repository\DomainEntityMapper;
 use App\AppCore\Domain\Repository\PersistGateway;
-use App\AppCore\Domain\Repository\uServiceEntity;
 use App\AppCore\Domain\Repository\uServiceRepository;
-use App\AppCore\Domain\Repository\uServiceRepositoryTest;
 use App\AppCore\Domain\SaveDomainService;
-use App\Framework\Entity\MicroService;
 
 class SaveDomainServiceTest extends \Codeception\Test\Unit
 {
