@@ -1,7 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace App\AppCore\Domain\Repository;
+namespace Integration\Stubs;
+
+use App\AppCore\Domain\Repository\PersistGatewayInterface;
+use App\AppCore\Domain\Repository\uServiceEntity;
 
 class PersistGateway implements PersistGatewayInterface
 {
