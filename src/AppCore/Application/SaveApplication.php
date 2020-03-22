@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\AppCore\Application;
 
-use App\AppCore\Domain\SaveDomainService;
-use App\AppCore\Domain\SaveDomainServiceInterface;
+use App\AppCore\Domain\Service\SaveDomainService;
+use App\AppCore\Domain\Service\SaveDomainServiceInterface;
 
 /**
  * Class SaveApplication
@@ -35,9 +35,9 @@ class SaveApplication implements SaveApplicationInterface
     /**
      * SaveApplication constructor.
      *
-     * @param UploadedFileFactoryInterface $factory
-     * @param SaveToFileSystemInterface    $saveToFileSystem
-     * @param SaveDomainServiceInterface   $service
+     * @param UploadedFileFactoryInterface                           $factory
+     * @param SaveToFileSystemInterface                              $saveToFileSystem
+     * @param \App\AppCore\Domain\Service\SaveDomainServiceInterface $service
      */
     public function __construct(UploadedFileFactoryInterface $factory, SaveToFileSystemInterface $saveToFileSystem, SaveDomainServiceInterface $service)
     {

@@ -4,8 +4,7 @@ declare(strict_types=1);
 namespace App\AppCore\Domain\Service\Command\WebSocketAdapter;
 
 use App\AppCore\Domain\Service\Command\OutputAdapterInterface;
-use App\AppCore\Domain\Service\WebSockets\WrappedContext;
-use App\AppCore\Domain\Service\WebSockets\WrappedContextInterface;
+use App\MixedContext\Domain\Service\WebSockets\WrappedContextInterface;
 
 class SocketErrorOutputAdapter implements OutputAdapterInterface
 {

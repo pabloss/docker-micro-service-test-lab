@@ -4,10 +4,7 @@ declare(strict_types=1);
 namespace App\AppCore\Domain\Service\Command\WebSocketAdapter;
 
 use App\AppCore\Domain\Service\Command\OutputAdapterInterface;
-
-use App\AppCore\Domain\Service\WebSockets\WrappedContext;
-use App\AppCore\Domain\Service\WebSockets\WrappedContextInterface;
-use Symfony\Component\Console\Helper\ProgressBar;
+use App\MixedContext\Domain\Service\WebSockets\WrappedContextInterface;
 
 class SocketProgressBarOutputAdapter implements OutputAdapterInterface
 {
