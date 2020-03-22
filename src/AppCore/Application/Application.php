@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\AppCore\Domain;
+namespace App\AppCore;
 
 use App\AppCore\Domain\Repository\uServiceEntity;
 
