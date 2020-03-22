@@ -2,9 +2,10 @@
 
 use App\AppCore\Domain\Actors\uService;
 use App\AppCore\Domain\Repository\DomainEntityMapper;
-use App\AppCore\Domain\Repository\PersistGateway;
+use Integration\Stubs\PersistGateway;
 use App\AppCore\Domain\Repository\uServiceEntity;
 use App\AppCore\Domain\Repository\uServiceRepository;
+use Codeception\Util\Autoload;
 
 class uServiceRepositoryTest extends \Codeception\Test\Unit
 {
@@ -15,6 +16,7 @@ class uServiceRepositoryTest extends \Codeception\Test\Unit
     
     protected function _before()
     {
+        Autoload::addNamespace('Integration\Stubs', __DIR__.'/../Stubs/');
     }
 
     protected function _after()
