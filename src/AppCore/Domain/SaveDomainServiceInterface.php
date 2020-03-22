@@ -5,5 +5,5 @@ namespace App\AppCore\Domain;
 
 interface SaveDomainServiceInterface
 {
-
+    public function save(string $file);
 }

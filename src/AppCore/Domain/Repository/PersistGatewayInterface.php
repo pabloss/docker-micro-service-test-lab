@@ -7,5 +7,5 @@ interface PersistGatewayInterface
 {
     public function nextId();
     public function getAll();
-    public function persist(uServiceEntity $uServiceEntity);
+    public function persist(EntityInterface $uServiceEntity);
 }

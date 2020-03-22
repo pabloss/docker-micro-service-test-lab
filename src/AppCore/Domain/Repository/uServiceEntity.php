@@ -3,7 +3,19 @@ declare(strict_types=1);
 
 namespace App\AppCore\Domain\Repository;
 
-class uServiceEntity
+use App\AppCore\Domain\Actors\uServiceInterface;
+
+/**
+ * 1. SRP - OK
+ * 2. OCP - OK
+ * 3. LSP - don't know
+ * 4. ISP - OK
+ * 5. DIP - OK
+ * Class uServiceEntity
+ *
+ * @package App\AppCore\Domain\Repository
+ */
+class uServiceEntity implements EntityInterface, uServiceInterface
 {
     /**
      * @var string

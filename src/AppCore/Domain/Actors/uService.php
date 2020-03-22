@@ -3,12 +3,19 @@ declare(strict_types=1);
 
 namespace App\AppCore\Domain\Actors;
 
-class uService
+/**
+ *
+ * 1. SRP - OK
+ * 2. OCP - OK
+ * 3. LSP - OK
+ * 4. SIP - OK
+ * 5. DIP - OK
+ * Class uService
+ *
+ * @package App\AppCore\Domain\Actors
+ */
+class uService implements uServiceInterface
 {
-    /**
-     * @var string
-     */
-    private $id;
     /**
      * @var string
      */
@@ -31,17 +38,7 @@ class uService
         $this->movedToDir = $movedToDir;
     }
 
-    public function setId(string $id)
-    {
-        $this->id = $id;
-    }
-
-    public function id()
-    {
-        return $this->id;
-    }
-
-    public function fileName()
+    public function file()
     {
         return $this->file;
     }

@@ -4,26 +4,26 @@ declare(strict_types=1);
 namespace App\AppCore\Domain;
 
 use App\AppCore\Domain\Actors\uService;
-use App\AppCore\Domain\Repository\uServiceRepository;
+use App\AppCore\Domain\Repository\uServiceRepositoryInterface;
 
-class SaveDomainService
+class SaveDomainService implements SaveDomainServiceInterface
 {
     /**
      * @var string
      */
     private $dirName;
     /**
-     * @var uServiceRepository
+     * @var uServiceRepositoryInterface
      */
     private $repo;
 
     /**
      * SaveDomainService constructor.
      *
-     * @param string             $dirName
-     * @param uServiceRepository $repo
+     * @param string                      $dirName
+     * @param uServiceRepositoryInterface $repo
      */
-    public function __construct(string $dirName, uServiceRepository $repo)
+    public function __construct(string $dirName, uServiceRepositoryInterface $repo)
     {
         $this->dirName = $dirName;
         $this->repo = $repo;

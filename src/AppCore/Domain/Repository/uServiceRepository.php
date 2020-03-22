@@ -3,9 +3,19 @@ declare(strict_types=1);
 
 namespace App\AppCore\Domain\Repository;
 
-use App\AppCore\Domain\Actors\uService;
+use App\AppCore\Domain\Actors\uServiceInterface;
 
-class uServiceRepository
+/**
+ * 1. SRP - OK
+ * 2. OCP - OK
+ * 3. LSP - don't know
+ * 4. ISP - not applicable
+ * 5. DIP - OK
+ * Class uServiceRepository
+ *
+ * @package App\AppCore\Domain\Repository
+ */
+class uServiceRepository implements uServiceRepositoryInterface
 {
     /**
      * @var PersistGateway
@@ -15,14 +25,6 @@ class uServiceRepository
      * @var DomainEntityMapper
      */
     private $mapper;
-
-    /**
-     *
-     * SOLID up to L concerns one class
-     * 1. SRP - OK
-     * 2. OCP - NOT
-     */
-
 
     /**
      * uServiceRepository constructor.
@@ -36,7 +38,7 @@ class uServiceRepository
         $this->mapper = $mapper;
     }
 
-    public function persist(uService $domain)
+    public function persist(uServiceInterface $domain)
     {
         $this->gateway->persist(
             $this->mapper->domain2Entity($this->gateway->nextId(), $domain)
