@@ -35,8 +35,8 @@ services:
     ZMQContext:
         class: 'ZMQContext'
 
-    App\AppCore\Domain\Service\WebSockets\Context\Context:
-        class: 'App\AppCore\Domain\Service\WebSockets\Context\Context'
+    App\MixedContext\Domain\Service\WebSockets\Context\Context:
+        class: 'App\MixedContext\Domain\Service\WebSockets\Context\Context'
         arguments:
             $context: '@ZMQContext'
             $bindHost: '%bind_host%'
@@ -47,7 +47,7 @@ services:
             $unpacked_directory: '%unpacked_directory%'
             $uploaded_directory: '%uploaded_directory%'
 
-    App\AppCore\Domain\Service\WebSockets\WebSocketProcessor:
+    App\MixedContext\Domain\Service\WebSockets\WebSocketProcessor:
         arguments:
             $bindHost: '%bind_host%'
             $bindPort: '%bind_port%'
@@ -58,10 +58,10 @@ services:
         arguments:
             $max: 20
             $output: '@Symfony\Component\Console\Output\NullOutput'
-    App\AppCore\Domain\Service\Command\WebSocketAdapter\OutputAdapterFactory:
+    App\MixedContext\Domain\Service\Command\WebSocketAdapter\OutputAdapterFactory:
         arguments:
-            $socketProgressBarOutputAdapter: '@App\AppCore\Domain\Service\Command\WebSocketAdapter\SocketProgressBarOutputAdapter'
-            $socketErrorOutputAdapter: '@App\AppCore\Domain\Service\Command\WebSocketAdapter\SocketErrorOutputAdapter'
+            $socketProgressBarOutputAdapter: '@App\MixedContext\Domain\Service\Command\WebSocketAdapter\SocketProgressBarOutputAdapter'
+            $socketErrorOutputAdapter: '@App\MixedContext\Domain\Service\Command\WebSocketAdapter\SocketErrorOutputAdapter'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
