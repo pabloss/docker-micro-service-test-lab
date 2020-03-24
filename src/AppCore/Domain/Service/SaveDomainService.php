@@ -31,7 +31,7 @@ class SaveDomainService implements SaveDomainServiceInterface
 
     public function save(string $file)
     {
-        $domain = new uService($file, $this->dirName);
+        $domain = new uService(\basename($file), \basename($this->dirName));
         $this->repo->persist($domain);
         return $domain;
     }
