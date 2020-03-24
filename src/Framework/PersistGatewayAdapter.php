@@ -33,7 +33,7 @@ class PersistGatewayAdapter implements PersistGatewayInterface
 
     public function persist(EntityInterface $uServiceEntity)
     {
-        $this->entityManager->persist($uServiceEntity);
+        $this->entityManager->persist(UService::fromDomainEntity($uServiceEntity));
         $this->entityManager->flush();
     }
 
