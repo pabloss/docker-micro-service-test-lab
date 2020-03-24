@@ -1,10 +1,10 @@
 <?php namespace Integration;
 
 use App\AppCore\Domain\Repository\DomainEntityMapper;
-use Integration\Stubs\PersistGateway;
 use App\AppCore\Domain\Repository\uServiceRepository;
-use App\AppCore\Domain\SaveDomainService;
+use App\AppCore\Domain\Service\SaveDomainService;
 use Codeception\Util\Autoload;
+use Integration\Stubs\PersistGateway;
 
 class SaveDomainServiceTest extends \Codeception\Test\Unit
 {
@@ -42,6 +42,6 @@ class SaveDomainServiceTest extends \Codeception\Test\Unit
         // Then
         $this->tester->assertNotEmpty(\end($all)->id());
         $this->tester->assertEquals($movedToDir, $uService->movedToDir());
-        $this->tester->assertEquals($file, $uService->fileName());
+        $this->tester->assertEquals($file, $uService->file());
     }
 }
