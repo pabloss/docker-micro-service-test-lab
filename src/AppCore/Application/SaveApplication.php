@@ -9,7 +9,7 @@ use App\AppCore\Domain\Service\SaveDomainServiceInterface;
 /**
  * Class SaveApplication
  *
- * @package App\AppCore\Application
+ * @package App\AppCore\Application\Application
  *
  * 1. SRP - OK
  * 2. OCP - OK
