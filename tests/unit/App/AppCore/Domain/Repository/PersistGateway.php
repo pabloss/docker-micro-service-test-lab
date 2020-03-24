@@ -19,7 +19,7 @@ class PersistGateway implements PersistGatewayInterface
         return $this->collection;
     }
 
-    public function persist(uServiceEntity $uServiceEntity)
+    public function persist(EntityInterface $uServiceEntity)
     {
         $this->collection[] = $uServiceEntity;
     }

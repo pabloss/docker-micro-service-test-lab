@@ -41,7 +41,7 @@ class uServiceRepository implements uServiceRepositoryInterface
     public function persist(uServiceInterface $domain)
     {
         $this->gateway->persist(
-            $this->mapper->domain2Entity($this->gateway->nextId(), $domain)
+            $this->mapper->domain2Entity((string) $this->gateway->nextId(), $domain)
         );
     }
 

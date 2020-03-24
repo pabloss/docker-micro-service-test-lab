@@ -1,7 +1,6 @@
 <?php namespace App\AppCore\Domain\Repository;
 
 use App\AppCore\Domain\Actors\uService;
-use Codeception\Stub;
 
 class uServiceRepositoryTest extends \Codeception\Test\Unit
 {
