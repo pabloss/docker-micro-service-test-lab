@@ -1,10 +1,8 @@
 <?php namespace App\Framework\Application;
 
-use App\AppCore\Domain\Service\Files\Dir;
-use App\AppCore\Domain\Service\Files\File;
-use App\AppCore\Domain\Service\Files\Unpack;
-use App\Framework\Service\Files\Params;
-use App\Tests\unit\App\Framework\Application\UploadedFile;
+use App\MixedContext\Domain\Service\Files\Dir;
+use App\MixedContext\Domain\Service\Files\File;
+use App\MixedContext\Domain\Service\Files\Unpack;
 
 class UnpackZippedFileApplicationTest extends \Codeception\Test\Unit
 {
