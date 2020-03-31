@@ -19,17 +19,14 @@ class uServiceTest extends \Codeception\Test\Unit
     public function testSomeFeature()
     {
         // Given
-        $id = 'test';
         $file = 'fileName';
         $movedToDir = 'movedToDir';
 
         // When
         $uService = new uService($file, $movedToDir);
-        $uService->setId($id);
 
         // Then
-        $this->tester->assertEquals($id, $uService->id());
-        $this->tester->assertEquals($file, $uService->fileName());
+        $this->tester->assertEquals($file, $uService->file());
         $this->tester->assertEquals($movedToDir, $uService->movedToDir());
 
     }
