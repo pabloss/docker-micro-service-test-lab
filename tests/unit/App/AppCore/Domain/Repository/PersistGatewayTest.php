@@ -35,5 +35,7 @@ class PersistGatewayTest extends \Codeception\Test\Unit
 
         // Then
         $this->tester->assertEquals($uServiceEntity, \end($all));
+
+        $this->tester->assertEquals($uServiceEntity, $gateway->find($id));
     }
 }

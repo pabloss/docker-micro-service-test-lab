@@ -29,10 +29,12 @@ class uServiceRepositoryTest extends \Codeception\Test\Unit
         $persistGateway->nextId()->willReturn('id');
         $persistGateway->getAll()->willReturn([$uServiceEntity]);
         $persistGateway->persist($uServiceEntity)->shouldBeCalled();
+        $persistGateway->find($id)->willReturn($uServiceEntity)->shouldBeCalled();
         $domain = new uService($file, $movedToDir);
 
         $mapper = $this->prophesize(DomainEntityMapperInterface::class);
         $mapper->domain2Entity($id, $domain)->willReturn($uServiceEntity);
+        $mapper->entity2Domain($uServiceEntity)->willReturn($domain);
         $repo = new uServiceRepository($persistGateway->reveal(), $mapper->reveal());  //jeśli repo zależy od mappera to będę mógł zrobić mocka do entity
 
         // When
@@ -45,5 +47,8 @@ class uServiceRepositoryTest extends \Codeception\Test\Unit
         $this->tester->assertNotEmpty($lastEntity->id());
         $this->tester->assertEquals($movedToDir.$lastEntity->id(), $lastEntity->movedToDir());
         $this->tester->assertEquals($file, $lastEntity->file());
+
+        $this->tester->assertEquals($domain, $repo->find($id));
+
     }
 }
