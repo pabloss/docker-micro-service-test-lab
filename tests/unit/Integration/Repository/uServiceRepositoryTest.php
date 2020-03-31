@@ -43,5 +43,7 @@ class uServiceRepositoryTest extends \Codeception\Test\Unit
         $this->tester->assertNotEmpty($lastEntity->id());
         $this->tester->assertEquals($movedToDir.$lastEntity->id(), $lastEntity->movedToDir());
         $this->tester->assertEquals($file, $lastEntity->file());
+
+        $this->tester->assertEquals($domain, $repo->find($id));
     }
 }
