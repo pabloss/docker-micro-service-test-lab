@@ -6,4 +6,5 @@ namespace App\AppCore\Domain\Actors;
 interface UploadedFileInterface
 {
     public function getBasename(): string ;
+    public function getPath(): string ;
 }

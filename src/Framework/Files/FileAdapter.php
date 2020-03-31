@@ -29,4 +29,9 @@ class UploadedFileAdapter implements UploadedFileInterface
     {
         return $this->frameworkUploadedFile->getBasename();
     }
+
+    public function getPath(): string
+    {
+        return $this->frameworkUploadedFile->getPathname();
+    }
 }

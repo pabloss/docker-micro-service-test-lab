@@ -1,6 +1,6 @@
 <?php namespace App\AppCore\Application;
 
-use App\AppCore\Domain\Actors\UploadedFileInterface;
+use App\AppCore\Domain\Actors\FileInterface;
 use App\AppCore\Domain\Service\SaveDomainServiceInterface;
 
 class SaveApplicationTest extends \Codeception\Test\Unit
@@ -26,14 +26,14 @@ class SaveApplicationTest extends \Codeception\Test\Unit
 
         $movedToDir = 'dir';
         $file = 'file';
-        $uploadedFile = $this->prophesize(UploadedFileInterface::class);
+        $uploadedFile = $this->prophesize(FileInterface::class);
         $uploadedFile->getBasename()->willReturn($file);
 
         $saveToFileSystem = $this->prophesize(SaveToFileSystemInterface::class);
-        $saveToFileSystem->move($uploadedFile, $movedToDir)->shouldBeCalled();
+        $saveToFileSystem->move($movedToDir, $uploadedFile)->shouldBeCalled();
 
         $factory = $this->prophesize(UploadedFileFactoryInterface::class);
-        $factory->createUploadedFile($uploadedFile->reveal()->getBasename())->shouldBeCalled()->willReturn($uploadedFile);
+        $factory->createFile($uploadedFile->reveal()->getBasename())->shouldBeCalled()->willReturn($uploadedFile);
 
         $saveDomainService = $this->prophesize(SaveDomainServiceInterface::class);
         $saveDomainService->save($uploadedFile->reveal()->getBasename())->shouldBeCalled();
