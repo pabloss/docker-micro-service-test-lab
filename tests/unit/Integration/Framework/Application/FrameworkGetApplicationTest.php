@@ -14,6 +14,8 @@ use App\Framework\Factory\FileFactory;
 use App\Framework\Persistence\PersistGatewayAdapter;
 use App\Framework\Service\SaveToFileSystemService;
 use App\Framework\Application\FrameworkGetApplication;
+use Codeception\Util\Autoload;
+use Integration\Stubs\File;
 
 class FrameworkGetApplicationTest extends \Codeception\Test\Unit
 {
@@ -32,6 +34,7 @@ class FrameworkGetApplicationTest extends \Codeception\Test\Unit
 
     protected function _before()
     {
+        Autoload::addNamespace('Integration\Stubs', __DIR__.'/../../Stubs/');
         $this->fileToSave = __DIR__ . '/../../../../_data/save_test';
         $this->targetDir = __DIR__ . '/../../../../_data/target_dir';
         /**
@@ -54,7 +57,7 @@ class FrameworkGetApplicationTest extends \Codeception\Test\Unit
             )
         );
         $this->getFileService = new GetFileService($this->repo);
-        $application->save($this->fileToSave, $this->targetDir);
+        $application->save(new File($this->fileToSave), $this->targetDir);
     }
 
     protected function _after()

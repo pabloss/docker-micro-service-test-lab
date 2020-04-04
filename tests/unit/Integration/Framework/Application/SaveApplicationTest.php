@@ -6,8 +6,12 @@ use App\AppCore\Domain\Repository\uServiceRepository;
 use App\AppCore\Domain\Service\SaveDomainService;
 use App\Framework\Application\FrameworkSaveApplication;
 use App\Framework\Factory\FileFactory;
+use App\Framework\Files\FileAdapter;
 use App\Framework\Persistence\PersistGatewayAdapter;
 use App\Framework\Service\SaveToFileSystemService;
+use Codeception\Util\Autoload;
+use Integration\Stubs\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class SaveApplicationTest extends \Codeception\Test\Unit
 {
@@ -27,6 +31,7 @@ class SaveApplicationTest extends \Codeception\Test\Unit
     // tests
     public function testSomeFeature()
     {
+        Autoload::addNamespace('Integration\Stubs', __DIR__.'/../../Stubs/');
         $fileToSave = __DIR__ . '/../../../../_data/save_test';
         $targetDir =  __DIR__ . '/../../../../_data/target_dir';
         /**
@@ -46,7 +51,7 @@ class SaveApplicationTest extends \Codeception\Test\Unit
                 )
             )
         );
-        $application->save($fileToSave, $targetDir);
+        $application->save(new File($fileToSave), $targetDir);
 
         $id = $this->tester->grabFromDatabase('u_service', 'id', [
             'file' => \basename($fileToSave),
