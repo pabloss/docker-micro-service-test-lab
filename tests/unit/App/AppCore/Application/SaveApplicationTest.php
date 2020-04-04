@@ -27,19 +27,17 @@ class SaveApplicationTest extends \Codeception\Test\Unit
         $movedToDir = 'dir';
         $file = 'file';
         $uploadedFile = $this->prophesize(FileInterface::class);
+        $uploadedFile->getPath()->willReturn($file);
         $uploadedFile->getBasename()->willReturn($file);
 
         $saveToFileSystem = $this->prophesize(SaveToFileSystemInterface::class);
         $saveToFileSystem->move($movedToDir, $uploadedFile)->shouldBeCalled();
 
-        $factory = $this->prophesize(FileFactoryInterface::class);
-        $factory->createFile($uploadedFile->reveal()->getBasename())->shouldBeCalled()->willReturn($uploadedFile);
-
         $saveDomainService = $this->prophesize(SaveDomainServiceInterface::class);
         $saveDomainService->save($uploadedFile->reveal()->getBasename())->shouldBeCalled();
 
-        $app = new SaveApplication($factory->reveal(), $saveToFileSystem->reveal(),  $saveDomainService->reveal());
+        $app = new SaveApplication($saveToFileSystem->reveal(), $saveDomainService->reveal());
 
-        $app->save($movedToDir, $uploadedFile->reveal()->getBasename());
+        $app->save($movedToDir, $uploadedFile->reveal());
     }
 }
