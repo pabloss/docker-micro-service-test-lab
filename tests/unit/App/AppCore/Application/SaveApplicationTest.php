@@ -32,7 +32,7 @@ class SaveApplicationTest extends \Codeception\Test\Unit
         $saveToFileSystem = $this->prophesize(SaveToFileSystemInterface::class);
         $saveToFileSystem->move($movedToDir, $uploadedFile)->shouldBeCalled();
 
-        $factory = $this->prophesize(UploadedFileFactoryInterface::class);
+        $factory = $this->prophesize(FileFactoryInterface::class);
         $factory->createFile($uploadedFile->reveal()->getBasename())->shouldBeCalled()->willReturn($uploadedFile);
 
         $saveDomainService = $this->prophesize(SaveDomainServiceInterface::class);
