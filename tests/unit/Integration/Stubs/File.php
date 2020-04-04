@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Tests\unit\Integration\Framework\Application;
+namespace Integration\Stubs;
 
 use App\AppCore\Domain\Actors\FileInterface;
 

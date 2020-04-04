@@ -5,7 +5,6 @@ namespace Integration\Stubs;
 
 use App\AppCore\Domain\Repository\EntityInterface;
 use App\AppCore\Domain\Repository\PersistGatewayInterface;
-use App\AppCore\Domain\Repository\uServiceEntity;
 
 class PersistGateway implements PersistGatewayInterface
 {
@@ -27,4 +26,10 @@ class PersistGateway implements PersistGatewayInterface
     {
         $this->collection[] = $uServiceEntity;
     }
+
+    public function find(string $id)
+    {
+        return \array_filter($this->collection, function (EntityInterface $entity) use ($id){return $id === $entity->id();})[0];
+    }
+
 }
