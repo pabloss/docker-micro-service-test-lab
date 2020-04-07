@@ -47,4 +47,11 @@ class uService implements uServiceInterface
     {
         return $this->movedToDir;
     }
+
+    public function setMovedToDir(string $movedToDir)
+    {
+        $this->movedToDir = $movedToDir;
+    }
+
+
 }

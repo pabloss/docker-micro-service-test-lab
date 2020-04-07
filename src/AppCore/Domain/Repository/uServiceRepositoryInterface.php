@@ -9,4 +9,5 @@ interface uServiceRepositoryInterface
 {
     public function persist(uServiceInterface $domain);
     public function all();
+    public function find(string $id);
 }

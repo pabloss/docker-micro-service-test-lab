@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\AppCore\Domain\Repository;
 
+use App\AppCore\Domain\Actors\uService;
 use App\AppCore\Domain\Actors\uServiceInterface;
 
 /**
@@ -18,8 +19,13 @@ use App\AppCore\Domain\Actors\uServiceInterface;
  */
 class DomainEntityMapper implements DomainEntityMapperInterface
 {
-    public function domain2Entity(string $id, uServiceInterface $domain): EntityInterface
+    public function domain2Entity(string $id, uServiceInterface $domain): uServiceEntityInterface
     {
-        return new uServiceEntity($id,  $domain->movedToDir().$id, $domain->file());
+        return new uServiceEntity($id,  $domain->movedToDir(), $domain->file());
+    }
+
+    public function entity2Domain(uServiceEntityInterface $entity)
+    {
+        return new uService($entity->file(), $entity->movedToDir());
     }
 }

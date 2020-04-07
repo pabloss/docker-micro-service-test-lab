@@ -4,10 +4,9 @@ declare(strict_types=1);
 namespace App\Framework\Files;
 
 use App\AppCore\Domain\Actors\FileInterface;
-use Integration\Stubs\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-class FileAdapter implements FileInterface
+class UploadedFileAdapter implements FileInterface
 {
     /**
      * @var UploadedFile
@@ -37,7 +36,7 @@ class FileAdapter implements FileInterface
 
     public function move(string $dir): FileInterface
     {
-        return new FileWrapper($this->file->move($dir, $this->file->getClientOriginalName()));
+        return new FileAdapter($this->file->move($dir, $this->file->getClientOriginalName()));
     }
 
 

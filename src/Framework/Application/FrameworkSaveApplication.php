@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Framework\Application;
 
 use App\AppCore\Application\SaveApplicationInterface;
+use App\AppCore\Domain\Actors\FileInterface;
 
 class FrameworkSaveApplication
 {
@@ -22,8 +23,7 @@ class FrameworkSaveApplication
         $this->saveApplication = $saveApplication;
     }
 
-
-    public function save(string $fileToSave, string $targetDir)
+    public function save(FileInterface $fileToSave, string $targetDir)
     {
         $this->saveApplication->save($targetDir, $fileToSave);
     }

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\AppCore\Application;
 
+use App\AppCore\Domain\Actors\FileInterface;
 use App\AppCore\Domain\Service\SaveDomainService;
 use App\AppCore\Domain\Service\SaveDomainServiceInterface;
 
@@ -19,10 +20,7 @@ use App\AppCore\Domain\Service\SaveDomainServiceInterface;
  */
 class SaveApplication implements SaveApplicationInterface
 {
-    /**
-     * @var UploadedFileFactoryInterface
-     */
-    private $factory;
+
     /**
      * @var SaveDomainService
      */
@@ -35,21 +33,18 @@ class SaveApplication implements SaveApplicationInterface
     /**
      * SaveApplication constructor.
      *
-     * @param UploadedFileFactoryInterface                           $factory
      * @param SaveToFileSystemInterface                              $saveToFileSystem
-     * @param \App\AppCore\Domain\Service\SaveDomainServiceInterface $service
+     * @param SaveDomainServiceInterface $service
      */
-    public function __construct(UploadedFileFactoryInterface $factory, SaveToFileSystemInterface $saveToFileSystem, SaveDomainServiceInterface $service)
+    public function __construct(SaveToFileSystemInterface $saveToFileSystem, SaveDomainServiceInterface $service)
     {
-        $this->factory = $factory;
         $this->service = $service;
         $this->saveToFileSystem = $saveToFileSystem;
     }
 
 
-    public function save(string $dir, string $file)
+    public function save(string $dir, FileInterface $file)
     {
-        $this->saveToFileSystem->move($this->factory->createUploadedFile($file), $dir);
-        $this->service->save($file);
+        $this->service->save($this->saveToFileSystem->move($dir, $file)->getPath());
     }
 }

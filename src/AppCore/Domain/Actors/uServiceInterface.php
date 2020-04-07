@@ -7,4 +7,5 @@ interface uServiceInterface
 {
     public function file();
     public function movedToDir();
+    public function setMovedToDir(string $movedToDir);
 }

@@ -8,4 +8,5 @@ interface PersistGatewayInterface
     public function nextId();
     public function getAll();
     public function persist(EntityInterface $uServiceEntity);
+    public function find(string $id);
 }

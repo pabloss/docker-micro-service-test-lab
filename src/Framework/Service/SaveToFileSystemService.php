@@ -4,12 +4,12 @@ declare(strict_types=1);
 namespace App\Framework\Service;
 
 use App\AppCore\Application\SaveToFileSystemInterface;
+use App\AppCore\Domain\Actors\FileInterface;
 
 class SaveToFileSystemService implements SaveToFileSystemInterface
 {
-    public function move()
+    public function move(string $targetDir, FileInterface $domainUploadedFile): FileInterface
     {
-        // TODO: Implement move() method.
+        return $domainUploadedFile->move($targetDir);
     }
-
 }

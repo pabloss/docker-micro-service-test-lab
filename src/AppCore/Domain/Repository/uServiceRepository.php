@@ -40,13 +40,23 @@ class uServiceRepository implements uServiceRepositoryInterface
 
     public function persist(uServiceInterface $domain)
     {
+        $domain->setMovedToDir(
+            $domain->movedToDir().(string)$this->gateway->nextId()
+        );
         $this->gateway->persist(
-            $this->mapper->domain2Entity((string) $this->gateway->nextId(), $domain)
+            $this->mapper->domain2Entity(
+                (string)$this->gateway->nextId(), $domain
+            )
         );
     }
 
     public function all()
     {
         return $this->gateway->getAll();
+    }
+
+    public function find(string $id)
+    {
+        return $this->mapper->entity2Domain($this->gateway->find($id));
     }
 }

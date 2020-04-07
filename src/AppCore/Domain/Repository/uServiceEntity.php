@@ -15,7 +15,7 @@ use App\AppCore\Domain\Actors\uServiceInterface;
  *
  * @package App\AppCore\Domain\Repository
  */
-class uServiceEntity implements EntityInterface, uServiceInterface
+class uServiceEntity implements uServiceEntityInterface
 {
     /**
      * @var string
@@ -59,5 +59,13 @@ class uServiceEntity implements EntityInterface, uServiceInterface
     public function movedToDir()
     {
         return $this->movedToDir;
+    }
+
+    /**
+     * @param string $movedToDir
+     */
+    public function setMovedToDir(string $movedToDir): void
+    {
+        $this->movedToDir = $movedToDir;
     }
 }

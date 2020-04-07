@@ -6,7 +6,7 @@ namespace App\Framework\Files;
 use App\AppCore\Domain\Actors\FileInterface;
 use Symfony\Component\HttpFoundation\File\File;
 
-class FileWrapper implements FileInterface
+class FileAdapter implements FileInterface
 {
     /**
      * @var File
