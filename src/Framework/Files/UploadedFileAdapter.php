@@ -4,24 +4,26 @@ declare(strict_types=1);
 namespace App\Framework\Files;
 
 use App\AppCore\Domain\Actors\FileInterface;
-use Symfony\Component\HttpFoundation\File\File;
+use Integration\Stubs\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-class FileWrapper implements FileInterface
+class FileAdapter implements FileInterface
 {
     /**
-     * @var File
+     * @var UploadedFile
      */
     private $file;
 
     /**
      * UploadedFileAdapter constructor.
      *
-     * @param File $file
+     * @param UploadedFile $file
      */
-    public function __construct(File $file)
+    public function __construct(UploadedFile $file)
     {
         $this->file = $file;
     }
+
 
     public function getBasename(): string
     {
@@ -30,11 +32,13 @@ class FileWrapper implements FileInterface
 
     public function getPath(): string
     {
-        return $this->file->getPath();
+        return $this->file->getPathname();
     }
 
     public function move(string $dir): FileInterface
     {
-        return  $this;
+        return new FileWrapper($this->file->move($dir, $this->file->getClientOriginalName()));
     }
+
+
 }

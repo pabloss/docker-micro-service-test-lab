@@ -31,7 +31,7 @@ class SaveApplicationTest extends \Codeception\Test\Unit
         $uploadedFile->getBasename()->willReturn($file);
 
         $saveToFileSystem = $this->prophesize(SaveToFileSystemInterface::class);
-        $saveToFileSystem->move($movedToDir, $uploadedFile)->shouldBeCalled();
+        $saveToFileSystem->move($movedToDir, $uploadedFile)->willReturn($uploadedFile)->shouldBeCalled();
 
         $saveDomainService = $this->prophesize(SaveDomainServiceInterface::class);
         $saveDomainService->save($uploadedFile->reveal()->getBasename())->shouldBeCalled();
