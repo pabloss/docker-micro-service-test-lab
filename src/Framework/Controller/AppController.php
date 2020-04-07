@@ -3,16 +3,13 @@ declare(strict_types=1);
 
 namespace App\Framework\Controller;
 
-use App\AppCore\Domain\Application\DeployProcessApplication;
-use App\AppCore\Domain\Application\TestProcessApplication;
-use App\Framework\Entity\MicroService;
-use App\Framework\Event\FileUploadedEvent;
+use App\Framework\Application\FrameworkSaveApplication;
+use App\Framework\Files\UploadedFileAdapter;
 use App\Framework\Service\Files\UploadedFile;
+use App\MixedContext\Domain\Application\DeployProcessApplication;
+use App\MixedContext\Domain\Application\TestProcessApplication;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile as BaseUploadedFile;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse as RedirectResponseAlias;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -49,38 +46,16 @@ class AppController extends AbstractController
 
     /**
      * @Route("/upload", name="photos.upload")
-     * @param Request $request
-     * @param EventDispatcherInterface $dispatcher
-     * @return RedirectResponseAlias|Response
+     * @param Request                  $request
+     * @param FrameworkSaveApplication $service
+     *
+     * @return Response
      */
-    public function upload(Request $request, EventDispatcherInterface $dispatcher)
+    public function upload(Request $request, FrameworkSaveApplication $service)
     {
-
-        if(false === $this->isFileUploaded($request)){
-            return $this->json([]);
-        }
-
-        if ($this->uploadedFile($request->files->all())) {
-            try {
-                $this->uploadedFile($request->files->all())
-                    ->move(
-                        $this->getParameter('uploaded_directory'),
-                        $this->uploadedFile($request->files->all())->getUniqueFileName()
-                    );
-            } catch (FileException $e) {
-                // ... handle exception if something happens during file upload
-                return new JsonResponse([$e->getMessage(). "\n" . $e->getTraceAsString()], Response::HTTP_INTERNAL_SERVER_ERROR);
-            }
-
-            $microService = new MicroService();
-            $microService->setMicroServicePackedFilename($this->uploadedFile($request->files->all())->getUniqueFileName());
-
-            $event = new FileUploadedEvent($request->files->all());
-            $dispatcher->dispatch($event, FileUploadedEvent::NAME);
-        }
+        $service->save(new UploadedFileAdapter($request->files->all()['files']), $this->getParameter('uploaded_directory'));
 
         return new Response();
-
     }
 
     /**
