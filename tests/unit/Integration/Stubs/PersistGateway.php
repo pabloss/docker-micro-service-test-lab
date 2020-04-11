@@ -10,7 +10,7 @@ class PersistGateway implements PersistGatewayInterface
 {
 
     /** @var array */
-    private $collection;
+    private $collection = [];
 
     public function nextId()
     {
@@ -24,12 +24,33 @@ class PersistGateway implements PersistGatewayInterface
 
     public function persist(EntityInterface $uServiceEntity)
     {
-        $this->collection[] = $uServiceEntity;
+        foreach ($this->collection as &$item){
+            /** @var EntityInterface $item */
+            if($uServiceEntity->id() === $item->id()){
+                $item = $uServiceEntity;
+            }
+        }
+        if(0 === \count($this->filterCollectionById($uServiceEntity->id()))){
+            $this->collection[] = $uServiceEntity;
+        }
     }
 
     public function find(string $id)
     {
-        return \array_filter($this->collection, function (EntityInterface $entity) use ($id){return $id === $entity->id();})[0];
+        return $this->filterCollectionById($id)[0];
+    }
+
+
+    /**
+     * @param string $id
+     *
+     * @return array
+     */
+    private function filterCollectionById(string $id): array
+    {
+        return \array_filter($this->collection, function (EntityInterface $entity) use ($id) {
+            return $id === $entity->id();
+        });
     }
 
 }

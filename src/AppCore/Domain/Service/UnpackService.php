@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\AppCore\Domain\Service;
 
-use App\AppCore\Domain\Actors\uService;
 use App\AppCore\Domain\Actors\uServiceInterface;
 
 class UnpackService implements UnpackServiceInterface
@@ -26,7 +25,7 @@ class UnpackService implements UnpackServiceInterface
 
     public function unpack(uServiceInterface $service, string $unpackedLocation)
     {
-        $this->unpack->unpack($service->movedToDir().'/'.$service->file(), $unpackedLocation);
+        $this->unpack->unpack($service->file(), $unpackedLocation);
         $service->setUnpacked($unpackedLocation);
         return $service;
     }

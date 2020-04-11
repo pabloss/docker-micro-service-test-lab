@@ -21,11 +21,19 @@ class DomainEntityMapper implements DomainEntityMapperInterface
 {
     public function domain2Entity(string $id, uServiceInterface $domain): uServiceEntityInterface
     {
-        return new uServiceEntity($id,  $domain->movedToDir(), $domain->file());
+        $uServiceEntity = new uServiceEntity($id, $domain->movedToDir(), $domain->file());
+        if(null !== $domain->unpacked()){
+            $uServiceEntity->setUnpacked($domain->unpacked());
+        }
+        return $uServiceEntity;
     }
 
-    public function entity2Domain(uServiceEntityInterface $entity)
+    public function entity2Domain(uServiceEntityInterface $entity): uServiceInterface
     {
-        return new uService($entity->file(), $entity->movedToDir());
+        $uService = new uService($entity->file(), $entity->movedToDir());
+        if(null !== $entity->unpacked()){
+            $uService->setUnpacked($entity->unpacked());
+        }
+        return $uService;
     }
 }

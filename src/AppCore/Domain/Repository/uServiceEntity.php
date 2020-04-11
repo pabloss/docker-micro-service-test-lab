@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace App\AppCore\Domain\Repository;
 
-use App\AppCore\Domain\Actors\uServiceInterface;
-
 /**
  * 1. SRP - OK
  * 2. OCP - OK
@@ -31,6 +29,11 @@ class uServiceEntity implements uServiceEntityInterface
      * @var string
      */
     private $file;
+
+    /**
+     * @var string
+     */
+    private $unpackedLocation;
 
     /**
      * uServiceEntity constructor.
@@ -67,5 +70,15 @@ class uServiceEntity implements uServiceEntityInterface
     public function setMovedToDir(string $movedToDir): void
     {
         $this->movedToDir = $movedToDir;
+    }
+
+    public function unpacked()
+    {
+        return $this->unpackedLocation;
+    }
+
+    public function setUnpacked(string $unpackedLocation)
+    {
+        $this->unpackedLocation = $unpackedLocation;
     }
 }
