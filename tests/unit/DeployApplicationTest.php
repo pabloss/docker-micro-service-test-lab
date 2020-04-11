@@ -40,19 +40,19 @@ class DeployApplicationTest extends \Codeception\Test\Unit
          *      - stosując zależność UnpackServiceInterface oraz Repo: rozpakuj (do nowej lokalizcji) i zapisz do bazy
          * 2. robić build
          */
-        $targetDir =  self::DATA_DIR.self::UNPACKED.'/';
+        // Given
         $repo = new uServiceRepository(new PersistGateway(), new DomainEntityMapper());
-        $repo->persist(new uService(self::DATA_DIR.self::ZIPPED_TEST_UPLOAD_FILE_NAME, self::DATA_DIR));
-
         $application = new DeployApplication(
             new UnpackService(new UnpackAdapter(new \ZipArchive())),
             $repo
         ); //Framework
-        $application->deploy('id', $targetDir);
 
+        // When
+        $repo->persist(new uService(self::DATA_DIR.self::ZIPPED_TEST_UPLOAD_FILE_NAME, self::DATA_DIR));
+        $application->deploy('id', self::DATA_DIR.self::UNPACKED);
+
+        // Then
         $this->tester->assertFileExists(self::DATA_DIR. self::UNPACKED .'/'.self::TEST_UPLOAD_FILE_NAME);
-        $this->tester->assertEquals(self::DATA_DIR. self::UNPACKED.'/', $repo->find('id')->unpacked());
-
-        // file addapter statje się potem encje domenyu
+        $this->tester->assertEquals(self::DATA_DIR. self::UNPACKED, $repo->find('id')->unpacked());
     }
 }

@@ -5,6 +5,7 @@ namespace App\Framework\Application;
 
 use App\AppCore\Domain\Repository\uServiceRepositoryInterface;
 use App\AppCore\Domain\Service\UnpackService;
+use App\AppCore\Domain\Service\UnpackServiceInterface;
 
 class DeployApplication
 {
@@ -20,10 +21,10 @@ class DeployApplication
     /**
      * DeployApplication constructor.
      *
-     * @param UnpackService               $service
+     * @param UnpackServiceInterface      $service
      * @param uServiceRepositoryInterface $repository
      */
-    public function __construct(\App\AppCore\Domain\Service\UnpackService $service, uServiceRepositoryInterface $repository)
+    public function __construct(UnpackServiceInterface $service, uServiceRepositoryInterface $repository)
     {
         $this->service = $service;
         $this->repository = $repository;
