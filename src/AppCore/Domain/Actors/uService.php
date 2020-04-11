@@ -24,6 +24,7 @@ class uService implements uServiceInterface
      * @var string
      */
     private $movedToDir;
+    private $unpackedLocation;
 
     /**
      * uService constructor.
@@ -55,8 +56,12 @@ class uService implements uServiceInterface
 
     public function unpacked()
     {
-        return 'unpackedid';
+        return $this->unpackedLocation;
     }
 
+    public function setUnpacked(string $unpackedLocation)
+    {
+        $this->unpackedLocation = $unpackedLocation;
+    }
 
 }
