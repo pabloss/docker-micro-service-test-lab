@@ -1,8 +1,9 @@
 <?php
 
+namespace App\Framework\Repository;
+
 use App\Framework\Entity\UService;
 use App\Framework\Persistence\PersistGatewayAdapter;
-use App\Framework\Repository\UServiceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 class PersistGatewayAdapterTest extends \Codeception\Test\Unit
@@ -26,7 +27,7 @@ class PersistGatewayAdapterTest extends \Codeception\Test\Unit
 
     public function testPersist()
     {
-        $entity= new UService();
+        $entity = new UService();
         $em = $this->prophesize(EntityManagerInterface::class);
         $adapter = new PersistGatewayAdapter($em->reveal());
         $em->persist($entity)->shouldBeCalled();
