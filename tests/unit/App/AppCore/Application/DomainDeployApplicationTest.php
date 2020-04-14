@@ -1,6 +1,7 @@
 <?php
 
-use App\AppCore\Application\DeployApplication;
+namespace App\AppCore\Application;
+
 use App\AppCore\Domain\Actors\uServiceInterface;
 use App\AppCore\Domain\DomainDeployApplication;
 use App\AppCore\Domain\Repository\uServiceRepository;
@@ -22,7 +23,11 @@ class DomainDeployApplicationTest extends \Codeception\Test\Unit
 
         $uService = $this->prophesize(uServiceInterface::class);
         $unpackService = $this->prophesize(UnpackServiceInterface::class);
-        $unpackService->unpack($uService->reveal(), $unpackedDir .$id)->will(function ($args) use ($uService, $unpackedDir, $id){
+        $unpackService->unpack($uService->reveal(), $unpackedDir . $id)->will(function ($args) use (
+            $uService,
+            $unpackedDir,
+            $id
+        ) {
             $uService->unpacked()->willReturn($args[1]);
             return $uService->reveal();
         });
@@ -44,8 +49,8 @@ class DomainDeployApplicationTest extends \Codeception\Test\Unit
          */
 
         $repo->persist($uService->reveal());
-        $service->deploy($id, $unpackedDir.$id);
+        $service->deploy($id, $unpackedDir . $id);
 
-        $this->tester->assertEquals($unpackedDir .$id, $repo->reveal()->find($id)->unpacked());
+        $this->tester->assertEquals($unpackedDir . $id, $repo->reveal()->find($id)->unpacked());
     }
 }

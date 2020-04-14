@@ -1,7 +1,8 @@
 <?php
 
+namespace App\Framework\Entity;
+
 use App\AppCore\Domain\Repository\uServiceEntity;
-use App\Framework\Entity\UService;
 
 class UServiceTest extends \Codeception\Test\Unit
 {

@@ -1,6 +1,7 @@
 <?php
 
-use App\Framework\Files\UploadedFileAdapter;
+namespace App\Framework\Files;
+
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class UploadedFileAdapterTest extends \Codeception\Test\Unit
@@ -14,7 +15,7 @@ class UploadedFileAdapterTest extends \Codeception\Test\Unit
     public function testGetBasename()
     {
         // mam wykorzystać framework - czyli jednak integracyjny
-        $path = __DIR__ . '/../_data/save_test'; //do integracyjhnego
+        $path = __DIR__ . '/../../../../_data/save_test'; //do integracyjhnego
         $originalFileName = basename($path);
 
         $adapter = new UploadedFileAdapter(new UploadedFile($path, $originalFileName));
