@@ -3,6 +3,7 @@
 namespace App\Framework\Entity;
 
 use App\AppCore\Domain\Repository\EntityInterface;
+use App\AppCore\Domain\Repository\uServiceEntity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -28,12 +29,12 @@ class UService implements EntityInterface
      */
     private $movedToDir;
 
-    public static function fromDomainEntity(EntityInterface $reveal)
+    public static function fromDomainEntity(uServiceEntity $uServiceEntity)
     {
         $entity = new self();
-        $entity->setFile($reveal->file());
-        $entity->setMovedToDir($reveal->movedToDir());
-        $entity->setId($reveal->id());
+        $entity->setFile($uServiceEntity->file());
+        $entity->setMovedToDir($uServiceEntity->movedToDir());
+        $entity->setId($uServiceEntity->id());
         return $entity;
     }
 
