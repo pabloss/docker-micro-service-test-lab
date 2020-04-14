@@ -13,5 +13,13 @@ modules:
             port: 2121
         - \Helper\Acceptance
         - Filesystem
+        - Db:
+            dsn: 'mysql:host=localhost;dbname=test_u_service_test_lab'
+            user: 'root'
+            password: '1234'
+            dump: 'tests/_data/dump.sql'
+            populate: true # run populator before all tests
+            cleanup: false # run populator before each test
+            populator: 'mysql -u $user -h $host -p$password $dbname < $dump'
         - Asserts
     step_decorators: ~        

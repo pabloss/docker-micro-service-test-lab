@@ -5,19 +5,22 @@
 actor: UnitTester
 modules:
     enabled:
-        - Asserts
         - \Helper\Unit
-        - Filesystem
-        - Cli
+        - Asserts
         - Symfony:
             app_path: 'src'
             environment: 'test'
+            em_service: 'doctrine.orm.entity_manager'
+#        - Doctrine2:
+#            depends: Symfony
         - Db:
               dsn: 'mysql:host=localhost;dbname=test_u_service_test_lab'
               user: 'root'
               password: '1234'
               dump: 'tests/_data/dump.sql'
               populate: true # run populator before all tests
-              cleanup: true # run populator before each test
+              cleanup: false # run populator before each test
               populator: 'mysql -u $user -h $host -p$password $dbname < $dump'
+        - Cli
+        - Filesystem
     step_decorators: ~
