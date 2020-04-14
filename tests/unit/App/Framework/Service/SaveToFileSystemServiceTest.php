@@ -1,9 +1,8 @@
 <?php
 
+namespace App\Framework\Service;
+
 use App\AppCore\Domain\Actors\FileInterface;
-use App\Framework\Files\UploadedFileAdapter;
-use App\Framework\Service\SaveToFileSystemService;
-use Integration\Stubs\File;
 
 class SaveToFileSystemServiceTest extends \Codeception\Test\Unit
 {
