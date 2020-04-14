@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Framework;
+namespace App\Framework\Persistence;
 
 use App\AppCore\Domain\Repository\EntityInterface;
 use App\AppCore\Domain\Repository\PersistGatewayInterface;
-use App\Entity\UService;
-use App\Repository\UServiceRepository;
+use App\AppCore\Domain\Repository\uServiceEntity;
+use App\Framework\Entity\UService;
 use Doctrine\ORM\EntityManagerInterface;
 
 class PersistGatewayAdapter implements PersistGatewayInterface
@@ -33,8 +33,17 @@ class PersistGatewayAdapter implements PersistGatewayInterface
 
     public function persist(EntityInterface $uServiceEntity)
     {
-        $this->entityManager->persist(UService::fromDomainEntity($uServiceEntity));
+        $this->entityManager->persist($uServiceEntity);
         $this->entityManager->flush();
+    }
+
+    public function find(string $id)
+    {
+        return new uServiceEntity(
+            $id,
+            $this->entityManager->getRepository(UService::class)->find($id)->getMovedToDir(),
+            $this->entityManager->getRepository(UService::class)->find($id)->getFile()
+        );
     }
 
 }

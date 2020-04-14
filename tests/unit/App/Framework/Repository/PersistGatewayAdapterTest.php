@@ -1,8 +1,8 @@
 <?php
 
-use App\Entity\UService;
-use App\Framework\PersistGatewayAdapter;
-use App\Repository\UServiceRepository;
+use App\Framework\Entity\UService;
+use App\Framework\Persistence\PersistGatewayAdapter;
+use App\Framework\Repository\UServiceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 class PersistGatewayAdapterTest extends \Codeception\Test\Unit
