@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Framework\Application;
+namespace App\AppCore\Application;
 
 use App\AppCore\Domain\Repository\uServiceRepositoryInterface;
 use App\AppCore\Domain\Service\UnpackServiceInterface;
