@@ -1,11 +1,8 @@
 <?php
 
-use App\AppCore\Domain\Actors\uService;
+use App\AppCore\Application\DeployApplication;
 use App\AppCore\Domain\Actors\uServiceInterface;
 use App\AppCore\Domain\DomainDeployApplication;
-use App\AppCore\Domain\Repository\DomainEntityMapperInterface;
-use App\AppCore\Domain\Repository\PersistGatewayInterface;
-use App\AppCore\Domain\Repository\uServiceEntity;
 use App\AppCore\Domain\Repository\uServiceRepository;
 use App\AppCore\Domain\Service\UnpackServiceInterface;
 
@@ -25,13 +22,15 @@ class DomainDeployApplicationTest extends \Codeception\Test\Unit
 
         $uService = $this->prophesize(uServiceInterface::class);
         $unpackService = $this->prophesize(UnpackServiceInterface::class);
-        $unpackService->unpack($uService, $unpackedDir .$id)->will(function ($args) use ($uService, $unpackedDir, $id){
+        $unpackService->unpack($uService->reveal(), $unpackedDir .$id)->will(function ($args) use ($uService, $unpackedDir, $id){
             $uService->unpacked()->willReturn($args[1]);
-        })->shouldBeCalled();
+            return $uService->reveal();
+        });
 
         $repo = $this->prophesize(uServiceRepository::class);
         $repo->find($id)->shouldBeCalled()->willReturn($uService->reveal());
-        $service = new DomainDeployApplication($unpackService->reveal(), $repo->reveal());
+        $repo->persist($uService->reveal())->shouldBeCalled();
+        $service = new DeployApplication($unpackService->reveal(), $repo->reveal());
 
         /**
          * @todo
@@ -44,7 +43,8 @@ class DomainDeployApplicationTest extends \Codeception\Test\Unit
          *      - stosując zależność UnpackServiceInterface oraz Repo: rozpakuj (do nowej lokalizcji) i zapisz do bazy
          */
 
-        $service->deploy($id);
+        $repo->persist($uService->reveal());
+        $service->deploy($id, $unpackedDir.$id);
 
         $this->tester->assertEquals($unpackedDir .$id, $repo->reveal()->find($id)->unpacked());
     }

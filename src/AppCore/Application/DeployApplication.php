@@ -4,13 +4,12 @@ declare(strict_types=1);
 namespace App\Framework\Application;
 
 use App\AppCore\Domain\Repository\uServiceRepositoryInterface;
-use App\AppCore\Domain\Service\UnpackService;
 use App\AppCore\Domain\Service\UnpackServiceInterface;
 
 class DeployApplication
 {
     /**
-     * @var UnpackService
+     * @var UnpackServiceInterface
      */
     private $service;
     /**
@@ -33,7 +32,10 @@ class DeployApplication
     public function deploy(string $id, string $targetDir)
     {
         $this->repository->persist(
-            $this->service->unpack($this->repository->find($id), $targetDir)
+            $this->service->unpack(
+                $this->repository->find($id),
+                $targetDir
+            )
         );
     }
 }
