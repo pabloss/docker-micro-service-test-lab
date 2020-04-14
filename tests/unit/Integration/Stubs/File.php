@@ -31,9 +31,9 @@ class File implements FileInterface
         return $this->path;
     }
 
-    public function move(string $dir)
+    public function move(string $dir): FileInterface
     {
-        // TODO: Implement move() method.
+        return $this;
     }
 
 }
