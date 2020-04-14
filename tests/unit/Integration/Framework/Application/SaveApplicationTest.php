@@ -6,7 +6,7 @@ use App\AppCore\Domain\Repository\uServiceRepository;
 use App\AppCore\Domain\Service\SaveDomainService;
 use App\Framework\Application\FrameworkSaveApplication;
 use App\Framework\Factory\FileFactory;
-use App\Framework\Files\FileAdapter;
+use App\Framework\Files\UploadedFileAdapter;
 use App\Framework\Persistence\PersistGatewayAdapter;
 use App\Framework\Service\SaveToFileSystemService;
 use Codeception\Util\Autoload;
@@ -43,9 +43,7 @@ class SaveApplicationTest extends \Codeception\Test\Unit
             $this->tester->grabService('doctrine.orm.entity_manager');;
         $application = new FrameworkSaveApplication(
             new SaveApplication(
-                new FileFactory(),
-                new SaveToFileSystemService(),
-                new SaveDomainService(
+                new SaveToFileSystemService(), new SaveDomainService(
                     $targetDir,
                     new uServiceRepository(new PersistGatewayAdapter($em), new DomainEntityMapper())
                 )

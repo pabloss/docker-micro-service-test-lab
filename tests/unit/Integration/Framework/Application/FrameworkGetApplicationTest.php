@@ -48,9 +48,7 @@ class FrameworkGetApplicationTest extends \Codeception\Test\Unit
         $this->repo = new uServiceRepository($this->gateway, new DomainEntityMapper());
         $application = new FrameworkSaveApplication(
             new SaveApplication(
-                new FileFactory(),
-                new SaveToFileSystemService(),
-                new SaveDomainService(
+                new SaveToFileSystemService(), new SaveDomainService(
                     $this->targetDir,
                     $this->repo
                 )
