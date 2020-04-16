@@ -1,6 +1,7 @@
 <?php namespace App\AppCore\Domain\Repository;
 
 use App\AppCore\Domain\Actors\uService;
+use App\AppCore\Domain\Actors\uServiceInterface;
 
 class uServiceRepositoryTest extends \Codeception\Test\Unit
 {
@@ -28,7 +29,7 @@ class uServiceRepositoryTest extends \Codeception\Test\Unit
         $persistGateway = $this->prophesize(PersistGatewayInterface::class);
         $persistGateway->nextId()->willReturn('id');
         $persistGateway->getAll()->willReturn([$uServiceEntity]);
-        $persistGateway->persist($uServiceEntity)->shouldBeCalled();
+        $persistGateway->persist($uServiceEntity)->shouldBeCalled()->willReturn($id);
         $persistGateway->find($id)->willReturn($uServiceEntity)->shouldBeCalled();
         $domain = new uService($file, $movedToDir);
 
@@ -38,17 +39,15 @@ class uServiceRepositoryTest extends \Codeception\Test\Unit
         $repo = new uServiceRepository($persistGateway->reveal(), $mapper->reveal());  //jeśli repo zależy od mappera to będę mógł zrobić mocka do entity
 
         // When
-        $repo->persist($domain);
-        $all = $repo->all();
-        $lastEntity = \end($all);
+        $lastId = $repo->persist($domain);
 
         // Then
-        $this->tester->assertInstanceOf(uServiceEntity::class, $lastEntity);
-        $this->tester->assertNotEmpty($lastEntity->id());
-        $this->tester->assertEquals($movedToDir.$lastEntity->id(), $lastEntity->movedToDir());
-        $this->tester->assertEquals($file, $lastEntity->file());
+        $this->tester->assertInstanceOf(uServiceInterface::class, $repo->find($lastId));
+        $this->tester->assertNotEmpty($lastId);
+        $this->tester->assertEquals($movedToDir.$lastId, $repo->find($lastId)->movedToDir());
+        $this->tester->assertEquals($file, $repo->find($lastId)->file());
 
-        $this->tester->assertEquals($domain, $repo->find($id));
+        $this->tester->assertEquals($domain, $repo->find($lastId));
 
     }
 }
