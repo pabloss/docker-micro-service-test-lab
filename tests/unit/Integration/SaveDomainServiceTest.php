@@ -33,7 +33,7 @@ class SaveDomainServiceTest extends \Codeception\Test\Unit
         $domainService = new SaveDomainService($movedToDir, $repo);
 
         // When
-        $uService = $domainService->save($file);
+        $domainService->save($file);
         /**
          * When I looked for last saved entity id I got also dir suffix
          */
@@ -41,7 +41,7 @@ class SaveDomainServiceTest extends \Codeception\Test\Unit
 
         // Then
         $this->tester->assertNotEmpty(\end($all)->id());
-        $this->tester->assertEquals($movedToDir, $uService->movedToDir());
-        $this->tester->assertEquals($file, $uService->file());
+        $this->tester->assertEquals($movedToDir.$id, $repo->find($id)->movedToDir());
+        $this->tester->assertEquals($file, $repo->find($id)->file());
     }
 }
