@@ -2,6 +2,7 @@
 
 namespace App\Framework\Repository;
 
+use App\AppCore\Domain\Repository\uServiceEntity;
 use App\Framework\Entity\UService;
 use App\Framework\Persistence\PersistGatewayAdapter;
 use Doctrine\ORM\EntityManagerInterface;
@@ -27,13 +28,14 @@ class PersistGatewayAdapterTest extends \Codeception\Test\Unit
 
     public function testPersist()
     {
-        $entity = new UService();
+        $id = 'id';
+        $entity = new uServiceEntity($id, 'movedToDir', 'file');
         $em = $this->prophesize(EntityManagerInterface::class);
         $adapter = new PersistGatewayAdapter($em->reveal());
-        $em->persist($entity)->shouldBeCalled();
+        $em->persist(UService::fromDomainEntity($entity))->shouldBeCalled()->willReturn($id);
         $em->flush()->shouldBeCalled();
 
-        $adapter->persist($entity);
+        $this->tester->assertEquals($id, $adapter->persist($entity));
     }
 
     public function testGetAll()
