@@ -30,7 +30,7 @@ class FileAdapter implements FileInterface
 
     public function getPath(): string
     {
-        return $this->file->getPath();
+        return $this->file->getPathname();
     }
 
     public function move(string $dir): FileInterface
