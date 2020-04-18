@@ -3,8 +3,10 @@ declare(strict_types=1);
 
 namespace App\Framework\Controller;
 
+use App\AppCore\Application\DeployApplication;
 use App\Framework\Application\FrameworkSaveApplication;
 use App\Framework\Files\UploadedFileAdapter;
+use App\Framework\Persistence\PersistGatewayAdapter;
 use App\Framework\Service\Files\UploadedFile;
 use App\MixedContext\Domain\Application\DeployProcessApplication;
 use App\MixedContext\Domain\Application\TestProcessApplication;
@@ -53,20 +55,29 @@ class AppController extends AbstractController
      */
     public function upload(Request $request, FrameworkSaveApplication $service)
     {
-        $service->save(new UploadedFileAdapter($request->files->all()['files']), $this->getParameter('uploaded_directory'));
+        $uniqid = \uniqid();
+        $newDirPath = $this->getParameter('uploaded_directory') . '/' . $uniqid;
+        \mkdir($newDirPath);
 
-        return new Response();
+        $service->save(new UploadedFileAdapter($request->files->all()['files']), $newDirPath);
+        return new Response($uniqid);
     }
 
     /**
-     * @Route("/deploy/{targetDir}", name="deploy")
-     * @param string $targetDir
-     * @param DeployProcessApplication $application
+     * @Route("/deploy", name="deploy")
+     * @param Request               $request
+     * @param DeployApplication     $application
+     * @param PersistGatewayAdapter $adapter
+     *
      * @return Response
      */
-    public function deploy(string $targetDir, DeployProcessApplication $application)
+    public function deploy(Request $request, DeployApplication $application, PersistGatewayAdapter $adapter)
     {
-        $application->run($this->getParameter('unpacked_directory').'/'.$targetDir);
+        $uniqid = $request->getContent();
+        $targetDir = $this->getParameter('unpacked_directory') . '/' . $uniqid;
+        \mkdir($targetDir);
+
+        $application->deploy((string) ($adapter->nextId()-1), $targetDir);
         return new Response();
     }
 
