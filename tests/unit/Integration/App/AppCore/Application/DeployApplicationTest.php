@@ -14,10 +14,12 @@ use Integration\Stubs\PersistGateway;
 class DeployApplicationTest extends \Codeception\Test\Unit
 {
     const TEST_UPLOADED_DIR = "/../../files/";
-    const DATA_DIR = __DIR__ . '/../_data/';
+    const DATA_DIR = __DIR__ . '/../../../../../_data/';
     const TEST_UPLOAD_FILE_NAME = 'test.upload';
     const ZIPPED_TEST_UPLOAD_FILE_NAME = 'test.zip';
     const UNPACKED = 'unpacked';
+    const PACKED_MICRO_SERVICE = 'packed/micro-service-1.zip';
+    const MICRO_SERVICE_1_DOCKERFILE = 'micro-service-1/Dockerfile';
 
     /**
      * @var \UnitTester
@@ -51,11 +53,21 @@ class DeployApplicationTest extends \Codeception\Test\Unit
         ); //Framework
 
         // When
-        $repo->persist(new uService(self::DATA_DIR . self::ZIPPED_TEST_UPLOAD_FILE_NAME, self::DATA_DIR));
-        $application->deploy($id, self::DATA_DIR . self::UNPACKED . $id);
+        $repo->persist(new uService(self::DATA_DIR . self::PACKED_MICRO_SERVICE, self::DATA_DIR));
+        $newDir = self::DATA_DIR . self::UNPACKED . '/' . $id;
+        if(!\file_exists($newDir)){
+            \mkdir($newDir);
+        }
+        $application->deploy($id, $newDir, 'new_image_prefix', 'new_container_prefix');
+
 
         // Then
-        $this->tester->assertFileExists(self::DATA_DIR . self::UNPACKED . $id . '/' . self::TEST_UPLOAD_FILE_NAME);
-        $this->tester->assertEquals(self::DATA_DIR . self::UNPACKED . $id, $repo->find($id)->unpacked());
+        $this->tester->assertFileExists($newDir . '/' . self::MICRO_SERVICE_1_DOCKERFILE);
+        $this->tester->assertEquals($newDir, $repo->find($id)->unpacked());
+        $containerName = 'container';
+        $this->tester->runShellCommand("docker inspect -f '{{.State.Running}}' $(docker ps --filter 'name=$containerName' --format '{{.Image}} {{.Names}}')", false);
+        $this->tester->seeInShellOutput('true'); ///-- DZIAŁA!!!
+        $this->tester->runShellCommand("docker inspect -f '{{.State.Running}}' $(docker ps --filter 'name=$containerName' --format '{{.Image}} {{.Names}}' -a) | wc -l", false);
+        $this->tester->seeInShellOutput('1'); ///-- DZIAŁA!!!
     }
 }
