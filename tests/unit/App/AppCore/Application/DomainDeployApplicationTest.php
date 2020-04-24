@@ -3,9 +3,14 @@
 namespace App\AppCore\Application;
 
 use App\AppCore\Domain\Actors\uServiceInterface;
-use App\AppCore\Domain\DomainDeployApplication;
 use App\AppCore\Domain\Repository\uServiceRepository;
+use App\AppCore\Domain\Service\BuildServiceInterface;
+use App\AppCore\Domain\Service\CommandsCollectionInterface;
+use App\AppCore\Domain\Service\CommandFactoryInterface;
 use App\AppCore\Domain\Service\UnpackServiceInterface;
+use App\Framework\Service\Command\BuildCommand;
+use App\Framework\Service\Command\RunCommand;
+use App\MixedContext\Domain\Service\Files\Dir;
 
 class DomainDeployApplicationTest extends \Codeception\Test\Unit
 {
@@ -35,7 +40,24 @@ class DomainDeployApplicationTest extends \Codeception\Test\Unit
         $repo = $this->prophesize(uServiceRepository::class);
         $repo->find($id)->shouldBeCalled()->willReturn($uService->reveal());
         $repo->persist($uService->reveal())->shouldBeCalled();
-        $service = new DeployApplication($unpackService->reveal(), $repo->reveal());
+
+        $buildService = $this->prophesize(BuildServiceInterface::class);
+        $dir = $this->prophesize(Dir::class);
+        $dir->findFile($unpackedDir.$id, 'Dockerfile')->willReturn('Dockerfile');
+
+
+        $buildCommand = $this->prophesize(BuildCommand::class);
+        $runCommand = $this->prophesize(RunCommand::class);
+        $collection = $this->prophesize(CommandsCollectionInterface::class);
+        $collection->getCommand(0)->willReturn($buildCommand->reveal());
+        $collection->getCommand(1)->willReturn($runCommand->reveal());
+        $commandFactory = $this->prophesize(CommandFactoryInterface::class);
+
+        $commandFactory->createCommand('build', 'Dockerfile', 'imagePref')->willReturn($buildCommand->reveal());
+        $commandFactory->createCommand('run', 'containerPref', 'imagePref')->willReturn($runCommand->reveal());
+        $commandFactory->createCollection([$buildCommand->reveal(), $runCommand->reveal()])->willReturn($collection->reveal());
+
+        $service = new DeployApplication($unpackService->reveal(), $buildService->reveal(), $dir->reveal(), $commandFactory->reveal(), $repo->reveal());
 
         /**
          * @todo
@@ -49,7 +71,7 @@ class DomainDeployApplicationTest extends \Codeception\Test\Unit
          */
 
         $repo->persist($uService->reveal());
-        $service->deploy($id, $unpackedDir . $id);
+        $service->deploy($id, $unpackedDir . $id, '', '');
 
         $this->tester->assertEquals($unpackedDir . $id, $repo->reveal()->find($id)->unpacked());
     }
