@@ -68,7 +68,7 @@ class BuildServiceTest extends \Codeception\Test\Unit
             $args[0]->getCommand(1)->command();
         })->shouldBeCalled();
 
-        $service = new BuildService($commandsCollection->reveal(), $commandRunner->reveal());
+        $service = new BuildService($commandRunner->reveal());
 
         /**
          * 1. Run: docker build -f $dockerFilePath -t $imageName .
@@ -76,7 +76,7 @@ class BuildServiceTest extends \Codeception\Test\Unit
          * 3. output should be: 'true' for `docker inspect -f '{{.State.Running}}' $(docker ps --filter 'name=$containerName' --format '{{.ID}}')`
          * 4. and '1' for `docker inspect -f '{{.State.Running}}' $(docker ps --filter 'name=$containerName' --format '{{.ID}}' -a) | wc -l`
          */
-        $service->build();
+        $service->build($commandsCollection->reveal());
 
         /**
          * - we don't check output - incrementally or at once - we don't assume behaviour or cli
