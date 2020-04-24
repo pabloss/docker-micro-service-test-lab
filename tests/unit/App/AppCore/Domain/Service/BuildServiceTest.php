@@ -54,17 +54,18 @@ class BuildServiceTest extends \Codeception\Test\Unit
         $commandsCollection = $this->prophesize(CommandsCollectionInterface::class);
         $commandsCollection->addCommand($buildCommand->reveal())->shouldBeCalled();
         $commandsCollection->addCommand($runCommand->reveal())->shouldBeCalled();
-        $commandsCollection->get(0)->willReturn($buildCommand->reveal())->shouldBeCalled();
-        $commandsCollection->get(1)->willReturn($runCommand->reveal())->shouldBeCalled();
+        $commandsCollection->getCommand(0)->willReturn($buildCommand->reveal())->shouldBeCalled();
+        $commandsCollection->getCommand(1)->willReturn($runCommand->reveal())->shouldBeCalled();
 
         $commandsCollection->reveal()->addCommand($buildCommand->reveal());
         $commandsCollection->reveal()->addCommand($runCommand->reveal());
 
         // run them
         $commandRunner = $this->prophesize(CommandRunnerInterface::class);
-        $commandRunner->run($commandsCollection->reveal())->will(function ($args) use ($buildCommand, $runCommand){
-            $args[0]->get(0)->command();
-            $args[0]->get(1)->command();
+        $commandRunner->willBeConstructedWith([$commandsCollection->reveal()]);
+        $commandRunner->run($commandsCollection->reveal())->will(function ($args){
+            $args[0]->getCommand(0)->command();
+            $args[0]->getCommand(1)->command();
         })->shouldBeCalled();
 
         $service = new BuildService($commandsCollection->reveal(), $commandRunner->reveal());
