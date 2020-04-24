@@ -77,7 +77,7 @@ class AppController extends AbstractController
         $targetDir = $this->getParameter('unpacked_directory') . '/' . $uniqid;
         \mkdir($targetDir);
 
-        $application->deploy((string) ($adapter->nextId()-1), $targetDir);
+        $application->deploy((string)($adapter->nextId() - 1), $targetDir, 'imagePrefix','containerPrefix');
         return new Response();
     }
 
