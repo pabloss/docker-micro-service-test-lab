@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\AppCore\Domain\Service;
 
-class BuildServiceInterface
+interface BuildServiceInterface
 {
-
+    public function build(CommandsCollectionInterface $collection);
 }
