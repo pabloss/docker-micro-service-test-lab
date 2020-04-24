@@ -98,16 +98,15 @@ class DeployApplicationTest extends \Codeception\Test\Unit
         if(!\file_exists($newDir)){
             \mkdir($newDir);
         }
-        $application->deploy($id, $newDir, 'new_image_prefix', 'new_container_prefix');
+        $application->deploy($id, $newDir, 'new_image_prefix', $containerPrefix);
 
 
         // Then
         $this->tester->assertFileExists($newDir . '/' . self::MICRO_SERVICE_1_DOCKERFILE);
         $this->tester->assertEquals($newDir, $repo->find($id)->unpacked());
-        $containerName = 'container';
-        $this->tester->runShellCommand("docker inspect -f '{{.State.Running}}' $(docker ps --filter 'name=$containerName' --format '{{.Image}} {{.Names}}')", false);
+        $this->tester->runShellCommand("docker inspect -f '{{.State.Running}}' $(docker ps --filter 'name=$containerPrefix' --format '{{.Image}} {{.Names}}')", false);
         $this->tester->seeInShellOutput('true'); ///-- DZIAŁA!!!
-        $this->tester->runShellCommand("docker inspect -f '{{.State.Running}}' $(docker ps --filter 'name=$containerName' --format '{{.Image}} {{.Names}}' -a) | wc -l", false);
+        $this->tester->runShellCommand("docker inspect -f '{{.State.Running}}' $(docker ps --filter 'name=$containerPrefix' --format '{{.Image}} {{.Names}}' -a) | wc -l", false);
         $this->tester->seeInShellOutput('1'); ///-- DZIAŁA!!!
     }
 }
