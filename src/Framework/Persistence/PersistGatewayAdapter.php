@@ -23,7 +23,8 @@ class PersistGatewayAdapter implements PersistGatewayInterface
 
     public function nextId()
     {
-        return $this->entityManager->getRepository(UService::class)->count([])+1;
+        $all = $this->entityManager->getRepository(UService::class)->findAll();
+        return empty($all) ? 0 : \end($all)->getId()+1;
     }
 
     public function getAll()
@@ -33,7 +34,12 @@ class PersistGatewayAdapter implements PersistGatewayInterface
 
     public function persist(EntityInterface $uServiceEntity)
     {
-        $this->entityManager->persist(UService::fromDomainEntity($uServiceEntity));
+        if(null === $uServiceEntity->id()){
+            $UService = UService::fromDomainEntity($uServiceEntity, null);
+        } else{
+            $UService = $this->entityManager->getRepository(UService::class)->find($uServiceEntity->id());
+        }
+        $this->entityManager->persist($UService);
         $this->entityManager->flush();
     }
 

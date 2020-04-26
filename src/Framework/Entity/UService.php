@@ -29,12 +29,27 @@ class UService implements EntityInterface
      */
     private $movedToDir;
 
-    public static function fromDomainEntity(uServiceEntity $uServiceEntity)
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $unpacked;
+
+    /**
+     * @param uServiceEntity $uServiceEntity
+     * @param UService|null  $frameworkEntity
+     *
+     * @return UService|null
+     */
+    public static function fromDomainEntity(uServiceEntity $uServiceEntity, ?self $frameworkEntity = null)
     {
-        $entity = new self();
+        $entity = $frameworkEntity;
+        if(null === $frameworkEntity){
+            $entity = new self();
+        }
         $entity->setFile($uServiceEntity->file());
         $entity->setMovedToDir($uServiceEntity->movedToDir());
         $entity->setId($uServiceEntity->id());
+        $entity->setUnpacked($uServiceEntity->unpacked());
         return $entity;
     }
 
@@ -78,6 +93,18 @@ class UService implements EntityInterface
     public function id()
     {
         // TODO: Implement id() method.
+    }
+
+    public function getUnpacked(): ?string
+    {
+        return $this->unpacked;
+    }
+
+    public function setUnpacked(?string $unpacked): self
+    {
+        $this->unpacked = $unpacked;
+
+        return $this;
     }
 
 
