@@ -38,11 +38,11 @@ class uServiceEntity implements uServiceEntityInterface
     /**
      * uServiceEntity constructor.
      *
-     * @param string $id
      * @param string $movedToDir
      * @param string $file
+     * @param string $id
      */
-    public function __construct(?string $id, string $movedToDir, string $file)
+    public function __construct(string $movedToDir, string $file, ?string $id = null)
     {
         $this->id = $id;
         $this->movedToDir = $movedToDir;
