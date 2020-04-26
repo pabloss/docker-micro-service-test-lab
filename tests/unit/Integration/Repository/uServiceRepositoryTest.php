@@ -27,23 +27,47 @@ class uServiceRepositoryTest extends \Codeception\Test\Unit
     public function testSomeFeature()
     {
         // Given
-        $id = 'id';
         $file = 'file';
         $movedToDir = 'movedToDir';
-        $repo = new uServiceRepository(new PersistGateway(), new DomainEntityMapper());
+        $gateway = new PersistGateway();
+        $repo = new uServiceRepository($gateway, new DomainEntityMapper());
         $domain = new uService($file, $movedToDir);
 
         // When
-        $repo->persist($domain);
+        $repo->persist($domain, $gateway->nextId());
         $all = $repo->all();
         $lastEntity = \end($all);
 
         // Then
         $this->tester->assertInstanceOf(uServiceEntity::class, $lastEntity);
         $this->tester->assertNotEmpty($lastEntity->id());
-        $this->tester->assertEquals($movedToDir.$lastEntity->id(), $lastEntity->movedToDir());
+        $this->tester->assertEquals($movedToDir, $lastEntity->movedToDir());
         $this->tester->assertEquals($file, $lastEntity->file());
 
-        $this->tester->assertEquals($domain, $repo->find($id));
+        $this->tester->assertEquals($domain, $repo->find($gateway->nextId()));
+    }
+
+    // tests
+    public function testSomeFeatureWithNull()
+    {
+        // Given
+        $file = 'file';
+        $movedToDir = 'movedToDir';
+        $gateway = new PersistGateway();
+        $repo = new uServiceRepository($gateway, new DomainEntityMapper());
+        $domain = new uService($file, $movedToDir);
+
+        // When
+        $repo->persist($domain, null);
+        $all = $repo->all();
+        $lastEntity = \end($all);
+
+        // Then
+        $this->tester->assertInstanceOf(uServiceEntity::class, $lastEntity);
+        $this->tester->assertNotEmpty($lastEntity->id());
+        $this->tester->assertEquals($movedToDir, $lastEntity->movedToDir());
+        $this->tester->assertEquals($file, $lastEntity->file());
+
+        $this->tester->assertEquals($domain, $repo->find($gateway->nextId()));
     }
 }
