@@ -38,14 +38,14 @@ class uServiceRepository implements uServiceRepositoryInterface
         $this->mapper = $mapper;
     }
 
-    public function persist(uServiceInterface $domain)
+    public function persist(uServiceInterface $domain, ?string $id)
     {
         $domain->setMovedToDir(
-            $domain->movedToDir().(string)$this->gateway->nextId()
+            $domain->movedToDir()
         );
         $this->gateway->persist(
             $this->mapper->domain2Entity(
-                (string)$this->gateway->nextId(), $domain
+                $id ?? $this->gateway->nextId(), $domain
             )
         );
     }
