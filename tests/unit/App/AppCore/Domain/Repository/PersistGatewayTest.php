@@ -25,7 +25,7 @@ class PersistGatewayTest extends \Codeception\Test\Unit
         $id = 'id';
         $file = 'test.txt';
         $movedToDir = 'dirName';
-        $uServiceEntity = new uServiceEntity($id, $movedToDir . $id, $file);
+        $uServiceEntity = new uServiceEntity($movedToDir . $id, $file, $id);
 
         $gateway = new PersistGateway();
 
