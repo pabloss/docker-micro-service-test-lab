@@ -31,4 +31,21 @@ class uServiceEntityTest extends \Codeception\Test\Unit
         $this->tester->assertEquals($file, $entity->file());
         $this->tester->assertEquals($movedToDir, $entity->movedToDir());
     }
+
+    // tests
+    public function testSomeFeatureWithNull()
+    {
+        // Given
+        $id = null;
+        $movedToDir = 'movedToDir';
+        $file = 'file';
+
+        // When
+        $entity = new uServiceEntity($id, $movedToDir, $file);
+
+        // Then
+        $this->tester->assertEquals($id, $entity->id());
+        $this->tester->assertEquals($file, $entity->file());
+        $this->tester->assertEquals($movedToDir, $entity->movedToDir());
+    }
 }
