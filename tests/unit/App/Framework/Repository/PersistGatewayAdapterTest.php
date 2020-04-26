@@ -16,31 +16,54 @@ class PersistGatewayAdapterTest extends \Codeception\Test\Unit
 
     public function testNextId()
     {
-        $intiCount = 0;
         $repo = $this->prophesize(UServiceRepository::class);
-        $repo->count([])->willReturn($intiCount);
+        $repo->findAll()->willReturn([]);
         $em = $this->prophesize(EntityManagerInterface::class);
-        $em->getRepository(UService::class)->willReturn($repo);
+        $em->getRepository(UService::class)->willReturn($repo->reveal());
 
         $adapter = new PersistGatewayAdapter($em->reveal());
-        $this->tester->assertEquals(1, $adapter->nextId());
+        $this->tester->assertEquals(0, $adapter->nextId());
     }
 
     public function testPersist()
     {
         $id = 'id';
-        $entity = new uServiceEntity($id, 'movedToDir', 'file');
+        $entity = new uServiceEntity('movedToDir', 'file', $id);
+        $UService = UService::fromDomainEntity($entity, null);
+
+        $repo = $this->prophesize(UServiceRepository::class);
+        $repo->find($id)->willReturn($UService);
+
         $em = $this->prophesize(EntityManagerInterface::class);
-        $adapter = new PersistGatewayAdapter($em->reveal());
-        $em->persist(UService::fromDomainEntity($entity))->shouldBeCalled()->willReturn($id);
+        $em->getRepository(UService::class)->willReturn($repo->reveal());
+        $em->persist($UService)->shouldBeCalled();
         $em->flush()->shouldBeCalled();
 
-        $this->tester->assertEquals($id, $adapter->persist($entity));
+        $adapter = new PersistGatewayAdapter($em->reveal());
+        $adapter->persist($entity);
+        $this->tester->assertEquals($UService, $repo->reveal()->find($id));
     }
+
+    public function testPersistNewEntity()
+    {
+        $id = 'id';
+        $entity = new uServiceEntity('movedToDir', 'file', null);
+
+        $repo = $this->prophesize(UServiceRepository::class);
+        $em = $this->prophesize(EntityManagerInterface::class);
+        $em->getRepository(UService::class)->willReturn($repo->reveal());
+
+        $UServiceEntity = UService::fromDomainEntity($entity, null);
+        $em->persist($UServiceEntity)->shouldBeCalled()->willReturn($id);
+        $em->flush()->shouldBeCalled();
+
+        $adapter = new PersistGatewayAdapter($em->reveal());
+        $adapter->persist($entity);
+    }
+
 
     public function testGetAll()
     {
-
         $repo = $this->prophesize(UServiceRepository::class);
         $repo->findAll()->willReturn([]);
         $em = $this->prophesize(EntityManagerInterface::class);
