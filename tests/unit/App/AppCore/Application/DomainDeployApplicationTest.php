@@ -39,7 +39,7 @@ class DomainDeployApplicationTest extends \Codeception\Test\Unit
 
         $repo = $this->prophesize(uServiceRepository::class);
         $repo->find($id)->shouldBeCalled()->willReturn($uService->reveal());
-        $repo->persist($uService->reveal())->shouldBeCalled();
+        $repo->persist($uService->reveal(), $id)->shouldBeCalled();
 
         $buildService = $this->prophesize(BuildServiceInterface::class);
         $dir = $this->prophesize(Dir::class);
@@ -53,8 +53,8 @@ class DomainDeployApplicationTest extends \Codeception\Test\Unit
         $collection->getCommand(1)->willReturn($runCommand->reveal());
         $commandFactory = $this->prophesize(CommandFactoryInterface::class);
 
-        $commandFactory->createCommand('build', 'Dockerfile', 'imagePref')->willReturn($buildCommand->reveal());
-        $commandFactory->createCommand('run', 'containerPref', 'imagePref')->willReturn($runCommand->reveal());
+        $commandFactory->createCommand('build', 'Dockerfile', 'imagePref_id')->willReturn($buildCommand->reveal());
+        $commandFactory->createCommand('run', 'containerPref_id', 'imagePref_id')->willReturn($runCommand->reveal());
         $commandFactory->createCollection([$buildCommand->reveal(), $runCommand->reveal()])->willReturn($collection->reveal());
 
         $service = new DeployApplication($unpackService->reveal(), $buildService->reveal(), $dir->reveal(), $commandFactory->reveal(), $repo->reveal());
@@ -70,8 +70,8 @@ class DomainDeployApplicationTest extends \Codeception\Test\Unit
          *      - stosując zależność UnpackServiceInterface oraz Repo: rozpakuj (do nowej lokalizcji) i zapisz do bazy
          */
 
-        $repo->persist($uService->reveal());
-        $service->deploy($id, $unpackedDir . $id, '', '');
+        $repo->reveal()->persist($uService->reveal(), $id);
+        $service->deploy($id, $unpackedDir . $id, 'imagePref', 'containerPref');
 
         $this->tester->assertEquals($unpackedDir . $id, $repo->reveal()->find($id)->unpacked());
     }
