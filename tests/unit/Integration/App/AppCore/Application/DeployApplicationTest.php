@@ -94,7 +94,7 @@ class DeployApplicationTest extends \Codeception\Test\Unit
         ); //Framework
 
         // When
-        $repo->persist(new uService(self::DATA_DIR . self::PACKED_MICRO_SERVICE, self::DATA_DIR));
+        $repo->persist(new uService(self::DATA_DIR . self::PACKED_MICRO_SERVICE, self::DATA_DIR), null);
         if(!\file_exists($newDir)){
             \mkdir($newDir);
         }
