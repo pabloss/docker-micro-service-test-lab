@@ -54,7 +54,7 @@ class DeployApplication
     public function deploy(string $id, string $targetDir, string $imagePrefix, string $containerPrefix)
     {
         $this->repository->persist(
-            $this->service->unpack($this->repository->find($id), $targetDir)
+            $this->service->unpack($this->repository->find($id), $targetDir), $id
         );
 
         $this->buildService->build($this->createCommandCollection($id, $imagePrefix, $containerPrefix));
