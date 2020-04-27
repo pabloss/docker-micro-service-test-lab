@@ -29,9 +29,7 @@ class DomainDeployApplicationTest extends \Codeception\Test\Unit
         $uService = $this->prophesize(uServiceInterface::class);
         $unpackService = $this->prophesize(UnpackServiceInterface::class);
         $unpackService->unpack($uService->reveal(), $unpackedDir . $id)->will(function ($args) use (
-            $uService,
-            $unpackedDir,
-            $id
+            $uService
         ) {
             $uService->unpacked()->willReturn($args[1]);
             return $uService->reveal();
