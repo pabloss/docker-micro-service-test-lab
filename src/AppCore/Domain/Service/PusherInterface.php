@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\AppCore\Domain\Service;
 
-class PusherInterface
+interface PusherInterface
 {
-
+    public function send();
 }

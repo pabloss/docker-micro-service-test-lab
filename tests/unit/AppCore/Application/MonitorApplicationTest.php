@@ -39,7 +39,6 @@ class MonitorApplicationTest extends \Codeception\Test\Unit
          * Listener dostanie eventy z payoloadem
          * i użyje pushera: listener przekaże output do pushera: push('out', outType)
          */
-
         $outType = 'stoOut';
         $testText = "TEST IT!";
         $testCommand = $this->prophesize(CommandInterface::class);
@@ -67,7 +66,7 @@ class MonitorApplicationTest extends \Codeception\Test\Unit
         });
 
         $collection->reveal()->addCommand($testCommand->reveal());
-        $application = new MonitorApplication($runner->reveal(), $listener->reveal(), $pusher->reveal());
+        $application = new MonitorApplication($runner->reveal());
 
         $application->run($collection->reveal());
     }
