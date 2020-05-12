@@ -12,33 +12,40 @@ class SaveServiceCest
     public function _after(AcceptanceTester $I)
     {
         file_put_contents(__DIR__.self::DATA_DIR. self::TEST_UPLOAD_FILE_NAME, '');
-//        $files = array_diff(scandir(__DIR__.self::TEST_UPLOADED_DIR.'uploaded/' , SCANDIR_SORT_DESCENDING), ['..', '.', '.gitkeep']);
-//        foreach ($files as $file) {
-//            unlink(__DIR__.self::TEST_UPLOADED_DIR.'uploaded/'.$file);
-//        }
     }
 
 
     // tests
     public function tryToTest(AcceptanceTester $I)
     {
+
+        $beforeCount = $I->grabNumRecords('u_service');
         $I->amOnPage("/");
         $I->attachFile('input[type="file"]', self::DATA_DIR. self::TEST_UPLOAD_FILE_NAME);
         $I->wait(5);
         Codeception\PHPUnit\TestCase::assertStringStartsWith("test", $this->getLastFileName('uploaded/'));
-        $id = $I->grabFromDatabase('u_service', 'id', [
-            'file' => \basename(__DIR__.self::TEST_UPLOADED_DIR.self::TEST_UPLOAD_FILE_NAME),
+        $afterCount =  $I->grabNumRecords('u_service');
+        $ids = $I->grabColumnFromDatabase('u_service', 'id');
+        $lastId = \end($ids);
+        $I->assertEquals(1, $afterCount - $beforeCount);
+        $I->seeInDatabase('u_service', [
+            'id' => (int) $lastId,
+            'moved_to_dir' => dirname(__DIR__).'/files/uploaded',
         ]);
-        $I->seeInDatabase('u_service',
-            [
-                'file' => \basename(__DIR__.self::TEST_UPLOADED_DIR.self::TEST_UPLOAD_FILE_NAME),
-                'moved_to_dir' => \basename(__DIR__.self::TEST_UPLOADED_DIR.'/uploaded'). $id
-            ]
-        );
+
     }
 
     private function getLastFileName(string $subDir)
     {
-        return array_diff(scandir(__DIR__.self::TEST_UPLOADED_DIR.$subDir , SCANDIR_SORT_DESCENDING), ['..', '.', '.gitkeep'])[0];
+        return
+            array_diff(
+                scandir(__DIR__ . self::TEST_UPLOADED_DIR . $subDir .
+                    array_diff(
+                        scandir(__DIR__ . self::TEST_UPLOADED_DIR . $subDir,SCANDIR_SORT_DESCENDING),
+                        ['..', '.', '.gitkeep']
+                    )[0],SCANDIR_SORT_DESCENDING
+                ),
+                ['..', '.', '.gitkeep']
+            )[0];
     }
 }
