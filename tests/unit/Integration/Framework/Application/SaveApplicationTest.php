@@ -5,13 +5,11 @@ use App\AppCore\Domain\Repository\DomainEntityMapper;
 use App\AppCore\Domain\Repository\uServiceRepository;
 use App\AppCore\Domain\Service\SaveDomainService;
 use App\Framework\Application\FrameworkSaveApplication;
-use App\Framework\Factory\FileFactory;
-use App\Framework\Files\UploadedFileAdapter;
+use App\Framework\Files\FileAdapter;
 use App\Framework\Persistence\PersistGatewayAdapter;
 use App\Framework\Service\SaveToFileSystemService;
 use Codeception\Util\Autoload;
-use Integration\Stubs\File;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\File\File;
 
 class SaveApplicationTest extends \Codeception\Test\Unit
 {
@@ -34,6 +32,7 @@ class SaveApplicationTest extends \Codeception\Test\Unit
         Autoload::addNamespace('Integration\Stubs', __DIR__.'/../../Stubs/');
         $fileToSave = __DIR__ . '/../../../../_data/save_test';
         $targetDir =  __DIR__ . '/../../../../_data/target_dir';
+        \file_put_contents($fileToSave, '');
         /**
          * Domena ma użyć interfacw wraz z frameworkiem by zapisać
          * do bazy
@@ -49,15 +48,12 @@ class SaveApplicationTest extends \Codeception\Test\Unit
                 )
             )
         );
-        $application->save(new File($fileToSave), $targetDir);
+        $application->save(new FileAdapter(new File($fileToSave)), $targetDir);
 
-        $id = $this->tester->grabFromDatabase('u_service', 'id', [
-            'file' => \basename($fileToSave),
-        ]);
         $this->tester->seeInDatabase('u_service',
             [
-                'file' => \basename($fileToSave),
-                'moved_to_dir' => \basename($targetDir). $id
+                'file' => $fileToSave,
+                'moved_to_dir' => $targetDir
             ]
             );
         $this->tester->seeFileFound(\basename($fileToSave), $targetDir);
