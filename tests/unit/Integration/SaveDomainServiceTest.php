@@ -40,8 +40,7 @@ class SaveDomainServiceTest extends \Codeception\Test\Unit
         $all = $repo->all();
 
         // Then
-        $this->tester->assertNotEmpty(\end($all)->id());
-        $this->tester->assertEquals($movedToDir.$id, $repo->find($id)->movedToDir());
-        $this->tester->assertEquals($file, $repo->find($id)->file());
+        $this->tester->assertEquals($movedToDir,\end($all)->movedToDir());
+        $this->tester->assertEquals($file, \end($all)->file());
     }
 }
