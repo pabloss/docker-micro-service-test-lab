@@ -48,7 +48,7 @@ class CommnadRunnerTest extends \Codeception\Test\Unit
         $collection = new CommandCollection();
         $collection->addCommand($buildCommand);
         $collection->addCommand($runCommand);
-        $runner = new RunnerStub($collection);
+        $runner = new RunnerStub();
         $runner->run($collection);
 
         $this->tester->assertInstanceOf(CommandRunnerInterface::class, $runner);

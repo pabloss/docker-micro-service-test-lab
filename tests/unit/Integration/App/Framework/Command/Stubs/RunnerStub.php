@@ -10,7 +10,10 @@ use App\Framework\Service\Command\CommandRunner;
 class RunnerStub extends CommandRunner
 {
     public static $counter = 0;
+    public function __construct()
+    {
 
+    }
 
     public function run(CommandsCollectionInterface $collection)
     {
