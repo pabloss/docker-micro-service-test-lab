@@ -12,9 +12,11 @@ use App\Framework\Service\Command\BuildCommand;
 use App\Framework\Service\Command\CommandCollection;
 use App\Framework\Service\Command\CommandFactory;
 use App\Framework\Service\Command\CommandRunner;
+use App\Framework\Service\Command\Fetcher\Fetcher;
 use App\Framework\Service\Command\RunCommand;
 use App\Framework\Service\UnpackAdapter;
 use App\MixedContext\Domain\Service\Files\Dir;
+use App\Tests\unit\Integration\Stubs\OutPutAdapter;
 use Codeception\Util\Autoload;
 use Integration\Stubs\PersistGateway;
 
@@ -75,7 +77,7 @@ class DeployApplicationTest extends \Codeception\Test\Unit
         $collection = new CommandCollection();
         $collection->addCommand($buildCommand);
         $collection->addCommand($runCommand);
-        $service = new BuildService(new CommandRunner());
+        $service = new BuildService(new CommandRunner(new Fetcher(), new OutPutAdapter()));
 
         /**
          * 1. Deploy application ma robić unppack
@@ -94,7 +96,7 @@ class DeployApplicationTest extends \Codeception\Test\Unit
         ); //Framework
 
         // When
-        $repo->persist(new uService(self::DATA_DIR . self::PACKED_MICRO_SERVICE, self::DATA_DIR), null);
+        $repo->persist(new uService(self::DATA_DIR . self::PACKED_MICRO_SERVICE, self::DATA_DIR), $id);
         if(!\file_exists($newDir)){
             \mkdir($newDir);
         }
