@@ -26,11 +26,14 @@ class SaveServiceCest
         Codeception\PHPUnit\TestCase::assertStringStartsWith("test", $this->getLastFileName('uploaded/'));
         $afterCount =  $I->grabNumRecords('u_service');
         $ids = $I->grabColumnFromDatabase('u_service', 'id');
+        $files = $I->grabColumnFromDatabase('u_service', 'file');
+        $lastFile = \end($files);
         $lastId = \end($ids);
         $I->assertEquals(1, $afterCount - $beforeCount);
         $I->seeInDatabase('u_service', [
             'id' => (int) $lastId,
-            'moved_to_dir' => dirname(__DIR__).'/files/uploaded',
+            'file' => $lastFile,
+            'moved_to_dir' => dirname(__DIR__, 2).'/files/uploaded',
         ]);
 
     }
