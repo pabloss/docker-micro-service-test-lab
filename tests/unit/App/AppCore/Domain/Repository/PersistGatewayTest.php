@@ -1,6 +1,7 @@
 <?php namespace App\AppCore\Domain\Repository;
 
 use Codeception\Util\Autoload;
+use Integration\Stubs\PersistGateway;
 
 class PersistGatewayTest extends \Codeception\Test\Unit
 {
@@ -8,10 +9,10 @@ class PersistGatewayTest extends \Codeception\Test\Unit
      * @var \UnitTester
      */
     protected $tester;
-    
+
     protected function _before()
     {
-        Autoload::addNamespace(__NAMESPACE__, __DIR__);
+        Autoload::addNamespace('Integration\Stubs', __DIR__.'/../../../../Integration/Stubs/');
     }
 
     protected function _after()

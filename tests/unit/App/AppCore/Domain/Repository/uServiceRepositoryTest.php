@@ -68,7 +68,7 @@ class uServiceRepositoryTest extends \Codeception\Test\Unit
 
 
         $mapper = $this->prophesize(DomainEntityMapperInterface::class);
-        $mapper->domain2Entity($nextId, $domain)->willReturn($uServiceEntity);
+        $mapper->domain2Entity(null, $domain)->willReturn($uServiceEntity);
         $mapper->entity2Domain($uServiceEntity)->willReturn($domain);
         $repo = new uServiceRepository($persistGateway->reveal(), $mapper->reveal());  //jeśli repo zależy od mappera to będę mógł zrobić mocka do entity
 
