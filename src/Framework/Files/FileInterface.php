@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\MixedContext\Domain\Service\Files;
+namespace App\Framework\Files;
 
 interface FileInterface
 {

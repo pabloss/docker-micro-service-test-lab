@@ -1,9 +1,6 @@
 <?php
 
 use App\MixedContext\Domain\Service\Command\CommandProcessor;
-use App\MixedContext\Domain\Service\Files\Dir;
-use App\MixedContext\Domain\Service\Files\Unpack;
-use Codeception\Scenario;
 
 
 /**

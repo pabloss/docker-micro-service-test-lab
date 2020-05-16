@@ -18,7 +18,7 @@ use App\AppCore\Domain\Actors\uServiceInterface;
 class uServiceRepository implements uServiceRepositoryInterface
 {
     /**
-     * @var PersistGateway
+     * @var PersistGatewayInterface
      */
     private $gateway;
     /**

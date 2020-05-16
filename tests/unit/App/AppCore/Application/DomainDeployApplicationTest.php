@@ -10,7 +10,7 @@ use App\AppCore\Domain\Service\Command\BuildCommand;
 use App\AppCore\Domain\Service\Command\CommandFactoryInterface;
 use App\AppCore\Domain\Service\Command\CommandsCollectionInterface;
 use App\AppCore\Domain\Service\Command\RunCommand;
-use App\MixedContext\Domain\Service\Files\Dir;
+use App\Framework\Files\Dir;
 
 class DomainDeployApplicationTest extends \Codeception\Test\Unit
 {

@@ -1,4 +1,4 @@
-<?php namespace App\MixedContext\Domain\Service\Files;
+<?php namespace App\Framework\Files;
 
 class DirTest extends \Codeception\Test\Unit
 {

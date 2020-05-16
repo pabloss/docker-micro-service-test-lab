@@ -8,7 +8,7 @@ use App\AppCore\Application\Monitor\FetcherInterface;
 class CommandRunner implements CommandRunnerInterface
 {
     /**
-     * @var \App\AppCore\Application\Monitor\FetcherInterface
+     * @var FetcherInterface
      */
     private $fetcher;
     /**

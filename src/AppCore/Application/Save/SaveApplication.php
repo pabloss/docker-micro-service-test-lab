@@ -34,7 +34,7 @@ class SaveApplication implements SaveApplicationInterface
      * SaveApplication constructor.
      *
      * @param SaveToFileSystemInterface                                   $saveToFileSystem
-     * @param \App\AppCore\Domain\Service\Save\SaveDomainServiceInterface $service
+     * @param SaveDomainServiceInterface $service
      */
     public function __construct(SaveToFileSystemInterface $saveToFileSystem, SaveDomainServiceInterface $service)
     {
