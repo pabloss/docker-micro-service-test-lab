@@ -12,11 +12,11 @@ class CommandRunner implements CommandRunnerInterface
      */
     private $fetcher;
     /**
-     * @var OutPutInterface
+     * @var WatcherInterface
      */
     private $outPut;
 
-    public function __construct(FetcherInterface $fetcher, OutPutInterface $outPut)
+    public function __construct(FetcherInterface $fetcher, WatcherInterface $outPut)
     {
         $this->fetcher = $fetcher;
         $this->outPut = $outPut;

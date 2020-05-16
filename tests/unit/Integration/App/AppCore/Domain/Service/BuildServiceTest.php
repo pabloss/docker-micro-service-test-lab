@@ -6,7 +6,7 @@ use App\AppCore\Domain\Service\Command\CommandCollection;
 use App\AppCore\Domain\Service\Command\CommandRunner;
 use App\AppCore\Domain\Service\Command\RunCommand;
 use App\Framework\Service\Command\Fetcher\Fetcher;
-use App\Tests\unit\Integration\Stubs\OutPutAdapter;
+use App\Tests\unit\Integration\Stubs\WatcherAdapter;
 
 class BuildServiceTest extends \Codeception\Test\Unit
 {
@@ -63,7 +63,7 @@ class BuildServiceTest extends \Codeception\Test\Unit
         $collection = new CommandCollection();
         $collection->addCommand($buildCommand);
         $collection->addCommand($runCommand);
-        $service = new BuildService(new CommandRunner(new Fetcher(), new OutPutAdapter()));
+        $service = new BuildService(new CommandRunner(new Fetcher(), new WatcherAdapter()));
 
         $service->build($collection);
 

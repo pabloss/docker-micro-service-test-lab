@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\AppCore\Application\Monitor;
 
-use App\AppCore\Domain\Service\Command\OutPutInterface;
+use App\AppCore\Domain\Service\Command\WatcherInterface;
 
 interface FetcherInterface
 {
-    public function exec(string $command, OutPutInterface $output);
+    public function exec(string $command, WatcherInterface $output);
 }

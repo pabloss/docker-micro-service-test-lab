@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Framework\Service\WebSockets\Context;
 
-use App\AppCore\Domain\Service\Command\OutPutInterface;
+use App\AppCore\Domain\Service\Command\WatcherInterface;
 
-class WrappedContextSendAdapter extends WrappedContext implements OutPutInterface
+class WebSocketWatcherAdapter extends WrappedContext implements WatcherInterface
 {
 
     public function writeln(string $output)

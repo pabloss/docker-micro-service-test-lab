@@ -2,9 +2,9 @@
 
 use App\Framework\Service\Command\Fetcher\Fetcher;
 use App\Framework\Service\WebSockets\Context\Context;
-use App\Framework\Service\WebSockets\Context\WrappedContextSendAdapter;
+use App\Framework\Service\WebSockets\Context\WebSocketWatcherAdapter;
 use App\Framework\Service\WebSockets\Context\Wrapper;
-use App\Tests\unit\Integration\Stubs\OutPutAdapter;
+use App\Tests\unit\Integration\Stubs\WatcherAdapter;
 use Codeception\Util\Autoload;
 
 
@@ -29,7 +29,7 @@ class FetcherTest extends \Codeception\Test\Unit
     {
         $fetcher = new Fetcher();
 
-        $outputAdapterStub = new OutPutAdapter();
+        $outputAdapterStub = new WatcherAdapter();
         $fetcher->exec('echo -n test', $outputAdapterStub);
         $out = $outputAdapterStub->getOuts();
         $this->tester->assertEquals('test', $out);
@@ -40,7 +40,7 @@ class FetcherTest extends \Codeception\Test\Unit
     {
         $fetcher = new Fetcher();
 
-        $outputAdapterStub = new WrappedContextSendAdapter(new Context(new \ZMQContext(), '127.0.0.1', 5555), new Wrapper());
+        $outputAdapterStub = new WebSocketWatcherAdapter(new Context(new \ZMQContext(), '127.0.0.1', 5555), new Wrapper());
         $fetcher->exec('echo -n test', $outputAdapterStub);
     }
 }

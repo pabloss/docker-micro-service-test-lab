@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\AppCore\Domain\Service\Command;
 
-interface OutPutInterface
+interface WatcherInterface
 {
     public function writeln(string $output);
 }

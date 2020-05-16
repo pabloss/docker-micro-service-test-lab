@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Framework\Service\Command\Fetcher;
 
 use App\AppCore\Application\Monitor\FetcherInterface;
-use App\AppCore\Domain\Service\Command\OutPutInterface;
+use App\AppCore\Domain\Service\Command\WatcherInterface;
 
 class Fetcher implements FetcherInterface
 {
@@ -20,7 +20,7 @@ class Fetcher implements FetcherInterface
     ];
 
 
-    public function exec(string $command, OutPutInterface $output)
+    public function exec(string $command, WatcherInterface $output)
     {
         flush();
         $process = \proc_open(

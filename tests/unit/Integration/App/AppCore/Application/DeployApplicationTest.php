@@ -16,7 +16,7 @@ use App\AppCore\Domain\Service\Command\RunCommand;
 use App\Framework\Service\Command\Fetcher\Fetcher;
 use App\Framework\Service\UnpackAdapter;
 use App\MixedContext\Domain\Service\Files\Dir;
-use App\Tests\unit\Integration\Stubs\OutPutAdapter;
+use App\Tests\unit\Integration\Stubs\WatcherAdapter;
 use Codeception\Util\Autoload;
 use Integration\Stubs\PersistGateway;
 
@@ -77,7 +77,7 @@ class DeployApplicationTest extends \Codeception\Test\Unit
         $collection = new CommandCollection();
         $collection->addCommand($buildCommand);
         $collection->addCommand($runCommand);
-        $service = new BuildService(new CommandRunner(new Fetcher(), new OutPutAdapter()));
+        $service = new BuildService(new CommandRunner(new Fetcher(), new WatcherAdapter()));
 
         /**
          * 1. Deploy application ma robić unppack

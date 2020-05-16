@@ -1,6 +1,6 @@
 <?php
 
-use App\AppCore\Domain\Service\Command\OutPutInterface;
+use App\AppCore\Domain\Service\Command\WatcherInterface;
 use App\Framework\Service\Command\Fetcher\Fetcher;
 use App\Framework\Service\WebSockets\Context\WrappedContext;
 
@@ -26,7 +26,7 @@ class FetcherTest extends \Codeception\Test\Unit
         $wrappedContext = $this->prophesize(WrappedContext::class);
         $wrappedContext->send(['test'])->shouldBeCalled();
 
-        $outputAdapter = $this->prophesize(OutPutInterface::class);
+        $outputAdapter = $this->prophesize(WatcherInterface::class);
         $outputAdapter->willBeConstructedWith([$wrappedContext->reveal()]);
         $outputAdapter->writeln('test')->will(function ($args)use($wrappedContext){
             $wrappedContext->reveal()->send([$args[0]]);
