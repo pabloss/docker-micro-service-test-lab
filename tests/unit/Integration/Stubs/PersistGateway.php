@@ -5,6 +5,7 @@ namespace Integration\Stubs;
 
 use App\AppCore\Domain\Repository\EntityInterface;
 use App\AppCore\Domain\Repository\PersistGatewayInterface;
+use App\AppCore\Domain\Repository\uServiceEntity;
 
 class PersistGateway implements PersistGatewayInterface
 {
@@ -30,6 +31,10 @@ class PersistGateway implements PersistGatewayInterface
                 $item = $uServiceEntity;
             }
         }
+        if(null === $uServiceEntity->id()){
+            $uServiceEntity = new uServiceEntity($uServiceEntity->movedToDir(), $uServiceEntity->file(), $this->nextId());
+        }
+
         if(0 === \count($this->filterCollectionById($uServiceEntity->id()))){
             $this->collection[] = $uServiceEntity;
         }

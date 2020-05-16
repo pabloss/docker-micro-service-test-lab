@@ -3,11 +3,24 @@ declare(strict_types=1);
 
 namespace App\Tests\unit\Integration\Stubs;
 
-class OutPutAdatper implements \App\AppCore\Domain\Service\OutPutInterface
+class OutPutAdapter implements \App\AppCore\Domain\Service\OutPutInterface
 {
+    private $outs;
+
+    public function __construct()
+    {
+        $this->outs = '';
+    }
 
     public function writeln(string $output)
     {
-        // TODO: Implement writeln() method.
+        $this->outs = $output;
+    }
+
+    /**
+     */
+    public function getOuts(): string
+    {
+        return $this->outs;
     }
 }

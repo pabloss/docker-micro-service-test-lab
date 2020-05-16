@@ -3,7 +3,23 @@ declare(strict_types=1);
 
 namespace App\Tests\unit\Integration\Stubs;
 
-class TestCommand
+use App\AppCore\Domain\Service\CommandInterface;
+
+class TestCommand implements CommandInterface
 {
+    /**
+     * @var string
+     */
+    private $input;
+
+    public function __construct(string $input)
+    {
+        $this->input = $input;
+    }
+
+    public function command(): string
+    {
+        return "echo {$this->input}";
+    }
 
 }
