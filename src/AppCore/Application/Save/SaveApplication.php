@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace App\AppCore\Application;
+namespace App\AppCore\Application\Save;
 
 use App\AppCore\Domain\Actors\FileInterface;
-use App\AppCore\Domain\Service\SaveDomainService;
-use App\AppCore\Domain\Service\SaveDomainServiceInterface;
+use App\AppCore\Domain\Service\Save\SaveDomainService;
+use App\AppCore\Domain\Service\Save\SaveDomainServiceInterface;
 
 /**
  * Class SaveApplication
@@ -22,7 +22,7 @@ class SaveApplication implements SaveApplicationInterface
 {
 
     /**
-     * @var SaveDomainService
+     * @var \App\AppCore\Domain\Service\Save\SaveDomainService
      */
     private $service;
     /**
@@ -33,8 +33,8 @@ class SaveApplication implements SaveApplicationInterface
     /**
      * SaveApplication constructor.
      *
-     * @param SaveToFileSystemInterface                              $saveToFileSystem
-     * @param SaveDomainServiceInterface $service
+     * @param SaveToFileSystemInterface                                   $saveToFileSystem
+     * @param \App\AppCore\Domain\Service\Save\SaveDomainServiceInterface $service
      */
     public function __construct(SaveToFileSystemInterface $saveToFileSystem, SaveDomainServiceInterface $service)
     {

@@ -2,7 +2,7 @@
 
 use App\AppCore\Domain\Repository\DomainEntityMapper;
 use App\AppCore\Domain\Repository\uServiceRepository;
-use App\AppCore\Domain\Service\SaveDomainService;
+use App\AppCore\Domain\Service\Save\SaveDomainService;
 use Codeception\Util\Autoload;
 use Integration\Stubs\PersistGateway;
 

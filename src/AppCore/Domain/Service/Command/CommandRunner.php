@@ -1,17 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Framework\Service\Command;
+namespace App\AppCore\Domain\Service\Command;
 
-use App\AppCore\Domain\Service\CommandRunnerInterface;
-use App\AppCore\Domain\Service\CommandsCollectionInterface;
-use App\AppCore\Domain\Service\OutPutInterface;
-use App\Framework\Service\Command\Fetcher\FetcherInterface;
+use App\AppCore\Application\Monitor\FetcherInterface;
 
 class CommandRunner implements CommandRunnerInterface
 {
     /**
-     * @var \App\Framework\Service\Command\Fetcher\FetcherInterface
+     * @var \App\AppCore\Application\Monitor\FetcherInterface
      */
     private $fetcher;
     /**

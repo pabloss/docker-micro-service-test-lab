@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Tests\unit\Integration\App\Framework\Command\Stubs;
 
-use App\AppCore\Domain\Service\CommandInterface;
-use App\AppCore\Domain\Service\CommandsCollectionInterface;
-use App\Framework\Service\Command\CommandRunner;
+use App\AppCore\Domain\Service\Command\CommandInterface;
+use App\AppCore\Domain\Service\Command\CommandRunner;
+use App\AppCore\Domain\Service\Command\CommandsCollectionInterface;
 
 class RunnerStub extends CommandRunner
 {

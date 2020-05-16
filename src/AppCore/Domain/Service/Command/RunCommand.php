@@ -1,9 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Framework\Service\Command;
-
-use App\AppCore\Domain\Service\CommandInterface;
+namespace App\AppCore\Domain\Service\Command;
 
 class RunCommand implements CommandInterface
 {

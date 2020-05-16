@@ -1,6 +1,10 @@
 <?php namespace App\Framework\Service\Command;
 
-use App\AppCore\Domain\Service\CommandFactoryInterface;
+use App\AppCore\Domain\Service\Command\BuildCommand;
+use App\AppCore\Domain\Service\Command\CommandCollection;
+use App\AppCore\Domain\Service\Command\CommandFactory;
+use App\AppCore\Domain\Service\Command\CommandFactoryInterface;
+use App\AppCore\Domain\Service\Command\RunCommand;
 
 class CommandFactoryTest extends \Codeception\Test\Unit
 {

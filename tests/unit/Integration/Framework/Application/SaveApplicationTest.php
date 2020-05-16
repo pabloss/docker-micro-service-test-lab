@@ -1,9 +1,8 @@
 <?php namespace Integration\Framework\Application;
 
-use App\AppCore\Application\SaveApplication;
 use App\AppCore\Domain\Repository\DomainEntityMapper;
 use App\AppCore\Domain\Repository\uServiceRepository;
-use App\AppCore\Domain\Service\SaveDomainService;
+use App\AppCore\Domain\Service\Save\SaveDomainService;
 use App\Framework\Application\FrameworkSaveApplication;
 use App\Framework\Files\FileAdapter;
 use App\Framework\Persistence\PersistGatewayAdapter;
@@ -41,7 +40,7 @@ class SaveApplicationTest extends \Codeception\Test\Unit
         $em =
             $this->tester->grabService('doctrine.orm.entity_manager');;
         $application = new FrameworkSaveApplication(
-            new SaveApplication(
+            new \App\AppCore\Application\Save\SaveApplication(
                 new SaveToFileSystemService(), new SaveDomainService(
                     $targetDir,
                     new uServiceRepository(new PersistGatewayAdapter($em), new DomainEntityMapper())

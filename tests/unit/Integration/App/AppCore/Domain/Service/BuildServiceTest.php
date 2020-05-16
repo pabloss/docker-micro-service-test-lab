@@ -1,11 +1,11 @@
 <?php namespace Integration\App\AppCore\Domain\Service;
 
-use App\AppCore\Domain\Service\BuildService;
-use App\Framework\Service\Command\BuildCommand;
-use App\Framework\Service\Command\CommandCollection;
-use App\Framework\Service\Command\CommandRunner;
+use App\AppCore\Domain\Service\Build\BuildService;
+use App\AppCore\Domain\Service\Command\BuildCommand;
+use App\AppCore\Domain\Service\Command\CommandCollection;
+use App\AppCore\Domain\Service\Command\CommandRunner;
+use App\AppCore\Domain\Service\Command\RunCommand;
 use App\Framework\Service\Command\Fetcher\Fetcher;
-use App\Framework\Service\Command\RunCommand;
 use App\Tests\unit\Integration\Stubs\OutPutAdapter;
 
 class BuildServiceTest extends \Codeception\Test\Unit

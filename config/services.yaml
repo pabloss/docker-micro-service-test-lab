@@ -60,7 +60,7 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
-    App\AppCore\Domain\Service\SaveDomainService:
+    App\AppCore\Domain\Service\Save\SaveDomainService:
         arguments:
             $dirName: '%uploaded_directory%'
     ZipArchive:
@@ -83,9 +83,9 @@ services:
     App\Framework\Service\WebSockets\Context\WrappedContext: ~
     App\Framework\Service\Command\Fetcher\Fetcher: ~
     App\Framework\Service\WebSockets\Context\WrappedContextInterface: '@App\Framework\Service\WebSockets\Context\WrappedContext'
-    App\Framework\Service\Command\Fetcher\FetcherInterface: '@App\Framework\Service\Command\Fetcher\Fetcher'
+    App\AppCore\Application\Monitor\FetcherInterface: '@App\Framework\Service\Command\Fetcher\Fetcher'
     App\Framework\Service\WebSockets\Context\WrappedContextSendAdapter: ~
-    App\Framework\Service\Command\CommandRunner:
+    App\AppCore\Domain\Service\Command\CommandRunner:
         arguments:
-            $fetcher: '@App\Framework\Service\Command\Fetcher\FetcherInterface'
+            $fetcher: '@App\AppCore\Application\Monitor\FetcherInterface'
             $outPut: '@App\Framework\Service\WebSockets\Context\WrappedContextSendAdapter'

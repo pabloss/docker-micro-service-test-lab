@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Tests\unit\Integration\Stubs;
 
-class OutPutAdapter implements \App\AppCore\Domain\Service\OutPutInterface
+class OutPutAdapter implements \App\AppCore\Domain\Service\Command\OutPutInterface
 {
     private $outs;
 

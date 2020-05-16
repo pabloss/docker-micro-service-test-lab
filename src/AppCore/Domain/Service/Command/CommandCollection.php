@@ -1,11 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Framework\Service\Command;
-
-use App\AppCore\Domain\Service\CommandInterface;
-use App\AppCore\Domain\Service\CommandsCollectionInterface;
-use phpDocumentor\Reflection\Types\This;
+namespace App\AppCore\Domain\Service\Command;
 
 class CommandCollection extends \ArrayObject implements CommandsCollectionInterface
 {

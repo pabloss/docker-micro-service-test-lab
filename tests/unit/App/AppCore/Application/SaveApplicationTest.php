@@ -1,7 +1,9 @@
 <?php namespace App\AppCore\Application;
 
+use App\AppCore\Application\Save\SaveApplication;
+use App\AppCore\Application\Save\SaveToFileSystemInterface;
 use App\AppCore\Domain\Actors\FileInterface;
-use App\AppCore\Domain\Service\SaveDomainServiceInterface;
+use App\AppCore\Domain\Service\Save\SaveDomainServiceInterface;
 
 class SaveApplicationTest extends \Codeception\Test\Unit
 {

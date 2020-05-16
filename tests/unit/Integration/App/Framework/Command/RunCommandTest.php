@@ -1,7 +1,6 @@
 <?php namespace Integration\App\Framework\Command;
 
-use App\AppCore\Domain\Service\CommandInterface;
-use App\Framework\Service\Command\RunCommand;
+use App\AppCore\Domain\Service\Command\CommandInterface;
 
 class RunCommandTest extends \Codeception\Test\Unit
 {
@@ -37,7 +36,7 @@ class RunCommandTest extends \Codeception\Test\Unit
         $newDir = self::DATA_DIR . self::UNPACKED . '/' . $id;
         $dockerFilePath = $newDir.'/'.self::MICRO_SERVICE_1_DOCKERFILE;
 
-        $command = new RunCommand($containerName, $imageName);
+        $command = new \App\AppCore\Domain\Service\Command\RunCommand($containerName, $imageName);
 
         $this->tester->assertInstanceOf(CommandInterface::class, $command);
         $this->tester->assertEquals("docker run --name $containerName --rm -it -d $imageName:latest",$command->command());

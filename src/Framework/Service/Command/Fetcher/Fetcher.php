@@ -3,7 +3,8 @@ declare(strict_types=1);
 
 namespace App\Framework\Service\Command\Fetcher;
 
-use App\AppCore\Domain\Service\OutPutInterface;
+use App\AppCore\Application\Monitor\FetcherInterface;
+use App\AppCore\Domain\Service\Command\OutPutInterface;
 
 class Fetcher implements FetcherInterface
 {

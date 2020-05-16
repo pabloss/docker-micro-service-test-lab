@@ -1,10 +1,10 @@
 <?php namespace AppCore\Application;
 
-use App\AppCore\Domain\Service\CommandInterface;
-use App\AppCore\Domain\Service\CommandRunnerInterface;
-use App\AppCore\Domain\Service\CommandsCollectionInterface;
+use App\AppCore\Application\Monitor\MonitorApplication;
+use App\AppCore\Domain\Service\Command\CommandInterface;
+use App\AppCore\Domain\Service\Command\CommandRunnerInterface;
+use App\AppCore\Domain\Service\Command\CommandsCollectionInterface;
 use App\AppCore\Domain\Service\PusherInterface;
-use App\AppCore\Application\MonitorApplication;
 
 class MonitorApplicationTest extends \Codeception\Test\Unit
 {

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\AppCore\Application;
+namespace App\AppCore\Application\Save;
 
 use App\AppCore\Domain\Actors\FileInterface;
 

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Framework\Service;
 
-use App\AppCore\Application\SaveToFileSystemInterface;
+use App\AppCore\Application\Save\SaveToFileSystemInterface;
 use App\AppCore\Domain\Actors\FileInterface;
 
 class SaveToFileSystemService implements SaveToFileSystemInterface

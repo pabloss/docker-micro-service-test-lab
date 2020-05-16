@@ -2,8 +2,8 @@
 namespace Integration;
 
 use App\AppCore\Domain\Actors\uService;
-use App\AppCore\Domain\Service\UnpackService;
-use App\AppCore\Domain\Service\UnpackServiceInterface;
+use App\AppCore\Domain\Service\Build\Unpack\UnpackService;
+use App\AppCore\Domain\Service\Build\Unpack\UnpackServiceInterface;
 use App\Framework\Service\UnpackAdapter;
 
 class UnpackServiceTest extends \Codeception\Test\Unit

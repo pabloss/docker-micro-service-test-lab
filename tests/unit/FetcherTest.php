@@ -1,6 +1,6 @@
 <?php
 
-use App\AppCore\Domain\Service\OutPutInterface;
+use App\AppCore\Domain\Service\Command\OutPutInterface;
 use App\Framework\Service\Command\Fetcher\Fetcher;
 use App\Framework\Service\WebSockets\Context\WrappedContext;
 

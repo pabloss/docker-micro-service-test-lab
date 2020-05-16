@@ -1,9 +1,7 @@
 <?php namespace Integration\App\Framework\Command;
 
-use App\AppCore\Domain\Service\CommandRunnerInterface;
-use App\Framework\Service\Command\BuildCommand;
-use App\Framework\Service\Command\CommandCollection;
-use App\Framework\Service\Command\RunCommand;
+use App\AppCore\Domain\Service\Command\CommandCollection;
+use App\AppCore\Domain\Service\Command\CommandRunnerInterface;
 use App\Tests\unit\Integration\App\Framework\Command\Stubs\RunnerStub;
 
 class CommnadRunnerTest extends \Codeception\Test\Unit
@@ -41,8 +39,8 @@ class CommnadRunnerTest extends \Codeception\Test\Unit
         $newDir = self::DATA_DIR . self::UNPACKED . '/' . $id;
         $dockerFilePath = $newDir.'/'.self::MICRO_SERVICE_1_DOCKERFILE;
 
-        $buildCommand = new BuildCommand($dockerFilePath, $imageName);
-        $runCommand = new RunCommand($containerName, $imageName);
+        $buildCommand = new \App\AppCore\Domain\Service\Command\BuildCommand($dockerFilePath, $imageName);
+        $runCommand = new \App\AppCore\Domain\Service\Command\RunCommand($containerName, $imageName);
 
         $collection = new CommandCollection();
         $collection->addCommand($buildCommand);

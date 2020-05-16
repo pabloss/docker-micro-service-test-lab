@@ -1,9 +1,10 @@
 <?php
 namespace App\AppCore\Domain\Service;
 
-use App\AppCore\Domain\Service\CommandInterface;
-use App\AppCore\Domain\Service\CommandsCollectionInterface;
-use App\AppCore\Domain\Service\CommandRunnerInterface;
+use App\AppCore\Domain\Service\Build\BuildService;
+use App\AppCore\Domain\Service\Command\CommandInterface;
+use App\AppCore\Domain\Service\Command\CommandRunnerInterface;
+use App\AppCore\Domain\Service\Command\CommandsCollectionInterface;
 
 class BuildServiceTest extends \Codeception\Test\Unit
 {

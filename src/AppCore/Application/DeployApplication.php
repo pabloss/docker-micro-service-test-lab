@@ -4,16 +4,16 @@ declare(strict_types=1);
 namespace App\AppCore\Application;
 
 use App\AppCore\Domain\Repository\uServiceRepositoryInterface;
-use App\AppCore\Domain\Service\BuildServiceInterface;
-use App\AppCore\Domain\Service\CommandFactoryInterface;
-use App\AppCore\Domain\Service\UnpackServiceInterface;
+use App\AppCore\Domain\Service\Build\BuildServiceInterface;
+use App\AppCore\Domain\Service\Build\Unpack\UnpackServiceInterface;
+use App\AppCore\Domain\Service\Command\CommandFactoryInterface;
 use App\MixedContext\Domain\Service\Files\Dir;
 
 class DeployApplication
 {
     const FILE_TO_FIND = 'Dockerfile';
     /**
-     * @var UnpackServiceInterface
+     * @var \App\AppCore\Domain\Service\Build\Unpack\UnpackServiceInterface
      */
     private $service;
     /**
@@ -36,11 +36,11 @@ class DeployApplication
     /**
      * DeployApplication constructor.
      *
-     * @param UnpackServiceInterface      $service
-     * @param BuildServiceInterface       $buildService
-     * @param Dir                         $dir
-     * @param CommandFactoryInterface     $commandFactory
-     * @param uServiceRepositoryInterface $repository
+     * @param UnpackServiceInterface                                      $service
+     * @param \App\AppCore\Domain\Service\Build\BuildServiceInterface     $buildService
+     * @param Dir                                                         $dir
+     * @param \App\AppCore\Domain\Service\Command\CommandFactoryInterface $commandFactory
+     * @param uServiceRepositoryInterface                                 $repository
      */
     public function __construct(UnpackServiceInterface $service, BuildServiceInterface $buildService, Dir $dir, CommandFactoryInterface $commandFactory,   uServiceRepositoryInterface $repository)
     {

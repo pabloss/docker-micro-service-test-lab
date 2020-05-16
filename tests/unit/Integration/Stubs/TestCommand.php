@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Tests\unit\Integration\Stubs;
 
-use App\AppCore\Domain\Service\CommandInterface;
+use App\AppCore\Domain\Service\Command\CommandInterface;
 
 class TestCommand implements CommandInterface
 {

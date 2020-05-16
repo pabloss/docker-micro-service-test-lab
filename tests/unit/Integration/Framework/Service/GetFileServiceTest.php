@@ -3,10 +3,10 @@
 use App\AppCore\Domain\Actors\uService;
 use App\AppCore\Domain\Repository\DomainEntityMapper;
 use App\AppCore\Domain\Repository\uServiceRepository;
-use App\AppCore\Domain\Service\SaveDomainService;
+use App\AppCore\Domain\Service\GetFileService;
+use App\AppCore\Domain\Service\Save\SaveDomainService;
 use Codeception\Util\Autoload;
 use Integration\Stubs\PersistGateway;
-use App\AppCore\Domain\Service\GetFileService;
 
 class GetFileServiceTest extends \Codeception\Test\Unit
 {

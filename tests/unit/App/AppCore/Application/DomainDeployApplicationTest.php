@@ -4,12 +4,12 @@ namespace App\AppCore\Application;
 
 use App\AppCore\Domain\Actors\uServiceInterface;
 use App\AppCore\Domain\Repository\uServiceRepository;
-use App\AppCore\Domain\Service\BuildServiceInterface;
-use App\AppCore\Domain\Service\CommandsCollectionInterface;
-use App\AppCore\Domain\Service\CommandFactoryInterface;
-use App\AppCore\Domain\Service\UnpackServiceInterface;
-use App\Framework\Service\Command\BuildCommand;
-use App\Framework\Service\Command\RunCommand;
+use App\AppCore\Domain\Service\Build\BuildServiceInterface;
+use App\AppCore\Domain\Service\Build\Unpack\UnpackServiceInterface;
+use App\AppCore\Domain\Service\Command\BuildCommand;
+use App\AppCore\Domain\Service\Command\CommandFactoryInterface;
+use App\AppCore\Domain\Service\Command\CommandsCollectionInterface;
+use App\AppCore\Domain\Service\Command\RunCommand;
 use App\MixedContext\Domain\Service\Files\Dir;
 
 class DomainDeployApplicationTest extends \Codeception\Test\Unit

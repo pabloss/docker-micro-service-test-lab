@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Framework\Service\Command\Fetcher;
+namespace App\AppCore\Application\Monitor;
 
-use App\AppCore\Domain\Service\OutPutInterface;
+use App\AppCore\Domain\Service\Command\OutPutInterface;
 
 interface FetcherInterface
 {

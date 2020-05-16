@@ -3,10 +3,7 @@ declare(strict_types=1);
 
 namespace App\Framework\Service;
 
-use App\AppCore\Domain\Service\UnpackInterface;
-use App\MixedContext\Domain\Service\Files\File;
-
-class UnpackAdapter implements UnpackInterface
+class UnpackAdapter implements \App\AppCore\Domain\Service\Build\Unpack\UnpackInterface
 {
 
     private $zipArchive;

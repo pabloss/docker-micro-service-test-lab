@@ -1,7 +1,7 @@
 <?php namespace Integration\App\Framework\Command;
 
-use App\AppCore\Domain\Service\CommandInterface;
-use App\Framework\Service\Command\BuildCommand;
+use App\AppCore\Domain\Service\Command\BuildCommand;
+use App\AppCore\Domain\Service\Command\CommandInterface;
 
 class BuildCommandTest extends \Codeception\Test\Unit
 {

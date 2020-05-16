@@ -3,16 +3,15 @@
 namespace Integration\Framework\Application;
 
 
-use App\AppCore\Application\SaveApplication;
 use App\AppCore\Domain\Repository\DomainEntityMapper;
 use App\AppCore\Domain\Repository\PersistGatewayInterface;
 use App\AppCore\Domain\Repository\uServiceRepository;
 use App\AppCore\Domain\Service\GetFileService;
-use App\AppCore\Domain\Service\SaveDomainService;
+use App\AppCore\Domain\Service\Save\SaveDomainService;
+use App\Framework\Application\FrameworkGetApplication;
 use App\Framework\Application\FrameworkSaveApplication;
 use App\Framework\Persistence\PersistGatewayAdapter;
 use App\Framework\Service\SaveToFileSystemService;
-use App\Framework\Application\FrameworkGetApplication;
 use Codeception\Util\Autoload;
 use Integration\Stubs\File;
 
@@ -46,7 +45,7 @@ class FrameworkGetApplicationTest extends \Codeception\Test\Unit
         $this->gateway = new PersistGatewayAdapter($em);
         $this->repo = new uServiceRepository($this->gateway, new DomainEntityMapper());
         $application = new FrameworkSaveApplication(
-            new SaveApplication(
+            new \App\AppCore\Application\Save\SaveApplication(
                 new SaveToFileSystemService(), new SaveDomainService(
                     $this->targetDir,
                     $this->repo
