@@ -1,4 +1,4 @@
-<?php namespace App\AppCore\Domain\Service\WebSockets\Context;
+<?php namespace App\Framework\Service\WebSockets\Context;
 
 class WrapperTest extends \Codeception\Test\Unit
 {

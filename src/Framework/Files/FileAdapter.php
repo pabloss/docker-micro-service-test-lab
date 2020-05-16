@@ -35,6 +35,7 @@ class FileAdapter implements FileInterface
 
     public function move(string $dir): FileInterface
     {
-        return  $this;
+        $this->file->move($dir);
+        return new self($this->file);
     }
 }

@@ -1,5 +1,6 @@
 <template>
         <div class="container">
+        <button @click="deploy" id="deploy">Deploy</button>
             <!--UPLOAD-->
             <form id="upload" enctype="multipart/form-data" novalidate v-if="isInitial || isSaving">
                 <h1>Upload images</h1>
@@ -42,7 +43,8 @@
                 uploadedFiles: [],
                 uploadError: null,
                 currentStatus: null,
-                uploadFieldName: 'files'
+                uploadFieldName: 'files',
+                uuid: '',
             }
         },
         computed: {
@@ -96,7 +98,20 @@
                 this.save(formData);
             },
             upload(formData) {
-                return this.axios.post(`http://${this.$BASE_HOST}/upload`, formData).then(x => x.data);
+                let vm = this;
+                return this.axios.post(`http://${this.$BASE_HOST}/upload`, formData).then(
+                    x =>  {
+                        console.log(x.data);
+                        this.uuid = x.data;
+                    }
+                    );
+            },
+            deploy()  {
+                return this.axios.post(`http://${this.$BASE_HOST}/deploy`, this.uuid).then(
+                    x =>  {
+                        console.log(x.data);
+                    }
+                );
             }
         },
         mounted() {

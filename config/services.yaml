@@ -35,19 +35,14 @@ services:
     ZMQContext:
         class: 'ZMQContext'
 
-    App\MixedContext\Domain\Service\WebSockets\Context\Context:
-        class: 'App\MixedContext\Domain\Service\WebSockets\Context\Context'
-        arguments:
-            $context: '@ZMQContext'
-            $bindHost: '%bind_host%'
-            $bindPort: '%bind_port%'
+#    App\Framework\Service\WebSockets\Context\Context:
+#        class: 'App\Framework\Service\WebSockets\Context\Context'
+#        arguments:
+#            $context: '@ZMQContext'
+#            $bindHost: '%bind_host%'
+#            $bindPort: '%bind_port%'
 
-    App\Framework\Application\UnpackZippedFileApplication:
-        arguments:
-            $unpacked_directory: '%unpacked_directory%'
-            $uploaded_directory: '%uploaded_directory%'
-
-    App\MixedContext\Domain\Service\WebSockets\WebSocketProcessor:
+    App\Framework\Service\WebSockets\WebSocketProcessor:
         arguments:
             $bindHost: '%bind_host%'
             $bindPort: '%bind_port%'
@@ -58,10 +53,39 @@ services:
         arguments:
             $max: 20
             $output: '@Symfony\Component\Console\Output\NullOutput'
-    App\MixedContext\Domain\Service\Command\WebSocketAdapter\OutputAdapterFactory:
-        arguments:
-            $socketProgressBarOutputAdapter: '@App\MixedContext\Domain\Service\Command\WebSocketAdapter\SocketProgressBarOutputAdapter'
-            $socketErrorOutputAdapter: '@App\MixedContext\Domain\Service\Command\WebSocketAdapter\SocketErrorOutputAdapter'
+#    App\MixedContext\Domain\Service\Command\WebSocketAdapter\OutputAdapterFactory:
+#        arguments:
+#            $socketProgressBarOutputAdapter: '@App\MixedContext\Domain\Service\Command\WebSocketAdapter\SocketProgressBarOutputAdapter'
+#            $socketErrorOutputAdapter: '@App\MixedContext\Domain\Service\Command\WebSocketAdapter\SocketErrorOutputAdapter'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    App\AppCore\Domain\Service\SaveDomainService:
+        arguments:
+            $dirName: '%uploaded_directory%'
+    ZipArchive:
+        class: ZipArchive
+    App\Framework\Service\UnpackAdapter:
+        arguments:
+            $zipArchive: '@ZipArchive'
+
+    App\AppCore\Domain\Repository\uServiceRepository:
+        arguments:
+            $gateway: '@App\Framework\Persistence\PersistGatewayAdapter'
+
+    App\Framework\Service\WebSockets\Context\Context:
+        arguments:
+            $context: '@ZMQContext'
+            $bindHost: '%bind_host%'
+            $bindPort: '%bind_port%'
+
+    App\Framework\Service\WebSockets\Context\ContextInterface: '@App\Framework\Service\WebSockets\Context\Context'
+    App\Framework\Service\WebSockets\Context\WrappedContext: ~
+    App\Framework\Service\Command\Fetcher\Fetcher: ~
+    App\Framework\Service\WebSockets\Context\WrappedContextInterface: '@App\Framework\Service\WebSockets\Context\WrappedContext'
+    App\Framework\Service\Command\Fetcher\FetcherInterface: '@App\Framework\Service\Command\Fetcher\Fetcher'
+    App\Framework\Service\WebSockets\Context\WrappedContextSendAdapter: ~
+    App\Framework\Service\Command\CommandRunner:
+        arguments:
+            $fetcher: '@App\Framework\Service\Command\Fetcher\FetcherInterface'
+            $outPut: '@App\Framework\Service\WebSockets\Context\WrappedContextSendAdapter'

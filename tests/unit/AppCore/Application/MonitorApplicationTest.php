@@ -3,7 +3,6 @@
 use App\AppCore\Domain\Service\CommandInterface;
 use App\AppCore\Domain\Service\CommandRunnerInterface;
 use App\AppCore\Domain\Service\CommandsCollectionInterface;
-use App\AppCore\Domain\Service\CommandListenerInterface;
 use App\AppCore\Domain\Service\PusherInterface;
 use App\AppCore\Application\MonitorApplication;
 
@@ -48,7 +47,6 @@ class MonitorApplicationTest extends \Codeception\Test\Unit
         $collection->addCommand($testCommand->reveal())->shouldBeCalled();
         $collection->getCommand(0)->willReturn($testCommand->reveal())->shouldBeCalled();
 
-        $listener = $this->prophesize(CommandListenerInterface::class);
         $pusher = $this->prophesize(PusherInterface::class);
         $pusher->send([
             'out' => $testText,
@@ -56,7 +54,7 @@ class MonitorApplicationTest extends \Codeception\Test\Unit
         ])->shouldBeCalled();
         $runner  = $this->prophesize(CommandRunnerInterface::class);
         $runner->run($collection->reveal())->shouldBeCalled();
-        $runner->run($collection->reveal())->will(function ($args) use ($listener, $pusher, $testText) {
+        $runner->run($collection->reveal())->will(function ($args) use ($pusher, $testText) {
             $outType = 'stoOut';
             $args[0]->getCommand(0)->command();
             $pusher->reveal()->send([

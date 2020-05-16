@@ -1,10 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Framework\Command;
+namespace App\Framework\Service\WebSockets\Context;
 
 use App\AppCore\Domain\Service\OutPutInterface;
-use App\Framework\Service\WebSockets\WrappedContext;
 
 class WrappedContextSendAdapter extends WrappedContext implements OutPutInterface
 {

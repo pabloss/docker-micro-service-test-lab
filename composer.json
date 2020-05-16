@@ -37,7 +37,9 @@
         "symfony/validator": "4.3.*",
         "symfony/web-link": "4.3.*",
         "symfony/webpack-encore-bundle": "^1.7",
-        "symfony/yaml": "4.3.*"
+        "symfony/yaml": "4.3.*",
+        "thruway/pawl-transport": "^0.5.1",
+        "voryx/thruway": "^0.5.3"
     },
     "require-dev": {
         "codeception/c3": "^2.4",
@@ -86,7 +88,10 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
-        ]
+        ],
+        "watch-dev": "yarn encore dev --watch --public http://service-test-lab-new.local:8080 --disable-host-check",
+        "selenium": " java  -Dwebdriver.chrome.driver=./chromedriver_linux64/chromedriver  -jar selenium-server-standalone-3.141.0.jar -port 2121",
+        "hot-dev": " yarn encore dev-server --hot  --public http://service-test-lab-new.local:8080 --disable-host-check"
     },
     "conflict": {
         "symfony/symfony": "*"

@@ -1,10 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Framework\Service;
+namespace App\Framework\Service\Command\Fetcher;
 
 use App\AppCore\Domain\Service\OutPutInterface;
-use App\MixedContext\Event\CommandOutGotEvent;
 
 class Fetcher implements FetcherInterface
 {

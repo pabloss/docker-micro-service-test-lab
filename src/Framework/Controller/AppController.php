@@ -8,8 +8,6 @@ use App\Framework\Application\FrameworkSaveApplication;
 use App\Framework\Files\UploadedFileAdapter;
 use App\Framework\Persistence\PersistGatewayAdapter;
 use App\Framework\Service\Files\UploadedFile;
-use App\MixedContext\Domain\Application\DeployProcessApplication;
-use App\MixedContext\Domain\Application\TestProcessApplication;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile as BaseUploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse as RedirectResponseAlias;
@@ -32,18 +30,6 @@ class AppController extends AbstractController
     public function index()
     {
         return $this->render('app/index.html.twig');
-    }
-
-    /**
-     * @Route("/test/{targetDir}", name="test")
-     * @param string $targetDir
-     * @param TestProcessApplication $application
-     * @return RedirectResponseAlias|Response
-     */
-    public function test(string $targetDir, TestProcessApplication $application)
-    {
-        $application->run($this->getParameter('unpacked_directory').'/'.$targetDir);
-        return new Response();
     }
 
     /**
@@ -75,9 +61,7 @@ class AppController extends AbstractController
     {
         $uniqid = $request->getContent();
         $targetDir = $this->getParameter('unpacked_directory') . '/' . $uniqid;
-        \mkdir($targetDir);
-
-        $application->deploy((string)($adapter->nextId() - 1), $targetDir, 'imagePrefix','containerPrefix');
+        $application->deploy((string)($adapter->nextId() - 1), $targetDir, 'image_prefix','container_prefix');
         return new Response();
     }
 
@@ -88,27 +72,5 @@ class AppController extends AbstractController
     public function c3(string  $suffix)
     {
         return new Response();
-    }
-
-
-    /**
-     * @param Request $request
-     * @return bool
-     */
-    protected function isFileUploaded(Request $request): bool
-    {
-        return isset($request->files->all()[self::FILES]) && ($request->files->all()[self::FILES] instanceof BaseUploadedFile);
-    }
-
-    /**
-     * @param array $filesBag
-     * @return UploadedFile
-     */
-    protected function uploadedFile(array $filesBag): UploadedFile
-    {
-        return  UploadedFile::fromTargetDirAndBaseUploadedFile(
-            $this->getParameter('uploaded_directory'),
-            $filesBag[UploadedFile::FILES]
-        );
     }
 }

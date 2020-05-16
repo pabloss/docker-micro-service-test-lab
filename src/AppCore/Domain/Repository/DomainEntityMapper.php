@@ -19,9 +19,9 @@ use App\AppCore\Domain\Actors\uServiceInterface;
  */
 class DomainEntityMapper implements DomainEntityMapperInterface
 {
-    public function domain2Entity(string $id, uServiceInterface $domain): uServiceEntityInterface
+    public function domain2Entity(?string $id, uServiceInterface $domain): uServiceEntityInterface
     {
-        $uServiceEntity = new uServiceEntity($id, $domain->movedToDir(), $domain->file());
+        $uServiceEntity = new uServiceEntity($domain->movedToDir(), $domain->file(), $id);
         if(null !== $domain->unpacked()){
             $uServiceEntity->setUnpacked($domain->unpacked());
         }

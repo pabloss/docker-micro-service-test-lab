@@ -3,7 +3,6 @@
 use App\AppCore\Domain\Service\CommandRunnerInterface;
 use App\Framework\Service\Command\BuildCommand;
 use App\Framework\Service\Command\CommandCollection;
-use App\Framework\Service\Command\CommandRunner;
 use App\Framework\Service\Command\RunCommand;
 use App\Tests\unit\Integration\App\Framework\Command\Stubs\RunnerStub;
 

@@ -1,7 +1,6 @@
 <?php namespace App\Framework\Service\Command;
 
 use App\AppCore\Domain\Service\CommandFactoryInterface;
-use App\Framework\Service\Command\CommandFactory;
 
 class CommandFactoryTest extends \Codeception\Test\Unit
 {

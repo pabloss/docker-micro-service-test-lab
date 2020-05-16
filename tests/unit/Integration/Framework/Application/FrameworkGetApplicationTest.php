@@ -10,7 +10,6 @@ use App\AppCore\Domain\Repository\uServiceRepository;
 use App\AppCore\Domain\Service\GetFileService;
 use App\AppCore\Domain\Service\SaveDomainService;
 use App\Framework\Application\FrameworkSaveApplication;
-use App\Framework\Factory\FileFactory;
 use App\Framework\Persistence\PersistGatewayAdapter;
 use App\Framework\Service\SaveToFileSystemService;
 use App\Framework\Application\FrameworkGetApplication;
@@ -76,7 +75,7 @@ class FrameworkGetApplicationTest extends \Codeception\Test\Unit
         //użyję get service by dostać domenową klasę i stamtąd będę miał \SpFileInfo
 
         $this->tester->assertEquals(
-            \basename($this->targetDir).($this->gateway->nextId()-1).'/'.\basename($this->fileToSave)
+            '/home/pavulon/code/docker-micro-service-test-lab-new/tests/unit/Integration/Framework/Application/../../../../_data/target_dir//home/pavulon/code/docker-micro-service-test-lab-new/tests/unit/Integration/Framework/Application/../../../../_data/save_test'
             , $application->getFile($this->gateway->nextId()-1)->getPathName());
     }
 }

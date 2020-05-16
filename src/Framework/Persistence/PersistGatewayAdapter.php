@@ -38,6 +38,7 @@ class PersistGatewayAdapter implements PersistGatewayInterface
             $UService = UService::fromDomainEntity($uServiceEntity, null);
         } else{
             $UService = $this->entityManager->getRepository(UService::class)->find($uServiceEntity->id());
+            $UService->setUnpacked($uServiceEntity->unpacked());
         }
         $this->entityManager->persist($UService);
         $this->entityManager->flush();
@@ -45,11 +46,15 @@ class PersistGatewayAdapter implements PersistGatewayInterface
 
     public function find(string $id)
     {
-        return new uServiceEntity(
-            $id,
+        $uServiceEntity = new uServiceEntity(
             $this->entityManager->getRepository(UService::class)->find($id)->getMovedToDir(),
-            $this->entityManager->getRepository(UService::class)->find($id)->getFile()
+            $this->entityManager->getRepository(UService::class)->find($id)->getFile(),
+            $id
         );
+        if($unpackedLocation = $this->entityManager->getRepository(UService::class)->find($id)->getUnpacked()){
+            $uServiceEntity->setUnpacked($unpackedLocation);
+        }
+        return $uServiceEntity;
     }
 
 }

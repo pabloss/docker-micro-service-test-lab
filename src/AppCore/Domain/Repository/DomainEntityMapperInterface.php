@@ -8,6 +8,6 @@ use App\AppCore\Domain\Actors\uServiceInterface;
 
 interface DomainEntityMapperInterface
 {
-    public function domain2Entity(string $id, uServiceInterface $domain): uServiceEntityInterface;
+    public function domain2Entity(?string $id, uServiceInterface $domain): uServiceEntityInterface;
     public function entity2Domain(uServiceEntityInterface $entity);
 }

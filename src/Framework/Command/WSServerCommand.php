@@ -3,8 +3,7 @@ declare(strict_types=1);
 
 namespace App\Framework\Command;
 
-use App\AppCore\Domain\Service\WebSockets\WebSocketProcessor;
-use App\AppCore\Domain\Service\WebSockets\WebSocketProcessorInterface;
+use App\Framework\Service\WebSockets\WebSocketProcessorInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

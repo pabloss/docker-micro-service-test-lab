@@ -1,4 +1,4 @@
-<?php namespace App\AppCore\Domain\Service\Files;
+<?php namespace App\MixedContext\Domain\Service\Files;
 
 class UnpackTest extends \Codeception\Test\Unit
 {

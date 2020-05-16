@@ -89,7 +89,7 @@ files/uploaded/*
 files/unpacked/*
 !files/unpacked/.gitkeep
 
-tests/_data/unpacked/*
+tests/_data/unpacked/**
 !tests/_data/unpacked/.gitkeep
 
 ###> symfony/webpack-encore-bundle ###

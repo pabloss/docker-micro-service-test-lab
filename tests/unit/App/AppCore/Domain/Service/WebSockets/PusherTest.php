@@ -1,4 +1,4 @@
-<?php namespace App\AppCore\Domain\Service\WebSockets;
+<?php namespace App\Framework\Service\WebSockets;
 
 use Codeception\Stub\Expected;
 use Ratchet\ConnectionInterface;

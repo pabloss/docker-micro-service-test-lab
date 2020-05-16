@@ -1,10 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Framework\Service\WebSockets;
-
-use App\Framework\Service\WebSockets\Context\ContextInterface;
-use App\Framework\Service\WebSockets\Context\WrapperInterface;
+namespace App\Framework\Service\WebSockets\Context;
 
 /**
  * Class WrappedContext

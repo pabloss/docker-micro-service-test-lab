@@ -32,7 +32,7 @@ class SaveDomainService implements SaveDomainServiceInterface
     public function save(string $file)
     {
         $domain = new uService($file, $this->dirName);
-        $this->repo->persist($domain);
+        $this->repo->persist($domain, null);
         return $domain;
     }
 }

@@ -71,6 +71,9 @@ const vue = new Vue({
                     return row;
                 }
             });
+        },
+        saveUuid: function (event) {
+            console.log(event)
         }
     }
 });
