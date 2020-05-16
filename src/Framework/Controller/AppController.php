@@ -5,6 +5,7 @@ namespace App\Framework\Controller;
 
 use App\AppCore\Application\DeployApplication;
 use App\Framework\Application\FrameworkSaveApplication;
+use App\Framework\Files\Dir;
 use App\Framework\Files\UploadedFileAdapter;
 use App\Framework\Persistence\PersistGatewayAdapter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,11 +16,47 @@ use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * Class AppController
+ *
  * @package App\Framework\Controller
  */
 class AppController extends AbstractController
 {
-    const FILES = 'files';
+    /**
+     * @var FrameworkSaveApplication
+     */
+    private $saveApplication;
+    /**
+     * @var DeployApplication
+     */
+    private $deployApplication;
+    /**
+     * @var PersistGatewayAdapter
+     */
+    private $gatewayAdapter;
+    /**
+     * @var Dir
+     */
+    private $dir;
+
+    /**
+     * AppController constructor.
+     *
+     * @param FrameworkSaveApplication $saveApplication
+     * @param DeployApplication        $deployApplication
+     * @param PersistGatewayAdapter    $gatewayAdapter
+     * @param Dir                      $dir
+     */
+    public function __construct(
+        FrameworkSaveApplication $saveApplication,
+        DeployApplication $deployApplication,
+        PersistGatewayAdapter $gatewayAdapter,
+        Dir $dir
+    ) {
+        $this->saveApplication = $saveApplication;
+        $this->deployApplication = $deployApplication;
+        $this->gatewayAdapter = $gatewayAdapter;
+        $this->dir = $dir;
+    }
 
     /**
      * @Route("/", name="app")
@@ -32,34 +69,32 @@ class AppController extends AbstractController
 
     /**
      * @Route("/upload", name="photos.upload")
-     * @param Request                  $request
-     * @param FrameworkSaveApplication $service
+     * @param Request $request
      *
      * @return Response
      */
-    public function upload(Request $request, FrameworkSaveApplication $service)
+    public function upload(Request $request)
     {
         $uniqid = \uniqid();
-        $newDirPath = $this->getParameter('uploaded_directory') . '/' . $uniqid;
-        \mkdir($newDirPath);
 
-        $service->save(new UploadedFileAdapter($request->files->all()['files']), $newDirPath);
+        $this->saveApplication->save(new UploadedFileAdapter($request->files->all()['files']),
+            $this->dir->sureTargetDirExists($this->getParameter('uploaded_directory') . '/' . $uniqid));
         return new Response($uniqid);
     }
 
     /**
      * @Route("/deploy", name="deploy")
-     * @param Request               $request
-     * @param DeployApplication     $application
-     * @param PersistGatewayAdapter $adapter
+     * @param Request $request
      *
      * @return Response
      */
-    public function deploy(Request $request, DeployApplication $application, PersistGatewayAdapter $adapter)
+    public function deploy(Request $request)
     {
         $uniqid = $request->getContent();
-        $targetDir = $this->getParameter('unpacked_directory') . '/' . $uniqid;
-        $application->deploy((string)($adapter->nextId() - 1), $targetDir, 'image_prefix','container_prefix');
+
+        $this->deployApplication->deploy((string)($this->gatewayAdapter->nextId() - 1),
+            $this->dir->sureTargetDirExists($this->getParameter('unpacked_directory') . '/' . $uniqid), 'image_prefix',
+            'container_prefix');
         return new Response();
     }
 
@@ -67,7 +102,7 @@ class AppController extends AbstractController
      * @Route("/c3/report/{suffix}", name="c3")
      * @return Response
      */
-    public function c3(string  $suffix)
+    public function c3(string $suffix)
     {
         return new Response();
     }
