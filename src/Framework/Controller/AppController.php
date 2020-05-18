@@ -92,7 +92,7 @@ class AppController extends AbstractController
     {
         $uniqid = $request->getContent();
 
-        $this->deployApplication->deploy((string)($this->gatewayAdapter->nextId() - 1),
+        $this->deployApplication->deploy((string)($this->gatewayAdapter->findByHash($uniqid)->getId()),
             $this->dir->sureTargetDirExists($this->getParameter('unpacked_directory') . '/' . $uniqid), 'image_prefix',
             'container_prefix');
         return new Response();

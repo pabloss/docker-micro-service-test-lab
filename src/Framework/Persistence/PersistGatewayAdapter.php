@@ -57,4 +57,15 @@ class PersistGatewayAdapter implements PersistGatewayInterface
         return $uServiceEntity;
     }
 
+    public function findByHash(string $hash)
+    {
+        return $this->entityManager->getRepository(UService::class)
+            ->createQueryBuilder('us')
+            ->where('us.file LIKE :file')
+            ->setParameter('file', '%'.$hash.'%')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getSingleResult()
+            ;
+    }
 }
