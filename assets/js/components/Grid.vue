@@ -78,9 +78,9 @@
                 this.sortKey = key;
                 this.sortOrders[key] = this.sortOrders[key] * -1
             },
-            deploy: function (targetDir) {
+            deploy: function (hash) {
                 const url = `http://${this.$BASE_HOST}/deploy/`;
-                this.axios.post(`http://${this.$BASE_HOST}/deploy`, targetDir).then(
+                this.axios.post(`http://${this.$BASE_HOST}/deploy`, hash).then(
                     x =>  {
                         console.log(x.data);
                     }
