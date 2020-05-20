@@ -103,7 +103,8 @@
                     x =>  {
                         console.log(x.data);
                         this.uuid = x.data;
-                    }
+                        this.$emit('upload', this.uuid);
+                        }
                     );
             },
             deploy()  {

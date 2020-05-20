@@ -10,6 +10,6 @@ class WebSocketWatcherAdapter extends WrappedContext implements WatcherInterface
 
     public function writeln(string $output)
     {
-        $this->send([$output]);
+        $this->send(['log' => $output]);
     }
 }

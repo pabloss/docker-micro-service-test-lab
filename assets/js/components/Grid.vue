@@ -16,10 +16,10 @@
             <td v-for="key in columns">
                 <span v-if="key !== 'progress'">{{entry[key]}}</span>
                 <span v-if="key === 'progress'">
-                    <button v-if="entry['init']||entry['progress']=== entry['max']" @click="deploy(entry['target_dir'])">{{buttonText(entry['progress'],entry['max'])}}</button>
+                    <button v-if="entry['init']||entry['progress']=== entry['max']" @click="deploy(entry['index'])">{{buttonText(entry['progress'],entry['max'])}}</button>
                     <progress v-else-if="entry['progress']!== entry['max']" :value="entry['progress']" :max="entry['max']"></progress>
 
-                    <button @click="test(entry['target_dir'])">Test</button>
+                    <button @click="test(entry['index'])">Test</button>
                 </span>
             </td>
         </tr>
@@ -80,7 +80,11 @@
             },
             deploy: function (targetDir) {
                 const url = `http://${this.$BASE_HOST}/deploy/`;
-                this.axios.get(url + targetDir).then(x => x.data);
+                this.axios.post(`http://${this.$BASE_HOST}/deploy`, targetDir).then(
+                    x =>  {
+                        console.log(x.data);
+                    }
+                );
             },
             test: function(targetDir){
                 const url = `http://${this.$BASE_HOST}/test/`;

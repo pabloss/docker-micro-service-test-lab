@@ -33,8 +33,6 @@ const vue = new Vue({
             function () {
                 conn.subscribe('entry_data', function (topic, data) {
                     vue.updateTerminal(data);
-                    vue.updateRow(data);
-                    vue.insertRow(data);
                 });
             },
             function () {
@@ -71,6 +69,9 @@ const vue = new Vue({
                     return row;
                 }
             });
+        },
+        onUpload: function (uuid){
+            this.insertRow({'index': uuid});
         },
         saveUuid: function (event) {
             console.log(event)
