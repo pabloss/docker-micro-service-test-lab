@@ -24,7 +24,7 @@ const vue = new Vue({
         return {
             log: null,
             searchQuery: '',
-            gridColumns: [this.$targetFileKey, this.$targetDirKey, this.$progressKey],
+            gridColumns: [this.$uuid, this.$progressKey],
             gridData: []
         }
     },
@@ -71,7 +71,7 @@ const vue = new Vue({
             });
         },
         onUpload: function (uuid){
-            this.insertRow({'index': uuid});
+            this.insertRow({'uuid': uuid});
         },
         saveUuid: function (event) {
             console.log(event)
