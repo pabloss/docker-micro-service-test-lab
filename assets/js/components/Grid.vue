@@ -16,10 +16,10 @@
             <td v-for="key in columns">
                 <span v-if="key !== 'progress'">{{entry[key]}}</span>
                 <span v-if="key === 'progress'">
-                    <button v-if="entry['init']||entry['progress']=== entry['max']" @click="deploy(entry['index'])">{{buttonText(entry['progress'],entry['max'])}}</button>
+                    <button v-if="entry['init']||entry['progress']=== entry['max']" @click="deploy(entry['uuid'])">{{buttonText(entry['progress'],entry['max'])}}</button>
                     <progress v-else-if="entry['progress']!== entry['max']" :value="entry['progress']" :max="entry['max']"></progress>
 
-                    <button @click="test(entry['index'])">Test</button>
+                    <button @click="test(entry['uuid'])">Test</button>
                 </span>
             </td>
         </tr>

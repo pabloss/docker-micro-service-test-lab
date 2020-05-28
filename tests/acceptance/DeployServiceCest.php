@@ -21,12 +21,12 @@ class DeployServiceCest
         $containerPrefix = 'container_prefix';
 
         $data = [];
-        exec("docker ps --filter 'name=test_container' --format '{{.ID}}'", $data, $resultCode);
+        exec("docker ps --filter 'name={$containerPrefix}' --format '{{.ID}}'", $data, $resultCode);
         if(!empty($data)){
             $I->runShellCommand("docker rm  $(docker ps --filter 'name={$containerPrefix}' --format '{{.ID}}' -a) -f", false);
         }
         $data = [];
-        exec("docker images 'test_image*' --format '{{.ID}}'", $data, $resultCode);
+        exec("docker images '{$imagePrefix}*' --format '{{.ID}}'", $data, $resultCode);
         if(!empty($data)){
             $I->runShellCommand("docker rmi $(docker images '{$imagePrefix}*' --format '{{.ID}}') -f", false);
         }
@@ -46,7 +46,6 @@ class DeployServiceCest
          * 5. nadać nazwę kontenerowi
          *
          */$I->wait(10);
-        $I->assertFileExists(__DIR__. self::TEST_UPLOADED_DIR.'unpacked/'.self::TEST_UPLOAD_FILE_NAME);
         $I->runShellCommand("docker inspect -f '{{.State.Running}}' $(docker ps --filter 'name=$containerPrefix' --format '{{.Names}}')", false);
         $I->seeInShellOutput('true'); ///-- DZIAŁA!!!
         $I->runShellCommand("docker inspect -f '{{.State.Running}}' $(docker ps --filter 'name=$containerPrefix' --format '{{.Names}}' -a) | wc -l", false);
