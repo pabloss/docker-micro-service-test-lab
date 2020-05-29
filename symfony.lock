@@ -192,6 +192,9 @@
     "phar-io/version": {
         "version": "2.0.1"
     },
+    "php-amqplib/php-amqplib": {
+        "version": "v2.11.3"
+    },
     "phpdocumentor/reflection-common": {
         "version": "2.0.0"
     },
@@ -200,6 +203,9 @@
     },
     "phpdocumentor/type-resolver": {
         "version": "1.0.1"
+    },
+    "phpseclib/phpseclib": {
+        "version": "2.0.27"
     },
     "phpspec/prophecy": {
         "version": "1.9.0"
