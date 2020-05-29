@@ -4,7 +4,10 @@ declare(strict_types=1);
 namespace App\Framework\Controller;
 
 use App\AppCore\Application\DeployApplication;
+use App\AppCore\Domain\Repository\DomainEntityMapper;
+use App\AppCore\Domain\Service\Trigger;
 use App\Framework\Application\FrameworkSaveApplication;
+use App\Framework\Entity\UService;
 use App\Framework\Files\Dir;
 use App\Framework\Files\UploadedFileAdapter;
 use App\Framework\Persistence\PersistGatewayAdapter;
@@ -21,6 +24,8 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class AppController extends AbstractController
 {
+    const IMAGE_PREFIX = 'image_prefix';
+    const CONTAINER_PREFIX = 'container_prefix';
     /**
      * @var FrameworkSaveApplication
      */
@@ -37,6 +42,10 @@ class AppController extends AbstractController
      * @var Dir
      */
     private $dir;
+    /**
+     * @var Trigger
+     */
+    private $trigger;
 
     /**
      * AppController constructor.
@@ -44,18 +53,21 @@ class AppController extends AbstractController
      * @param FrameworkSaveApplication $saveApplication
      * @param DeployApplication        $deployApplication
      * @param PersistGatewayAdapter    $gatewayAdapter
+     * @param Trigger                  $trigger
      * @param Dir                      $dir
      */
     public function __construct(
         FrameworkSaveApplication $saveApplication,
         DeployApplication $deployApplication,
         PersistGatewayAdapter $gatewayAdapter,
+        Trigger $trigger,
         Dir $dir
     ) {
         $this->saveApplication = $saveApplication;
         $this->deployApplication = $deployApplication;
         $this->gatewayAdapter = $gatewayAdapter;
         $this->dir = $dir;
+        $this->trigger = $trigger;
     }
 
     /**
@@ -65,6 +77,22 @@ class AppController extends AbstractController
     public function index()
     {
         return $this->render('app/index.html.twig');
+    }
+
+    /**
+     * @Route("/test/{uuid}", name="test")
+     * @param string $uuid
+     *
+     * @return Response
+     */
+    public function test(string $uuid)
+    {
+        $this->trigger->runRequest(
+            $this->findDockerFileDir($uuid),
+            self::IMAGE_PREFIX.'_test',
+            self::CONTAINER_PREFIX.'_test'
+        );
+        return new Response();
     }
 
     /**
@@ -93,8 +121,9 @@ class AppController extends AbstractController
         $uniqid = $request->getContent();
 
         $this->deployApplication->deploy((string)($this->gatewayAdapter->findByHash($uniqid)->getId()),
-            $this->dir->sureTargetDirExists($this->getParameter('unpacked_directory') . '/' . $uniqid), 'image_prefix',
-            'container_prefix');
+            $this->dir->sureTargetDirExists($this->getParameter('unpacked_directory') . '/' . $uniqid),
+            self::IMAGE_PREFIX,
+            self::CONTAINER_PREFIX);
         return new Response();
     }
 
@@ -105,5 +134,15 @@ class AppController extends AbstractController
     public function c3(string $suffix)
     {
         return new Response();
+    }
+
+    /**
+     * @param string $uuid
+     *
+     * @return string
+     */
+    private function findDockerFileDir(string $uuid): string
+    {
+        return $this->dir->findParentDir($this->gatewayAdapter->findByHash($uuid)->getUnpacked(), 'Dockerfile');
     }
 }
