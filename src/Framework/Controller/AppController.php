@@ -4,13 +4,12 @@ declare(strict_types=1);
 namespace App\Framework\Controller;
 
 use App\AppCore\Application\DeployApplication;
-use App\AppCore\Domain\Repository\DomainEntityMapper;
 use App\AppCore\Domain\Service\Trigger;
 use App\Framework\Application\FrameworkSaveApplication;
-use App\Framework\Entity\UService;
 use App\Framework\Files\Dir;
 use App\Framework\Files\UploadedFileAdapter;
 use App\Framework\Persistence\PersistGatewayAdapter;
+use App\Framework\Service\WebSockets\Context\WrappedContext;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse as RedirectResponseAlias;
 use Symfony\Component\HttpFoundation\Request;
@@ -93,6 +92,26 @@ class AppController extends AbstractController
             self::CONTAINER_PREFIX.'_test'
         );
         return new Response();
+    }
+
+    /**
+     * @Route("/connect/{uuid1}/{uuid2}", name="connect")
+     * @param string $uuid1
+     * @param string $uuid2
+     */
+    public function connect(string $uuid1, string $uuid2)
+    {
+
+    }
+
+    /**
+     * @Route("/endpoint", name="endpoint")
+     * @param Request        $request
+     * @param WrappedContext $context
+     */
+    public function endpoint(Request $request, WrappedContext $context)
+    {
+        $context->send(['request' => $request->getContent()]);
     }
 
     /**

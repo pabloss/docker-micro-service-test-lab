@@ -9,7 +9,7 @@ class Trigger
     {
         $ret = \shell_exec("docker build  --tag {$imagePrefix} {$unpacked}");
         if(null !== $ret){
-            $ret = \shell_exec("docker run --rm --name {$containerPrefix} {$imagePrefix}");
+            $ret = \shell_exec("docker run  --network=\"host\" --rm --name {$containerPrefix} {$imagePrefix}");
         }
     }
 }
