@@ -9,6 +9,7 @@ use App\Framework\Application\FrameworkSaveApplication;
 use App\Framework\Files\Dir;
 use App\Framework\Files\UploadedFileAdapter;
 use App\Framework\Persistence\PersistGatewayAdapter;
+use App\Framework\Service\MakeConnection;
 use App\Framework\Service\WebSockets\Context\WrappedContext;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse as RedirectResponseAlias;
@@ -45,6 +46,10 @@ class AppController extends AbstractController
      * @var Trigger
      */
     private $trigger;
+    /**
+     * @var MakeConnection
+     */
+    private $makeConnection;
 
     /**
      * AppController constructor.
@@ -54,19 +59,22 @@ class AppController extends AbstractController
      * @param PersistGatewayAdapter    $gatewayAdapter
      * @param Trigger                  $trigger
      * @param Dir                      $dir
+     * @param MakeConnection           $makeConnection
      */
     public function __construct(
         FrameworkSaveApplication $saveApplication,
         DeployApplication $deployApplication,
         PersistGatewayAdapter $gatewayAdapter,
         Trigger $trigger,
-        Dir $dir
+        Dir $dir,
+        MakeConnection $makeConnection
     ) {
         $this->saveApplication = $saveApplication;
         $this->deployApplication = $deployApplication;
         $this->gatewayAdapter = $gatewayAdapter;
         $this->dir = $dir;
         $this->trigger = $trigger;
+        $this->makeConnection = $makeConnection;
     }
 
     /**
@@ -98,16 +106,21 @@ class AppController extends AbstractController
      * @Route("/connect/{uuid1}/{uuid2}", name="connect")
      * @param string $uuid1
      * @param string $uuid2
+     *
+     * @return Response
      */
     public function connect(string $uuid1, string $uuid2)
     {
-
+        $this->makeConnection->make($uuid1, $uuid2);
+        return new Response();
     }
 
     /**
      * @Route("/endpoint", name="endpoint")
      * @param Request        $request
      * @param WrappedContext $context
+     *
+     * @throws \ZMQSocketException
      */
     public function endpoint(Request $request, WrappedContext $context)
     {
