@@ -43,6 +43,6 @@ class TriggerTest extends \Codeception\Test\Unit
          * stwórz taki docker
          */
 
-        $trigger->runRequest($uService->reveal(), "image_prefix_xxxx", "container_prefix_xxxx");
+        $trigger->runRequest($uService->reveal(), "image_prefix_xxxx", "container_prefix_xxxx",);
     }
 }

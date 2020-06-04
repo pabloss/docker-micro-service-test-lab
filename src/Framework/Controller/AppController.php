@@ -52,6 +52,11 @@ class AppController extends AbstractController
     private $makeConnection;
 
     /**
+     * @var WrappedContext $context
+     */
+    private $context;
+
+    /**
      * AppController constructor.
      *
      * @param FrameworkSaveApplication $saveApplication
@@ -60,6 +65,7 @@ class AppController extends AbstractController
      * @param Trigger                  $trigger
      * @param Dir                      $dir
      * @param MakeConnection           $makeConnection
+     * @param WrappedContext           $context
      */
     public function __construct(
         FrameworkSaveApplication $saveApplication,
@@ -67,7 +73,8 @@ class AppController extends AbstractController
         PersistGatewayAdapter $gatewayAdapter,
         Trigger $trigger,
         Dir $dir,
-        MakeConnection $makeConnection
+        MakeConnection $makeConnection,
+        WrappedContext $context
     ) {
         $this->saveApplication = $saveApplication;
         $this->deployApplication = $deployApplication;
@@ -75,6 +82,7 @@ class AppController extends AbstractController
         $this->dir = $dir;
         $this->trigger = $trigger;
         $this->makeConnection = $makeConnection;
+        $this->context = $context;
     }
 
     /**
@@ -88,16 +96,18 @@ class AppController extends AbstractController
 
     /**
      * @Route("/test/{uuid}", name="test")
-     * @param string $uuid
+     * @param string  $uuid
+     * @param Request $request
      *
      * @return Response
      */
-    public function test(string $uuid)
+    public function test(string $uuid, Request $request)
     {
         $this->trigger->runRequest(
             $this->findDockerFileDir($uuid),
-            self::IMAGE_PREFIX.'_test',
-            self::CONTAINER_PREFIX.'_test'
+            self::IMAGE_PREFIX . '_test',
+            self::CONTAINER_PREFIX . '_test',
+            \json_decode($request->getContent(), true)
         );
         return new Response();
     }
@@ -117,14 +127,21 @@ class AppController extends AbstractController
 
     /**
      * @Route("/endpoint", name="endpoint")
-     * @param Request        $request
-     * @param WrappedContext $context
+     * @param Request $request
      *
+     * @return Response
      * @throws \ZMQSocketException
      */
-    public function endpoint(Request $request, WrappedContext $context)
+    public function endpoint(Request $request)
     {
-        $context->send(['request' => $request->getContent()]);
+        $this->context
+            ->send(
+                [
+                    'request' => $request->getContent(),
+                    'headers' => $request->headers->get('X-Foo')
+                ]
+        );
+        return new Response();
     }
 
     /**
