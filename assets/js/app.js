@@ -25,7 +25,9 @@ const vue = new Vue({
             log: null,
             searchQuery: '',
             gridColumns: [this.$uuid, this.$progressKey],
-            gridData: []
+            gridData: [],
+            testData: [],
+            uuid: '',
         }
     },
     mounted() {
@@ -46,11 +48,16 @@ const vue = new Vue({
             data[vue.$initKey] = true;
             data[vue.$progressKey] = 0;
             data[vue.$maxKey] = 20;
+            data[vue.$testKey] = '';
             return data;
         },
         updateTerminal: function(data){
             if(data.log){
                 vue.log = data.log;
+            }
+            if(data.request && data.headers && _.find(vue.gridData, function(row) { return row['uuid'] === data.headers})){
+                vue.testData.push(data);
+                vue.uuid = data.headers;
             }
         },
         insertRow: function(data){

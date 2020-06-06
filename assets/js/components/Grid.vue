@@ -18,8 +18,17 @@
                 <span v-if="key === 'progress'">
                     <button v-if="entry['init']||entry['progress']=== entry['max']" @click="deploy(entry['uuid'])">{{buttonText(entry['progress'],entry['max'])}}</button>
                     <progress v-else-if="entry['progress']!== entry['max']" :value="entry['progress']" :max="entry['max']"></progress>
-
+                    <label for="script">Script</label>
+                    <input name="script" id="script" v-model="entry['script']"><br>
+                    <label for="url">Url</label>
+                    <input name="url" id="url" v-model="entry['url']"><br>
+                    <label for="body">body</label>
+                    <input name="body" id="body" v-model="entry['body']"><br>
+                    <label for="header">header</label>
+                    <input name="header" id="header" v-model="entry['header']"><br>
                     <button @click="test(entry['uuid'])">Test</button>
+                    <label for="test">Required body</label>
+                    <input name="test" id="test" v-model="entry['test']">
                 </span>
             </td>
         </tr>
@@ -31,9 +40,30 @@
     export default {
         name: "Grid",
         props: {
+            testData: Array,
             heroes: Array,
             columns: Array,
             filterKey: String,
+            uuid: String,
+        },
+        watch: {
+            // whenever question changes, this function will run
+            testData: function (newQuestion, oldQuestion) {
+                let that = this;
+                const filteredTestData = _.find(this.testData, function(row) { return row['headers'] ===that.uuid});
+                const filteredGridData = _.find(this.filteredHeroes, function(row) { return row['uuid'] === that.uuid});
+                if(
+                    filteredTestData && filteredGridData &&
+                    filteredTestData['request'] === filteredGridData['test']
+                ){
+                    console.log('Passed!')
+                } else if (
+                    filteredTestData && filteredGridData &&
+                    filteredTestData['request'] !== filteredGridData['test']
+                ) {
+                    console.log('Failed!!')
+                }
+            }
         },
         data: function () {
             const sortOrders = {};
@@ -86,9 +116,11 @@
                     }
                 );
             },
-            test: function(targetDir){
+            test: function(uuid){
                 const url = `http://${this.$BASE_HOST}/test/`;
-                this.axios.get(url + targetDir).then(x => x.data);
+                this.axios.post(url + uuid,
+                    JSON.stringify(_.find(this.filteredHeroes, function(row) { return row['uuid'] === uuid}))
+                ).then(x => x.data);
             },
             buttonText: function(progress,max){
                 if(this.error) {
