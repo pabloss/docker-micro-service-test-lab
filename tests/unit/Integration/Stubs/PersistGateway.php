@@ -9,6 +9,10 @@ use App\AppCore\Domain\Repository\uServiceEntity;
 
 class PersistGateway implements PersistGatewayInterface
 {
+    public function findByHash(string $id)
+    {
+        // TODO: Implement findByHash() method.
+    }
 
     /** @var array */
     private $collection = [];
@@ -32,7 +36,7 @@ class PersistGateway implements PersistGatewayInterface
             }
         }
         if(null === $uServiceEntity->id()){
-            $uServiceEntity = new uServiceEntity($uServiceEntity->movedToDir(), $uServiceEntity->file(), $this->nextId());
+            $uServiceEntity = new uServiceEntity($uServiceEntity->movedToDir(), $uServiceEntity->file(),  $this->getUuidFromDir($uServiceEntity->movedToDir()), $this->nextId());
         }
 
         if(0 === \count($this->filterCollectionById($uServiceEntity->id()))){
@@ -56,6 +60,20 @@ class PersistGateway implements PersistGatewayInterface
         return \array_filter($this->collection, function (EntityInterface $entity) use ($id) {
             return $id === $entity->id();
         });
+    }
+
+    /**
+     * @param string $dirPath
+     *
+     * @return string
+     */
+    private function getUuidFromDir(string $dirPath): string
+    {
+        \preg_match('/(\w+)$/', $dirPath, $matches);
+        if (\count($matches) < 2) {
+            $matches = ['/'];
+        }
+        return $matches[0];
     }
 
 }
