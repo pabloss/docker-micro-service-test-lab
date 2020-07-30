@@ -34,19 +34,25 @@ class uServiceEntity implements uServiceEntityInterface
      * @var string
      */
     private $unpackedLocation;
+    /**
+     * @var string
+     */
+    private $uuid;
 
     /**
      * uServiceEntity constructor.
      *
      * @param string $movedToDir
      * @param string $file
+     * @param string $uuid
      * @param string $id
      */
-    public function __construct(string $movedToDir, string $file, ?string $id = null)
+    public function __construct(string $movedToDir, string $file, string $uuid, ?string $id = null)
     {
         $this->id = $id;
         $this->movedToDir = $movedToDir;
         $this->file = $file;
+        $this->uuid = $uuid;
     }
 
     public function id()
@@ -80,5 +86,13 @@ class uServiceEntity implements uServiceEntityInterface
     public function setUnpacked(string $unpackedLocation)
     {
         $this->unpackedLocation = $unpackedLocation;
+    }
+
+    /**
+     * @return string
+     */
+    public function uuid(): string
+    {
+        return $this->uuid;
     }
 }
