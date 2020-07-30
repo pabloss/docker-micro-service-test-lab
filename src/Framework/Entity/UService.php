@@ -4,6 +4,7 @@ namespace App\Framework\Entity;
 
 use App\AppCore\Domain\Repository\EntityInterface;
 use App\AppCore\Domain\Repository\uServiceEntity;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -34,6 +35,22 @@ class UService implements EntityInterface
      */
     private $unpacked;
 
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Framework\Entity\Test", mappedBy="UService")
+     */
+    private $tests;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $uuid;
+
+    public function __construct()
+    {
+        $this->tests = new ArrayCollection();
+    }
+
     /**
      * @param uServiceEntity $uServiceEntity
      * @param UService|null  $frameworkEntity
@@ -50,6 +67,7 @@ class UService implements EntityInterface
         $entity->setMovedToDir($uServiceEntity->movedToDir());
         $entity->setId($uServiceEntity->id());
         $entity->setUnpacked($uServiceEntity->unpacked());
+        $entity->setUuid($uServiceEntity->uuid());
         return $entity;
     }
 
@@ -107,5 +125,60 @@ class UService implements EntityInterface
         return $this;
     }
 
+    /**
+     * @return ArrayCollection
+     */
+    public function getTests(): ArrayCollection
+    {
+        return $this->tests;
+    }
 
+    /**
+     * @param Test $test
+     *
+     * @return $this
+     */
+    public function addProduct(Test $test): self
+    {
+        if (!$this->tests->contains($test)) {
+            $this->tests[] = $test;
+            $test->setUService($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param Test $product
+     *
+     * @return $this
+     */
+    public function removeProduct(Test $product): self
+    {
+        if ($this->tests->contains($product)) {
+            $this->tests->removeElement($product);
+            // set the owning side to null (unless already changed)
+            if ($product->getUService() === $this) {
+                $product->setUService(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUuid()
+    {
+        return $this->uuid;
+    }
+
+    /**
+     * @param mixed $uuid
+     */
+    public function setUuid($uuid): void
+    {
+        $this->uuid = $uuid;
+    }
 }

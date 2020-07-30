@@ -26,7 +26,8 @@ class PersistGatewayTest extends \Codeception\Test\Unit
         $id = 'id';
         $file = 'test.txt';
         $movedToDir = 'dirName';
-        $uServiceEntity = new uServiceEntity($movedToDir . $id, $file, $id);
+        $uuid = '11111';
+        $uServiceEntity = new uServiceEntity($movedToDir . $id, $file, $uuid, $id);
 
         $gateway = new PersistGateway();
 
@@ -38,5 +39,6 @@ class PersistGatewayTest extends \Codeception\Test\Unit
         $this->tester->assertEquals($uServiceEntity, \end($all));
 
         $this->tester->assertEquals($uServiceEntity, $gateway->find($id));
+        $this->tester->assertEquals($uuid, $gateway->find($id)->uuid());
     }
 }

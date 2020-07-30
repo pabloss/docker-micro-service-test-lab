@@ -52,6 +52,39 @@ class uServiceRepositoryTest extends \Codeception\Test\Unit
     }
 
     // tests
+    public function testFindByHash()
+    {
+        // Given
+        $id = 'id';
+        $file = 'file';
+        $movedToDir = 'movedToDir';
+        $domain = new uService($file, $movedToDir);
+
+        $uServiceEntity = new uServiceEntity($movedToDir, $file, $id);
+        $persistGateway = $this->prophesize(PersistGatewayInterface::class);
+        $persistGateway->nextId()->willReturn('nextId');
+        $persistGateway->getAll()->willReturn([$uServiceEntity]);
+        $persistGateway->persist($uServiceEntity)->shouldBeCalled();
+        $persistGateway->findByHash($id)->willReturn($uServiceEntity)->shouldBeCalled();
+
+        $mapper = $this->prophesize(DomainEntityMapperInterface::class);
+        $mapper->domain2Entity($id, $domain)->willReturn($uServiceEntity);
+        $mapper->entity2Domain($uServiceEntity)->willReturn($domain);
+        $repo = new uServiceRepository($persistGateway->reveal(), $mapper->reveal());  //jeśli repo zależy od mappera to będę mógł zrobić mocka do entity
+
+        // When
+        $repo->persist($domain, $id);
+
+        // Then
+        $this->tester->assertInstanceOf(uServiceInterface::class, $repo->findByHash($id));
+        $this->tester->assertEquals($movedToDir, $repo->findByHash($id)->movedToDir());
+        $this->tester->assertEquals($file, $repo->findByHash($id)->file());
+
+        $this->tester->assertEquals($domain, $repo->findByHash($id));
+
+    }
+
+    // tests
     public function testSomeFeatureWithNull()
     {
         // Given

@@ -28,7 +28,8 @@ class PersistGatewayAdapterTest extends \Codeception\Test\Unit
     public function testPersist()
     {
         $id = 'id';
-        $entity = new uServiceEntity('movedToDir', 'file', $id);
+        $uuid = '1111';
+        $entity = new uServiceEntity('movedToDir', 'file', $uuid, $id);
         $UService = UService::fromDomainEntity($entity, null);
 
         $repo = $this->prophesize(UServiceRepository::class);
@@ -42,12 +43,14 @@ class PersistGatewayAdapterTest extends \Codeception\Test\Unit
         $adapter = new PersistGatewayAdapter($em->reveal());
         $adapter->persist($entity);
         $this->tester->assertEquals($UService, $repo->reveal()->find($id));
+        $this->tester->assertEquals($uuid, $repo->reveal()->find($id)->getUuid());
     }
 
     public function testPersistNewEntity()
     {
         $id = 'id';
-        $entity = new uServiceEntity('movedToDir', 'file', null);
+        $uuid = '1111';
+        $entity = new uServiceEntity('movedToDir', 'file', $uuid, null);
 
         $repo = $this->prophesize(UServiceRepository::class);
         $em = $this->prophesize(EntityManagerInterface::class);
@@ -59,6 +62,8 @@ class PersistGatewayAdapterTest extends \Codeception\Test\Unit
 
         $adapter = new PersistGatewayAdapter($em->reveal());
         $adapter->persist($entity);
+
+        $this->tester->assertEquals($uuid, $entity->uuid());
     }
 
 
