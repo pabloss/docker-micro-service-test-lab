@@ -27,7 +27,7 @@ class TestPersistGateway implements PersistGatewayInterface
             }
         }
         if(null === $testEntity->id()){
-            $testEntity = new TestEntity();
+            $testEntity = new TestEntity($testEntity->uuid(), $testEntity->requestedBody(), $this->nextId());
         }
         if(0 === \count($this->filterCollectionById($testEntity->id()))){
             $this->collection[] = $testEntity;

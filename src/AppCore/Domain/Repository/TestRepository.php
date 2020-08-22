@@ -33,7 +33,7 @@ class TestRepository
         return $this->mapper->entity2Domain($this->gateway->findByHash($uuid));
     }
 
-    public function persist(Test $domain, $nextId)
+    public function persist(Test $domain, ?string $nextId)
     {
         $this->gateway->persist($this->mapper->domain2Entity($nextId, $domain));
     }
