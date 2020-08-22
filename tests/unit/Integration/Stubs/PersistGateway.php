@@ -9,8 +9,6 @@ use App\AppCore\Domain\Repository\uServiceEntity;
 
 class PersistGateway implements PersistGatewayInterface
 {
-
-
     /** @var array */
     private $collection = [];
 
@@ -50,7 +48,7 @@ class PersistGateway implements PersistGatewayInterface
     {
         return $this->filterCollectionByHash($id)[0];
     }
-    
+
     /**
      * @param string $id
      *
