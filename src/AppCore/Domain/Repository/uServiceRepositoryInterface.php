@@ -10,4 +10,5 @@ interface uServiceRepositoryInterface
     public function persist(uServiceInterface $domain, ?string $id);
     public function all();
     public function find(string $id);
+    public function findByHash(string $hash);
 }

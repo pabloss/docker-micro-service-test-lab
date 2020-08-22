@@ -40,12 +40,17 @@ class uServiceEntity implements uServiceEntityInterface
     private $uuid;
 
     /**
+     * @var TestEntity
+     */
+    private $test;
+
+    /**
      * uServiceEntity constructor.
      *
-     * @param string $movedToDir
-     * @param string $file
-     * @param string $uuid
-     * @param string $id
+     * @param string      $movedToDir
+     * @param string      $file
+     * @param string      $uuid
+     * @param string|null $id
      */
     public function __construct(string $movedToDir, string $file, string $uuid, ?string $id = null)
     {
@@ -94,5 +99,21 @@ class uServiceEntity implements uServiceEntityInterface
     public function uuid(): string
     {
         return $this->uuid;
+    }
+
+    public function getTest(): ?TestEntity
+    {
+        return $this->test;
+    }
+
+    /**
+     * @param TestEntity|null $test
+     *
+     * @return uServiceEntity
+     */
+    public function setTest(?TestEntity $test): self
+    {
+        $this->test = $test;
+        return $this;
     }
 }

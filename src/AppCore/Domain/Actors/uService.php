@@ -27,6 +27,11 @@ class uService implements uServiceInterface
     private $unpackedLocation;
 
     /**
+     * @var Test
+     */
+    private $test;
+
+    /**
      * uService constructor.
      *
      * @param string $file
@@ -62,6 +67,22 @@ class uService implements uServiceInterface
     public function setUnpacked(string $unpackedLocation)
     {
         $this->unpackedLocation = $unpackedLocation;
+    }
+
+    public function getTest()
+    {
+        return $this->test;
+    }
+
+    /**
+     * @param Test $test
+     *
+     * @return uService
+     */
+    public function setTest(Test $test): uService
+    {
+        $this->test = $test;
+        return $this;
     }
 
 }

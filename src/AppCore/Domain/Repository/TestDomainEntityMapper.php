@@ -3,8 +3,7 @@ declare(strict_types=1);
 
 namespace App\AppCore\Domain\Repository;
 
-use App\AppCore\Domain\Actors\uService;
-use App\AppCore\Domain\Actors\uServiceInterface;
+use App\AppCore\Domain\Actors\Test;
 
 /**
  *
@@ -17,23 +16,15 @@ use App\AppCore\Domain\Actors\uServiceInterface;
  *
  * @package App\AppCore\Domain\Repository
  */
-class DomainEntityMapper implements DomainEntityMapperInterface
+class TestDomainEntityMapper implements TestDomainEntityMapperInterface
 {
-    public function domain2Entity(?string $id, uServiceInterface $domain): uServiceEntityInterface
+    public function domain2Entity(?string $id, Test $test)
     {
-        $uServiceEntity = new uServiceEntity($domain->movedToDir(), $domain->file(), $id);
-        if(null !== $domain->unpacked()){
-            $uServiceEntity->setUnpacked($domain->unpacked());
-        }
-        return $uServiceEntity;
+        return new TestEntity($test->getUuid(), $test->getRequestedBody(), $id);
     }
 
-    public function entity2Domain(uServiceEntityInterface $entity): uServiceInterface
+    public function entity2Domain(TestEntity $testEntity)
     {
-        $uService = new uService($entity->file(), $entity->movedToDir());
-        if(null !== $entity->unpacked()){
-            $uService->setUnpacked($entity->unpacked());
-        }
-        return $uService;
+        return new Test($testEntity->uuid(), $testEntity->requestedBody());
     }
 }

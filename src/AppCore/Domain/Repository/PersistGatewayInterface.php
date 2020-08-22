@@ -9,4 +9,5 @@ interface PersistGatewayInterface
     public function getAll();
     public function persist(EntityInterface $uServiceEntity);
     public function find(string $id);
+    public function findByHash(string $id);
 }
