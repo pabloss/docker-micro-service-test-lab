@@ -1,8 +1,8 @@
 <?php namespace App\AppCore\Domain\Repository;
 
-use App\AppCore\Domain\Actors\uService;
+use App\AppCore\Domain\Actors\Test;
 
-class DomainEntityMapperTest extends \Codeception\Test\Unit
+class TestDomainEntityMapperTest extends \Codeception\Test\Unit
 {
     /**
      * @var \UnitTester
@@ -20,14 +20,18 @@ class DomainEntityMapperTest extends \Codeception\Test\Unit
     // tests
     public function testSomeFeature()
     {
-        $mapper  = new DomainEntityMapper();
-        $uService = new uService('file', 'dir');
-        $entity = $mapper->domain2Entity('id', $uService);
+        $id = 'id';
+        $uuid = '1111';
+        $requestedBody = 'test_body';
+        $mapper  = new TestDomainEntityMapper();
+        $test = new Test($uuid, $requestedBody);
+        $testEntity = $mapper->domain2Entity($id, $test);
 
-        $this->tester->assertInstanceOf(uServiceEntity::class, $entity);
-        $this->tester->assertEquals('file', $entity->file());
-        $this->tester->assertEquals('dir', $entity->movedToDir());
+        $this->tester->assertInstanceOf(TestEntity::class, $testEntity);
+        $this->tester->assertEquals($id, $testEntity->id());
+        $this->tester->assertEquals($uuid, $testEntity->uuid());
+        $this->tester->assertEquals($requestedBody, $testEntity->requestedBody());
 
-        $this->tester->assertEquals($uService, $mapper->entity2Domain($entity));
+        $this->tester->assertEquals($test, $mapper->entity2Domain($testEntity));
     }
 }

@@ -1,6 +1,6 @@
 <?php namespace App\AppCore\Domain\Repository;
 
-class uServiceEntityTest extends \Codeception\Test\Unit
+class TestEntityTest extends \Codeception\Test\Unit
 {
     /**
      * @var \UnitTester
@@ -19,17 +19,16 @@ class uServiceEntityTest extends \Codeception\Test\Unit
     public function testSomeFeature()
     {
         // Given
-        $id = 'id';
-        $movedToDir = 'movedToDir';
-        $file = 'file';
-
+        $id = 'ID';
+        $uuid = 'uuid';
+        $requestedBody = 'test_body';
         // When
-        $entity = new uServiceEntity($movedToDir, $file, $id);
+        $entity = new TestEntity($uuid, $requestedBody, $id);
 
         // Then
         $this->tester->assertEquals($id, $entity->id());
-        $this->tester->assertEquals($file, $entity->file());
-        $this->tester->assertEquals($movedToDir, $entity->movedToDir());
+        $this->tester->assertEquals($uuid, $entity->uuid());
+        $this->tester->assertEquals($requestedBody, $entity->requestedBody());
     }
 
     // tests
@@ -37,15 +36,14 @@ class uServiceEntityTest extends \Codeception\Test\Unit
     {
         // Given
         $id = null;
-        $movedToDir = 'movedToDir';
-        $file = 'file';
-
+        $uuid = 'uuid';
+        $requestedBody = 'test_body';
         // When
-        $entity = new uServiceEntity($movedToDir, $file, $id);
+        $entity = new TestEntity($uuid, $requestedBody, $id);
 
         // Then
         $this->tester->assertEquals($id, $entity->id());
-        $this->tester->assertEquals($file, $entity->file());
-        $this->tester->assertEquals($movedToDir, $entity->movedToDir());
+        $this->tester->assertEquals($uuid, $entity->uuid());
+        $this->tester->assertEquals($requestedBody, $entity->requestedBody());
     }
 }

@@ -1,13 +1,13 @@
 <?php namespace Integration\Repository;
 
-use App\AppCore\Domain\Actors\uService;
-use App\AppCore\Domain\Repository\DomainEntityMapper;
-use Integration\Stubs\PersistGateway;
-use App\AppCore\Domain\Repository\uServiceEntity;
-use App\AppCore\Domain\Repository\uServiceRepository;
+use App\AppCore\Domain\Actors\Test;
+use App\AppCore\Domain\Repository\TestDomainEntityMapper;
+use App\AppCore\Domain\Repository\TestEntity;
+use App\AppCore\Domain\Repository\TestRepository;
 use Codeception\Util\Autoload;
+use Integration\Stubs\TestPersistGateway;
 
-class uServiceRepositoryTest extends \Codeception\Test\Unit
+class TestRepositoryTest extends \Codeception\Test\Unit
 {
     /**
      * @var \UnitTester
@@ -27,11 +27,13 @@ class uServiceRepositoryTest extends \Codeception\Test\Unit
     public function testSomeFeature()
     {
         // Given
-        $file = 'file';
-        $movedToDir = 'movedToDir';
-        $gateway = new PersistGateway();
-        $repo = new uServiceRepository($gateway, new DomainEntityMapper());
-        $domain = new uService($file, $movedToDir);
+
+        $uuid = '111';
+        $requestedBody = 'test_body';
+        $gateway = new TestPersistGateway();
+        $mapper = new TestDomainEntityMapper();
+        $repo = new TestRepository($gateway, $mapper);
+        $domain = new Test($uuid, $requestedBody);
 
         // When
         $repo->persist($domain, $gateway->nextId());
@@ -39,35 +41,12 @@ class uServiceRepositoryTest extends \Codeception\Test\Unit
         $lastEntity = \end($all);
 
         // Then
-        $this->tester->assertInstanceOf(uServiceEntity::class, $lastEntity);
+        $this->tester->assertInstanceOf(TestEntity::class, $lastEntity);
         $this->tester->assertNotEmpty($lastEntity->id());
-        $this->tester->assertEquals($movedToDir, $lastEntity->movedToDir());
-        $this->tester->assertEquals($file, $lastEntity->file());
+        $this->tester->assertEquals($uuid, $lastEntity->uuid());
+        $this->tester->assertEquals($requestedBody, $lastEntity->requestedBody());
 
         $this->tester->assertEquals($domain, $repo->find($gateway->nextId()));
-    }
-
-    // tests
-    public function testSomeFeatureWithNull()
-    {
-        // Given
-        $file = 'file';
-        $movedToDir = 'movedToDir';
-        $gateway = new PersistGateway();
-        $repo = new uServiceRepository($gateway, new DomainEntityMapper());
-        $domain = new uService($file, $movedToDir);
-
-        // When
-        $repo->persist($domain, null);
-        $all = $repo->all();
-        $lastEntity = \end($all);
-
-        // Then
-        $this->tester->assertInstanceOf(uServiceEntity::class, $lastEntity);
-        $this->tester->assertNotEmpty($lastEntity->id());
-        $this->tester->assertEquals($movedToDir, $lastEntity->movedToDir());
-        $this->tester->assertEquals($file, $lastEntity->file());
-
-        $this->tester->assertEquals($domain, $repo->find($gateway->nextId()));
+        $this->tester->assertEquals($domain, $repo->findByHash($uuid));
     }
 }

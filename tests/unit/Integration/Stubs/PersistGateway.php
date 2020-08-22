@@ -9,10 +9,7 @@ use App\AppCore\Domain\Repository\uServiceEntity;
 
 class PersistGateway implements PersistGatewayInterface
 {
-    public function findByHash(string $id)
-    {
-        // TODO: Implement findByHash() method.
-    }
+
 
     /** @var array */
     private $collection = [];
@@ -36,11 +33,11 @@ class PersistGateway implements PersistGatewayInterface
             }
         }
         if(null === $uServiceEntity->id()){
-            $uServiceEntity = new uServiceEntity($uServiceEntity->movedToDir(), $uServiceEntity->file(),  $this->getUuidFromDir($uServiceEntity->movedToDir()), $this->nextId());
+            $uServiceEntity = $this->createNewEntity($uServiceEntity);
         }
 
         if(0 === \count($this->filterCollectionById($uServiceEntity->id()))){
-            $this->collection[] = $uServiceEntity;
+            $this->collection[] = $this->createNewEntity($uServiceEntity);
         }
     }
 
@@ -49,7 +46,11 @@ class PersistGateway implements PersistGatewayInterface
         return $this->filterCollectionById($id)[0];
     }
 
-
+    public function findByHash(string $id)
+    {
+        return $this->filterCollectionByHash($id)[0];
+    }
+    
     /**
      * @param string $id
      *
@@ -61,6 +62,19 @@ class PersistGateway implements PersistGatewayInterface
             return $id === $entity->id();
         });
     }
+    /**
+     * @param string $hash
+     *
+     * @return array
+     */
+    private function filterCollectionByHash(string $hash): array
+    {
+        return \array_filter($this->collection, function (uServiceEntity $entity) use ($hash) {
+            return $hash === $entity->uuid();
+        });
+    }
+
+
 
     /**
      * @param string $dirPath
@@ -73,7 +87,26 @@ class PersistGateway implements PersistGatewayInterface
         if (\count($matches) < 2) {
             $matches = ['/'];
         }
+
         return $matches[0];
+    }
+
+    /**
+     * @param EntityInterface $uServiceEntity
+     *
+     * @return uServiceEntity
+     */
+    private function createNewEntity(EntityInterface $uServiceEntity): uServiceEntity
+    {
+        $newUServiceEntity = new uServiceEntity(
+            $uServiceEntity->movedToDir(),
+            $uServiceEntity->file(),
+            $this->getUuidFromDir($uServiceEntity->movedToDir()), $this->nextId()
+        );
+        if(null !== $uServiceEntity->getTest()){
+            $newUServiceEntity->setTest( $uServiceEntity->getTest());
+        }
+        return $newUServiceEntity;
     }
 
 }

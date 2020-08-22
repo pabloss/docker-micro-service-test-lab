@@ -1,9 +1,9 @@
 <?php namespace App\AppCore\Domain\Repository;
 
 use Codeception\Util\Autoload;
-use Integration\Stubs\PersistGateway;
+use Integration\Stubs\TestPersistGateway;
 
-class PersistGatewayTest extends \Codeception\Test\Unit
+class TestPersistGatewayTest extends \Codeception\Test\Unit
 {
     /**
      * @var \UnitTester
@@ -24,19 +24,18 @@ class PersistGatewayTest extends \Codeception\Test\Unit
     {
         // Given
         $id = 'id';
-        $file = 'test.txt';
-        $movedToDir = 'dirName';
-        $uServiceEntity = new uServiceEntity($movedToDir . $id, $file, $id);
+        $uuid = 'uuid';
+        $requestedBody = 'test_body';
+        $testEntity = new TestEntity($uuid, $requestedBody, $id);
 
-        $gateway = new PersistGateway();
+        $gateway = new TestPersistGateway();
 
         // When
-        $gateway->persist($uServiceEntity);
+        $gateway->persist($testEntity);
         $all = $gateway->getAll();
 
         // Then
-        $this->tester->assertEquals($uServiceEntity, \end($all));
-
-        $this->tester->assertEquals($uServiceEntity, $gateway->find($id));
+        $this->tester->assertEquals($testEntity, \end($all));
+        $this->tester->assertEquals($testEntity, $gateway->find($id));
     }
 }
