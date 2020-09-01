@@ -22,7 +22,7 @@ class SaveApplication implements SaveApplicationInterface
 {
 
     /**
-     * @var \App\AppCore\Domain\Service\Save\SaveDomainService
+     * @var SaveDomainService
      */
     private $service;
     /**

@@ -6,6 +6,7 @@ use App\AppCore\Domain\Repository\EntityInterface;
 use App\AppCore\Domain\Repository\uServiceEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\PersistentCollection;
 
 /**
  * @ORM\Entity(repositoryClass="App\Framework\Repository\UServiceRepository")
@@ -38,6 +39,7 @@ class UService implements EntityInterface
 
     /**
      * @ORM\OneToMany(targetEntity="App\Framework\Entity\Test", mappedBy="UService")
+     * @var PersistentCollection
      */
     private $tests;
 
@@ -130,7 +132,7 @@ class UService implements EntityInterface
      */
     public function getTests(): ArrayCollection
     {
-        return $this->tests;
+        return new ArrayCollection($this->tests->toArray());
     }
 
     /**
@@ -138,7 +140,7 @@ class UService implements EntityInterface
      *
      * @return $this
      */
-    public function addProduct(Test $test): self
+    public function addTest(Test $test): self
     {
         if (!$this->tests->contains($test)) {
             $this->tests[] = $test;
@@ -153,7 +155,7 @@ class UService implements EntityInterface
      *
      * @return $this
      */
-    public function removeProduct(Test $product): self
+    public function removeTest(Test $product): self
     {
         if ($this->tests->contains($product)) {
             $this->tests->removeElement($product);

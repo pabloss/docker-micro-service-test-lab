@@ -10,6 +10,10 @@ parameters:
     bind_port: 5555
     ws_port: 4444
     ws_broadcast_address: 0.0.0.0
+    rabbit.host: 'localhost'
+    rabbit.port: 5672
+    rabbit.user: 'guest'
+    rabbit.password: 'guest'
 
 services:
     # default configuration for services in *this* file
@@ -72,6 +76,11 @@ services:
     App\AppCore\Domain\Repository\uServiceRepository:
         arguments:
             $gateway: '@App\Framework\Persistence\PersistGatewayAdapter'
+
+    App\AppCore\Domain\Repository\TestRepository:
+        arguments:
+            $gateway: '@App\Framework\Persistence\TestPersistGatewayAdapter'
+            $mapper: '@App\AppCore\Domain\Repository\TestDomainEntityMapper'
 
     App\Framework\Service\WebSockets\Context\Context:
         arguments:

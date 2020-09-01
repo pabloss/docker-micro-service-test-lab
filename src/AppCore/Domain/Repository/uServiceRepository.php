@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\AppCore\Domain\Repository;
 
+use App\AppCore\Domain\Actors\Test;
 use App\AppCore\Domain\Actors\uServiceInterface;
 
 /**
@@ -47,13 +48,17 @@ class uServiceRepository implements uServiceRepositoryInterface
     public function persist(uServiceInterface $domain, ?string $id)
     {
         $this->gateway->persist(
-            $this->mapper->domain2Entity($id, $domain)->setTest($this->mapTestDomain($domain))
+            null === $domain->getTest() ? $this->mapper->domain2Entity($id, $domain):  $this->mapper->domain2Entity($id, $domain)->setTest($this->mapTestDomain($domain))
         );
     }
 
     public function all()
     {
-        return $this->gateway->getAll();
+        return \array_map(function ($entity){
+            return $this->mapper->entity2Domain($entity)->setTest(
+                $this->mapTestEntity($entity->uuid())
+            );
+        }, $this->gateway->getAll());
     }
 
     public function find(string $id)
@@ -81,9 +86,9 @@ class uServiceRepository implements uServiceRepositoryInterface
     /**
      * @param string $hash
      *
-     * @return \App\AppCore\Domain\Actors\Test
+     * @return Test
      */
-    private function mapTestEntity(string $hash): \App\AppCore\Domain\Actors\Test
+    private function mapTestEntity(string $hash): Test
     {
         return $this->testDomainEntityMapper->entity2Domain($this->gateway->findByHash($hash)->getTest());
     }

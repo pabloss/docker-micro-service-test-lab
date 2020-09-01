@@ -5,6 +5,7 @@ namespace App\Framework\Persistence;
 
 use App\AppCore\Domain\Repository\EntityInterface;
 use App\AppCore\Domain\Repository\PersistGatewayInterface;
+use App\AppCore\Domain\Repository\TestEntity;
 use App\AppCore\Domain\Repository\uServiceEntity;
 use App\Framework\Entity\UService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -29,7 +30,9 @@ class PersistGatewayAdapter implements PersistGatewayInterface
 
     public function getAll()
     {
-        return $this->entityManager->getRepository(UService::class)->findAll();
+        return \array_map(function (UService $entity){
+           return $this->mapFrameworkEntity($entity);
+        }, $this->entityManager->getRepository(UService::class)->findAll());
     }
 
     public function persist(EntityInterface $uServiceEntity)
@@ -59,13 +62,31 @@ class PersistGatewayAdapter implements PersistGatewayInterface
 
     public function findByHash(string $hash)
     {
-        return $this->entityManager->getRepository(UService::class)
+        $entity = $this->entityManager->getRepository(UService::class)
             ->createQueryBuilder('us')
             ->where('us.file LIKE :file')
-            ->setParameter('file', '%'.$hash.'%')
+            ->setParameter('file', '%' . $hash . '%')
             ->setMaxResults(1)
             ->getQuery()
-            ->getSingleResult()
-            ;
+            ->getSingleResult();
+        return $this->mapFrameworkEntity($entity);
     }
+
+    /**
+     * @param $entity
+     *
+     * @return uServiceEntity
+     */
+    private function mapFrameworkEntity($entity): uServiceEntity
+    {
+        $uServiceEntity = new uServiceEntity($entity->getMovedToDir(), $entity->getFile(), $entity->getFile(),
+            (string)$entity->getId());
+        if (null !== ($test = $entity->getTests()->first())) {
+            $uServiceEntity->setTest(
+                new TestEntity($entity->getUuid(), $test->getRequestedBody(), $test->getBody(), $test->getHeader(),
+                    $test->getScript(), $test->getUrl(), (string)$test->getId())
+            );
+        }
+        return $uServiceEntity;
+}
 }

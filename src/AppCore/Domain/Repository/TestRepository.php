@@ -30,7 +30,7 @@ class TestRepository
 
     public function findByHash(string $uuid)
     {
-        return $this->mapper->entity2Domain($this->gateway->findByHash($uuid));
+        return $this->mapper->entity2Domain(\App\Framework\Entity\Test::asDomainEntity($this->gateway->findByHash($uuid)));
     }
 
     public function persist(Test $domain, ?string $nextId)

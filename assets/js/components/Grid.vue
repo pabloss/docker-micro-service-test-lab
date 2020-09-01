@@ -27,8 +27,10 @@
                     <label for="header">header</label>
                     <input name="header" id="header" v-model="entry['header']"><br>
                     <button @click="test(entry['uuid'])">Test</button>
-                    <label for="test">Required body</label>
-                    <input name="test" id="test" v-model="entry['test']">
+                    <label for="requested_body">Requested body</label>
+                    <input name="requested_body" id="requested_body" v-model="entry['requested_body']">
+                    <br />
+                    <button @click="save(entry['uuid'])">Save</button>
                 </span>
             </td>
         </tr>
@@ -121,6 +123,18 @@
                 this.axios.post(url + uuid,
                     JSON.stringify(_.find(this.filteredHeroes, function(row) { return row['uuid'] === uuid}))
                 ).then(x => x.data);
+            },
+            save: function(uuid){
+                const url = `http://${this.$BASE_HOST}/save-test/`;
+                this.axios.post(url + uuid,
+                    JSON.stringify(_.find(this.filteredHeroes, function(row) { return row['uuid'] === uuid})),
+                    {
+                      headers: {'Content-Type': 'application/json'}
+                    }
+                ).then(x => {
+                  // x.data
+                  console.log(this.testData);
+                });
             },
             buttonText: function(progress,max){
                 if(this.error) {

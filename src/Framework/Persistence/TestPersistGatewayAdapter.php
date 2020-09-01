@@ -39,6 +39,10 @@ class TestPersistGatewayAdapter implements PersistGatewayInterface
         } else{
             $frameworkTestEntity = $this->entityManager->getRepository(Test::class)->find($testEntity->id());
             $frameworkTestEntity->setUuid($testEntity->uuid());
+            $frameworkTestEntity->setBody($testEntity->body());
+            $frameworkTestEntity->setScript($testEntity->script());
+            $frameworkTestEntity->setHeader($testEntity->header());
+            $frameworkTestEntity->setUrl($testEntity->url());
             $frameworkTestEntity->setRequestedBody($testEntity->requestedBody());
         }
         $this->entityManager->persist($frameworkTestEntity);
@@ -54,13 +58,13 @@ class TestPersistGatewayAdapter implements PersistGatewayInterface
 
     public function findByHash(string $hash)
     {
-        return $this->entityManager->getRepository(Test::class)
+        $frameworkEntity = $this->entityManager->getRepository(Test::class)
             ->createQueryBuilder('t')
             ->where('t.uuid LIKE :uuid')
             ->setParameter('uuid', $hash)
             ->setMaxResults(1)
             ->getQuery()
-            ->getSingleResult()
-            ;
+            ->getSingleResult();
+        return new TestEntity($frameworkEntity->getUuid(), $frameworkEntity->getRequestedBody(), $frameworkEntity->getId());
     }
 }

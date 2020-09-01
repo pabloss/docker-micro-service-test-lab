@@ -4,14 +4,21 @@ declare(strict_types=1);
 namespace App\Framework\Controller;
 
 use App\AppCore\Application\DeployApplication;
+use App\AppCore\Application\GetMicroServiceApplication;
+use App\AppCore\Application\Save\SaveTestApplication;
 use App\AppCore\Domain\Service\Trigger;
+use App\AppCore\Hub;
 use App\Framework\Application\FrameworkSaveApplication;
 use App\Framework\Files\Dir;
 use App\Framework\Files\UploadedFileAdapter;
 use App\Framework\Persistence\PersistGatewayAdapter;
+use App\Framework\Repository\TestRepository;
+use App\Framework\Repository\UServiceRepository;
 use App\Framework\Service\MakeConnection;
 use App\Framework\Service\WebSockets\Context\WrappedContext;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse as RedirectResponseAlias;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -57,6 +64,11 @@ class AppController extends AbstractController
     private $context;
 
     /**
+     * @var Hub $hub
+     */
+    private $hub;
+
+    /**
      * AppController constructor.
      *
      * @param FrameworkSaveApplication $saveApplication
@@ -66,6 +78,7 @@ class AppController extends AbstractController
      * @param Dir                      $dir
      * @param MakeConnection           $makeConnection
      * @param WrappedContext           $context
+     * @param Hub                      $hub
      */
     public function __construct(
         FrameworkSaveApplication $saveApplication,
@@ -74,7 +87,8 @@ class AppController extends AbstractController
         Trigger $trigger,
         Dir $dir,
         MakeConnection $makeConnection,
-        WrappedContext $context
+        WrappedContext $context,
+        Hub $hub
     ) {
         $this->saveApplication = $saveApplication;
         $this->deployApplication = $deployApplication;
@@ -83,6 +97,7 @@ class AppController extends AbstractController
         $this->trigger = $trigger;
         $this->makeConnection = $makeConnection;
         $this->context = $context;
+        $this->hub = $hub;
     }
 
     /**
@@ -95,21 +110,56 @@ class AppController extends AbstractController
     }
 
     /**
+     * @Route("/get-grid-content", name="get_grid_content")
+     * @param GetMicroServiceApplication $application
+     *
+     * @return JsonResponse
+     */
+    public function getGridContent(GetMicroServiceApplication  $application)
+    {
+        return new JsonResponse($application->getAllAsArray());
+    }
+
+
+    /**
      * @Route("/test/{uuid}", name="test")
      * @param string  $uuid
      * @param Request $request
      *
      * @return Response
      */
-    public function test(string $uuid, Request $request)
+    public function test(string $uuid, Request $request, Hub $hub)
     {
+        //./client.php 'http://service-test-lab-new.local/endpoint' 'Hej udało się 3425345!' 'Bars'
+        $uuid2 = \uniqid();
         $this->trigger->runRequest(
             $this->findDockerFileDir($uuid),
-            self::IMAGE_PREFIX . '_test',
-            self::CONTAINER_PREFIX . '_test',
+            self::IMAGE_PREFIX . $uuid2,
+            self::CONTAINER_PREFIX . $uuid2,
             \json_decode($request->getContent(), true)
         );
-        return new Response();
+
+        return new Response($hub->compare($uuid));
+    }
+
+    /**
+     * @Route("/save-test/{uuid}", name="saveTest")
+     * @param Request             $request
+     * @param SaveTestApplication $application
+     *
+     * @param UServiceRepository  $UServiceRepository
+     * @param TestRepository      $testRepository
+     *
+     * @return JsonResponse
+     */
+    public function saveTest(Request $request, SaveTestApplication  $application, UServiceRepository $UServiceRepository, TestRepository $testRepository, EntityManagerInterface $entityManager)
+    {
+        $application->save(\json_decode($request->getContent(), true));
+        $UServiceRepository->findOneBy(['uuid' => \json_decode($request->getContent(), true)['uuid']])->addTest(
+            $testRepository->findOneBy(['uuid' => \json_decode($request->getContent(), true)['uuid']])
+        );
+        $entityManager->flush();
+        return new JsonResponse([]);
     }
 
     /**
@@ -130,17 +180,10 @@ class AppController extends AbstractController
      * @param Request $request
      *
      * @return Response
-     * @throws \ZMQSocketException
      */
-    public function endpoint(Request $request)
+    public function endpoint(Request $request, Hub $hub)
     {
-        $this->context
-            ->send(
-                [
-                    'request' => $request->getContent(),
-                    'headers' => $request->headers->get('X-Foo')
-                ]
-        );
+        $hub->receive($request->getContent(), $request->headers->get('X-Foo'));
         return new Response();
     }
 

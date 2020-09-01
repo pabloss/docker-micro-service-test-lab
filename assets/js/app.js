@@ -30,6 +30,17 @@ const vue = new Vue({
             uuid: '',
         }
     },
+    created() {
+        const url = `http://${this.$BASE_HOST}/get-grid-content/`;
+        this.axios.get(url).then(
+            x =>  {
+                x.data.forEach(function (row) {
+                    vue.insertRow(row);
+                });
+                console.log(x.data);
+            }
+        );
+    },
     mounted() {
         const conn = new ab.Session('ws://'+this.$BASE_HOST+':'+this.$WS_PORT,
             function () {

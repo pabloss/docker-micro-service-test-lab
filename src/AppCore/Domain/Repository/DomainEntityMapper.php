@@ -21,7 +21,7 @@ class DomainEntityMapper implements DomainEntityMapperInterface
 {
     public function domain2Entity(?string $id, uServiceInterface $domain): uServiceEntityInterface
     {
-        $uServiceEntity = new uServiceEntity($domain->movedToDir(), $domain->file(), $this->getUuidFromDir($domain->movedToDir()), $id);
+        $uServiceEntity = new uServiceEntity($domain->movedToDir(), $domain->file(), $this->getUuidFromDir($domain->file()), $id);
         if(null !== $domain->unpacked()){
             $uServiceEntity->setUnpacked($domain->unpacked());
         }
@@ -44,9 +44,11 @@ class DomainEntityMapper implements DomainEntityMapperInterface
      */
     private function getUuidFromDir(string $dirPath): string
     {
-        \preg_match('/(\w+)$/', $dirPath, $matches);
+        \preg_match('/\/(\w+)\/[\w\-.]+$/', $dirPath, $matches);
         if (\count($matches) < 2) {
             $matches = ['/'];
+        } else {
+            $matches[0] = $matches[1];
         }
         return $matches[0];
     }

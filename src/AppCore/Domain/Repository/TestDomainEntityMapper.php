@@ -20,11 +20,11 @@ class TestDomainEntityMapper implements TestDomainEntityMapperInterface
 {
     public function domain2Entity(?string $id, Test $test)
     {
-        return new TestEntity($test->getUuid(), $test->getRequestedBody(), $id);
+        return new TestEntity($test->getUuid(), $test->getRequestedBody(), $test->getBody(), $test->getHeader(), $test->getScript(), $test->getUrl(), $id);
     }
 
     public function entity2Domain(TestEntity $testEntity)
     {
-        return new Test($testEntity->uuid(), $testEntity->requestedBody());
+        return new Test($testEntity->uuid(), $testEntity->requestedBody(), $testEntity->body(),$testEntity->header(), $testEntity->script(), $testEntity->url());
     }
 }
