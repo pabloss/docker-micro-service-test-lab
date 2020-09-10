@@ -4,6 +4,7 @@ namespace App\AppCore\Application;
 
 use App\AppCore\Domain\Actors\uServiceInterface;
 use App\AppCore\Domain\Repository\uServiceRepository;
+use App\AppCore\Domain\Repository\uServiceRepositoryInterface;
 use App\AppCore\Domain\Service\Build\BuildServiceInterface;
 use App\AppCore\Domain\Service\Build\Unpack\UnpackServiceInterface;
 use App\AppCore\Domain\Service\Command\BuildCommand;
@@ -35,7 +36,7 @@ class DomainDeployApplicationTest extends \Codeception\Test\Unit
             return $uService->reveal();
         });
 
-        $repo = $this->prophesize(uServiceRepository::class);
+        $repo = $this->prophesize(uServiceRepositoryInterface::class);
         $repo->find($id)->shouldBeCalled()->willReturn($uService->reveal());
         $repo->persist($uService->reveal(), $id)->shouldBeCalled();
 
