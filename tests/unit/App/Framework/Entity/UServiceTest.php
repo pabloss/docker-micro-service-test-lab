@@ -24,7 +24,7 @@ class UServiceTest extends \Codeception\Test\Unit
         $domainEntity->id()->willReturn($id);
         $domainEntity->getFile()->willReturn($file);
         $domainEntity->getMovedToDir()->willReturn($dir);
-        $domainEntity->unpacked()->willReturn($unpacked);
+        $domainEntity->getUnpacked()->willReturn($unpacked);
 
         $entity = UService::fromDomainEntity($domainEntity->reveal(), null);
 

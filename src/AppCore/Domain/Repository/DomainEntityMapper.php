@@ -22,8 +22,8 @@ class DomainEntityMapper implements DomainEntityMapperInterface
     public function domain2Entity(?string $id, uServiceInterface $domain): uServiceEntityInterface
     {
         $uServiceEntity = new uServiceEntity($domain->getMovedToDir(), $domain->getFile(), $id);
-        if(null !== $domain->unpacked()){
-            $uServiceEntity->setUnpacked($domain->unpacked());
+        if(null !== $domain->getUnpacked()){
+            $uServiceEntity->setUnpacked($domain->getUnpacked());
         }
         return $uServiceEntity;
     }
@@ -31,8 +31,8 @@ class DomainEntityMapper implements DomainEntityMapperInterface
     public function entity2Domain(uServiceEntityInterface $entity): uServiceInterface
     {
         $uService = new uService($entity->getFile(), $entity->getMovedToDir());
-        if(null !== $entity->unpacked()){
-            $uService->setUnpacked($entity->unpacked());
+        if(null !== $entity->getUnpacked()){
+            $uService->setUnpacked($entity->getUnpacked());
         }
         return $uService;
     }

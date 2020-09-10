@@ -54,7 +54,7 @@ class uService implements uServiceInterface
         $this->movedToDir = $movedToDir;
     }
 
-    public function unpacked()
+    public function getUnpacked()
     {
         return $this->unpackedLocation;
     }

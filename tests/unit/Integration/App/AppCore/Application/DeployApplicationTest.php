@@ -105,7 +105,7 @@ class DeployApplicationTest extends \Codeception\Test\Unit
 
         // Then
         $this->tester->assertFileExists($newDir . '/' . self::MICRO_SERVICE_1_DOCKERFILE);
-        $this->tester->assertEquals($newDir, $repo->find($id)->unpacked());
+        $this->tester->assertEquals($newDir, $repo->find($id)->getUnpacked());
         $this->tester->runShellCommand("docker inspect -f '{{.State.Running}}' $(docker ps --filter 'name=$containerPrefix' --format '{{.Image}} {{.Names}}')", false);
         $this->tester->seeInShellOutput('true'); ///-- DZIAŁA!!!
         $this->tester->runShellCommand("docker inspect -f '{{.State.Running}}' $(docker ps --filter 'name=$containerPrefix' --format '{{.Image}} {{.Names}}' -a) | wc -l", false);

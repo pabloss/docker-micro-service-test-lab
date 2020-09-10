@@ -26,7 +26,7 @@ class UnpackServiceTest extends \Codeception\Test\Unit
         $uService->getFile()->willReturn($file);
         $uService->getMovedToDir()->willReturn($movedToDir);
         $uService->setUnpacked($unpackedDir . $id)->will(function ($args) use ($uService, $unpackedDir, $id) {
-            $uService->unpacked()->willReturn($unpackedDir . $id);
+            $uService->getUnpacked()->willReturn($unpackedDir . $id);
         });
 
         $unpackLibAdapter = $this->prophesize(UnpackInterface::class);
@@ -37,6 +37,6 @@ class UnpackServiceTest extends \Codeception\Test\Unit
         $updatedUService = $service->unpack($uService->reveal(), $unpackedDir . $id);
 
         $this->tester->assertInstanceOf(UnpackServiceInterface::class, $service);
-        $this->tester->assertStringStartsWith($unpackedDir . $id, $updatedUService->unpacked());
+        $this->tester->assertStringStartsWith($unpackedDir . $id, $updatedUService->getUnpacked());
     }
 }

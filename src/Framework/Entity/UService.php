@@ -49,7 +49,7 @@ class UService implements EntityInterface
         $entity->setFile($uServiceEntity->getFile());
         $entity->setMovedToDir($uServiceEntity->getMovedToDir());
         $entity->setId($uServiceEntity->id());
-        $entity->setUnpacked($uServiceEntity->unpacked());
+        $entity->setUnpacked($uServiceEntity->getUnpacked());
         return $entity;
     }
 

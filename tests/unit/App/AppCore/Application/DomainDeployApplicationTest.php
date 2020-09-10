@@ -32,7 +32,7 @@ class DomainDeployApplicationTest extends \Codeception\Test\Unit
         $unpackService->unpack($uService->reveal(), $unpackedDir . $id)->will(function ($args) use (
             $uService
         ) {
-            $uService->unpacked()->willReturn($args[1]);
+            $uService->getUnpacked()->willReturn($args[1]);
             return $uService->reveal();
         });
 
@@ -72,6 +72,6 @@ class DomainDeployApplicationTest extends \Codeception\Test\Unit
         $repo->reveal()->persist($uService->reveal(), $id);
         $service->deploy($id, $unpackedDir . $id, 'imagePref', 'containerPref');
 
-        $this->tester->assertEquals($unpackedDir . $id, $repo->reveal()->find($id)->unpacked());
+        $this->tester->assertEquals($unpackedDir . $id, $repo->reveal()->find($id)->getUnpacked());
     }
 }

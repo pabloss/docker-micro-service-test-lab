@@ -38,6 +38,6 @@ class UnpackServiceTest extends \Codeception\Test\Unit
         $updatedUService = $service->unpack($domainUService, self::DATA_DIR.$unpackedDir.$id);
 
         $this->tester->assertInstanceOf(UnpackServiceInterface::class, $service);
-        $this->tester->assertStringStartsWith(self::DATA_DIR.$unpackedDir.$id, $updatedUService->unpacked());
+        $this->tester->assertStringStartsWith(self::DATA_DIR.$unpackedDir.$id, $updatedUService->getUnpacked());
     }
 }

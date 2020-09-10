@@ -38,7 +38,7 @@ class PersistGatewayAdapter implements PersistGatewayInterface
             $UService = UService::fromDomainEntity($uServiceEntity, null);
         } else{
             $UService = $this->entityManager->getRepository(UService::class)->find($uServiceEntity->id());
-            $UService->setUnpacked($uServiceEntity->unpacked());
+            $UService->setUnpacked($uServiceEntity->getUnpacked());
         }
         $this->entityManager->persist($UService);
         $this->entityManager->flush();

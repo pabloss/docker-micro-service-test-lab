@@ -72,7 +72,7 @@ class uServiceEntity implements uServiceEntityInterface
         $this->movedToDir = $movedToDir;
     }
 
-    public function unpacked()
+    public function getUnpacked()
     {
         return $this->unpackedLocation;
     }
