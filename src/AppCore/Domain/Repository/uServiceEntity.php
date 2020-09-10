@@ -59,7 +59,7 @@ class uServiceEntity implements uServiceEntityInterface
         return $this->file;
     }
 
-    public function movedToDir()
+    public function getMovedToDir()
     {
         return $this->movedToDir;
     }

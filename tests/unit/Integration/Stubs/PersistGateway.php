@@ -32,7 +32,7 @@ class PersistGateway implements PersistGatewayInterface
             }
         }
         if(null === $uServiceEntity->id()){
-            $uServiceEntity = new uServiceEntity($uServiceEntity->movedToDir(), $uServiceEntity->getFile(), $this->nextId());
+            $uServiceEntity = new uServiceEntity($uServiceEntity->getMovedToDir(), $uServiceEntity->getFile(), $this->nextId());
         }
 
         if(0 === \count($this->filterCollectionById($uServiceEntity->id()))){

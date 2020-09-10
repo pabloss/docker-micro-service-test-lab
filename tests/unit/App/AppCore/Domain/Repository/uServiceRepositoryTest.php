@@ -44,7 +44,7 @@ class uServiceRepositoryTest extends \Codeception\Test\Unit
 
         // Then
         $this->tester->assertInstanceOf(uServiceInterface::class, $repo->find($id));
-        $this->tester->assertEquals($movedToDir, $repo->find($id)->movedToDir());
+        $this->tester->assertEquals($movedToDir, $repo->find($id)->getMovedToDir());
         $this->tester->assertEquals($file, $repo->find($id)->getFile());
 
         $this->tester->assertEquals($domain, $repo->find($id));
@@ -77,7 +77,7 @@ class uServiceRepositoryTest extends \Codeception\Test\Unit
 
         // Then
         $this->tester->assertInstanceOf(uServiceInterface::class, $repo->find($nextId));
-        $this->tester->assertEquals($movedToDir, $repo->find($nextId)->movedToDir());
+        $this->tester->assertEquals($movedToDir, $repo->find($nextId)->getMovedToDir());
         $this->tester->assertEquals($file, $repo->find($nextId)->getFile());
 
         $this->tester->assertEquals($domain, $repo->find($nextId));

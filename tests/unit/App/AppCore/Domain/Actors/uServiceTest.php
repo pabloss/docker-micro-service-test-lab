@@ -27,7 +27,7 @@ class uServiceTest extends \Codeception\Test\Unit
 
         // Then
         $this->tester->assertEquals($file, $uService->getFile());
-        $this->tester->assertEquals($movedToDir, $uService->movedToDir());
+        $this->tester->assertEquals($movedToDir, $uService->getMovedToDir());
 
     }
 }

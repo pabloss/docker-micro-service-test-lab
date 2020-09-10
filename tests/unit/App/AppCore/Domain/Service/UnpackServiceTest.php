@@ -24,7 +24,7 @@ class UnpackServiceTest extends \Codeception\Test\Unit
 
         $uService = $this->prophesize(uServiceInterface::class);
         $uService->getFile()->willReturn($file);
-        $uService->movedToDir()->willReturn($movedToDir);
+        $uService->getMovedToDir()->willReturn($movedToDir);
         $uService->setUnpacked($unpackedDir . $id)->will(function ($args) use ($uService, $unpackedDir, $id) {
             $uService->unpacked()->willReturn($unpackedDir . $id);
         });

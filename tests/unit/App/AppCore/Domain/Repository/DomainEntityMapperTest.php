@@ -26,7 +26,7 @@ class DomainEntityMapperTest extends \Codeception\Test\Unit
 
         $this->tester->assertInstanceOf(uServiceEntity::class, $entity);
         $this->tester->assertEquals('file', $entity->getFile());
-        $this->tester->assertEquals('dir', $entity->movedToDir());
+        $this->tester->assertEquals('dir', $entity->getMovedToDir());
 
         $this->tester->assertEquals($uService, $mapper->entity2Domain($entity));
     }

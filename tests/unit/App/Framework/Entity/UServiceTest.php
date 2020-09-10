@@ -23,7 +23,7 @@ class UServiceTest extends \Codeception\Test\Unit
         $domainEntity = $this->prophesize(uServiceEntity::class);
         $domainEntity->id()->willReturn($id);
         $domainEntity->getFile()->willReturn($file);
-        $domainEntity->movedToDir()->willReturn($dir);
+        $domainEntity->getMovedToDir()->willReturn($dir);
         $domainEntity->unpacked()->willReturn($unpacked);
 
         $entity = UService::fromDomainEntity($domainEntity->reveal(), null);
