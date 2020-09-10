@@ -46,7 +46,7 @@ class UService implements EntityInterface
         if(null === $frameworkEntity){
             $entity = new self();
         }
-        $entity->setFile($uServiceEntity->file());
+        $entity->setFile($uServiceEntity->getFile());
         $entity->setMovedToDir($uServiceEntity->movedToDir());
         $entity->setId($uServiceEntity->id());
         $entity->setUnpacked($uServiceEntity->unpacked());

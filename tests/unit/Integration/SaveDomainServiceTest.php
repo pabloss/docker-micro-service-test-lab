@@ -41,6 +41,6 @@ class SaveDomainServiceTest extends \Codeception\Test\Unit
 
         // Then
         $this->tester->assertEquals($movedToDir,\end($all)->movedToDir());
-        $this->tester->assertEquals($file, \end($all)->file());
+        $this->tester->assertEquals($file, \end($all)->getFile());
     }
 }

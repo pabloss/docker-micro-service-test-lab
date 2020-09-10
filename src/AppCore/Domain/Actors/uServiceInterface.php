@@ -5,7 +5,7 @@ namespace App\AppCore\Domain\Actors;
 
 interface uServiceInterface
 {
-    public function file();
+    public function getFile();
     public function movedToDir();
     public function unpacked();
     public function setMovedToDir(string $movedToDir);

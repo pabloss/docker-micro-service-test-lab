@@ -28,7 +28,7 @@ class uServiceEntityTest extends \Codeception\Test\Unit
 
         // Then
         $this->tester->assertEquals($id, $entity->id());
-        $this->tester->assertEquals($file, $entity->file());
+        $this->tester->assertEquals($file, $entity->getFile());
         $this->tester->assertEquals($movedToDir, $entity->movedToDir());
     }
 
@@ -45,7 +45,7 @@ class uServiceEntityTest extends \Codeception\Test\Unit
 
         // Then
         $this->tester->assertEquals($id, $entity->id());
-        $this->tester->assertEquals($file, $entity->file());
+        $this->tester->assertEquals($file, $entity->getFile());
         $this->tester->assertEquals($movedToDir, $entity->movedToDir());
     }
 }

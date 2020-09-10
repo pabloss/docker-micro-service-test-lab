@@ -39,7 +39,7 @@ class uService implements uServiceInterface
         $this->movedToDir = $movedToDir;
     }
 
-    public function file()
+    public function getFile()
     {
         return $this->file;
     }

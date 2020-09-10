@@ -54,7 +54,7 @@ class uServiceEntity implements uServiceEntityInterface
         return $this->id;
     }
 
-    public function file()
+    public function getFile()
     {
         return $this->file;
     }

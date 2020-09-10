@@ -25,7 +25,7 @@ class UnpackService implements UnpackServiceInterface
 
     public function unpack(uServiceInterface $service, string $unpackedLocation)
     {
-        $this->unpack->unpack($service->file(), $unpackedLocation);
+        $this->unpack->unpack($service->getFile(), $unpackedLocation);
         $service->setUnpacked($unpackedLocation);
         return $service;
     }

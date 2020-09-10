@@ -23,14 +23,14 @@ class UnpackServiceTest extends \Codeception\Test\Unit
         $unpackedDir = 'unpacked';
 
         $uService = $this->prophesize(uServiceInterface::class);
-        $uService->file()->willReturn($file);
+        $uService->getFile()->willReturn($file);
         $uService->movedToDir()->willReturn($movedToDir);
         $uService->setUnpacked($unpackedDir . $id)->will(function ($args) use ($uService, $unpackedDir, $id) {
             $uService->unpacked()->willReturn($unpackedDir . $id);
         });
 
         $unpackLibAdapter = $this->prophesize(UnpackInterface::class);
-        $unpackLibAdapter->unpack($uService->reveal()->file(),
+        $unpackLibAdapter->unpack($uService->reveal()->getFile(),
             $unpackedDir . $id)->shouldBeCalled();
 
         $service = new UnpackService($unpackLibAdapter->reveal());
