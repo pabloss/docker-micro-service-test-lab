@@ -4,13 +4,14 @@ namespace App\Framework\Entity;
 
 use App\AppCore\Domain\Repository\EntityInterface;
 use App\AppCore\Domain\Repository\uServiceEntity;
+use App\AppCore\Domain\Repository\uServiceEntityInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Framework\Repository\UServiceRepository")
  * @ORM\Table(name="u_service")
  */
-class UService implements EntityInterface
+class UService implements uServiceEntityInterface
 {
     /**
      * @ORM\Id()
