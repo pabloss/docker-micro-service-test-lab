@@ -2,8 +2,8 @@
 
 namespace App\AppCore\Application;
 
-use App\AppCore\Domain\Actors\uServiceInterface;
-use App\AppCore\Domain\Repository\uServiceRepository;
+use App\AppCore\Domain\Repository\uServiceEntityInterface;
+use App\AppCore\Domain\Repository\uServiceRepositoryInterface;
 use App\AppCore\Domain\Service\Build\BuildServiceInterface;
 use App\AppCore\Domain\Service\Build\Unpack\UnpackServiceInterface;
 use App\AppCore\Domain\Service\Command\BuildCommand;
@@ -26,16 +26,16 @@ class DomainDeployApplicationTest extends \Codeception\Test\Unit
         $id = 'id';
         $unpackedDir = 'unpacked';
 
-        $uService = $this->prophesize(uServiceInterface::class);
+        $uService = $this->prophesize(uServiceEntityInterface::class);
         $unpackService = $this->prophesize(UnpackServiceInterface::class);
         $unpackService->unpack($uService->reveal(), $unpackedDir . $id)->will(function ($args) use (
             $uService
         ) {
-            $uService->unpacked()->willReturn($args[1]);
+            $uService->getUnpacked()->willReturn($args[1]);
             return $uService->reveal();
         });
 
-        $repo = $this->prophesize(uServiceRepository::class);
+        $repo = $this->prophesize(uServiceRepositoryInterface::class);
         $repo->find($id)->shouldBeCalled()->willReturn($uService->reveal());
         $repo->persist($uService->reveal(), $id)->shouldBeCalled();
 
@@ -71,6 +71,6 @@ class DomainDeployApplicationTest extends \Codeception\Test\Unit
         $repo->reveal()->persist($uService->reveal(), $id);
         $service->deploy($id, $unpackedDir . $id, 'imagePref', 'containerPref');
 
-        $this->tester->assertEquals($unpackedDir . $id, $repo->reveal()->find($id)->unpacked());
+        $this->tester->assertEquals($unpackedDir . $id, $repo->reveal()->find($id)->getUnpacked());
     }
 }

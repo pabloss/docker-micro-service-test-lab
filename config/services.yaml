@@ -39,13 +39,6 @@ services:
     ZMQContext:
         class: 'ZMQContext'
 
-#    App\Framework\Service\WebSockets\Context\Context:
-#        class: 'App\Framework\Service\WebSockets\Context\Context'
-#        arguments:
-#            $context: '@ZMQContext'
-#            $bindHost: '%bind_host%'
-#            $bindPort: '%bind_port%'
-
     App\Framework\Service\WebSockets\WebSocketProcessor:
         arguments:
             $bindHost: '%bind_host%'
@@ -57,13 +50,6 @@ services:
         arguments:
             $max: 20
             $output: '@Symfony\Component\Console\Output\NullOutput'
-#    App\MixedContext\Domain\Service\Command\WebSocketAdapter\OutputAdapterFactory:
-#        arguments:
-#            $socketProgressBarOutputAdapter: '@App\MixedContext\Domain\Service\Command\WebSocketAdapter\SocketProgressBarOutputAdapter'
-#            $socketErrorOutputAdapter: '@App\MixedContext\Domain\Service\Command\WebSocketAdapter\SocketErrorOutputAdapter'
-
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
     App\AppCore\Domain\Service\Save\SaveDomainService:
         arguments:
             $dirName: '%uploaded_directory%'
@@ -72,15 +58,6 @@ services:
     App\Framework\Service\UnpackAdapter:
         arguments:
             $zipArchive: '@ZipArchive'
-
-    App\AppCore\Domain\Repository\uServiceRepository:
-        arguments:
-            $gateway: '@App\Framework\Persistence\PersistGatewayAdapter'
-
-    App\AppCore\Domain\Repository\TestRepository:
-        arguments:
-            $gateway: '@App\Framework\Persistence\TestPersistGatewayAdapter'
-            $mapper: '@App\AppCore\Domain\Repository\TestDomainEntityMapper'
 
     App\Framework\Service\WebSockets\Context\Context:
         arguments:
@@ -98,3 +75,4 @@ services:
         arguments:
             $fetcher: '@App\AppCore\Application\Monitor\FetcherInterface'
             $outPut: '@App\Framework\Service\WebSockets\Context\WebSocketWatcherAdapter'
+    App\AppCore\Domain\Repository\uServiceRepositoryInterface: '@App\Framework\Repository\UServiceRepository'

@@ -2,7 +2,7 @@
 
 namespace App\Framework\Entity;
 
-use App\AppCore\Domain\Repository\uServiceEntity;
+use App\AppCore\Domain\Repository\uServiceEntityInterface;
 
 class UServiceTest extends \Codeception\Test\Unit
 {
@@ -20,14 +20,13 @@ class UServiceTest extends \Codeception\Test\Unit
         $dir = 'test_dir';
         $unpacked = 'unpacked';
 
-        $domainEntity = $this->prophesize(uServiceEntity::class);
-        $domainEntity->id()->willReturn($id);
-        $domainEntity->file()->willReturn($file);
-        $domainEntity->movedToDir()->willReturn($dir);
-        $domainEntity->unpacked()->willReturn($unpacked);
+        $entity = new UService();
+        $entity->setId($id);
+        $entity->setFile($file);
+        $entity->setMovedToDir($dir);
+        $entity->setUnpacked($unpacked);
 
-        $entity = UService::fromDomainEntity($domainEntity->reveal(), null);
-
+        $this->tester->assertInstanceOf(uServiceEntityInterface::class, $entity);
         $this->tester->assertEquals($id, $entity->getId());
         $this->tester->assertEquals($file, $entity->getFile());
         $this->tester->assertEquals($dir, $entity->getMovedToDir());

@@ -73,7 +73,7 @@ class DeployApplication
             [
                 $this->commandFactory->createCommand(
                     'build',
-                    $this->dir->findFile($this->repository->find($id)->unpacked(), self::FILE_TO_FIND),
+                    $this->dir->findFile($this->repository->find($id)->getUnpacked(), self::FILE_TO_FIND),
                     $imagePrefix . "_$id"
                 ),
                 $this->commandFactory->createCommand('run', $containerPrefix . "_$id", $imagePrefix . "_$id"),

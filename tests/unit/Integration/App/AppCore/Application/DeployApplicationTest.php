@@ -3,9 +3,6 @@
 namespace Integration\App\AppCore\Application;
 
 use App\AppCore\Application\DeployApplication;
-use App\AppCore\Domain\Actors\uService;
-use App\AppCore\Domain\Repository\DomainEntityMapper;
-use App\AppCore\Domain\Repository\uServiceRepository;
 use App\AppCore\Domain\Service\Build\BuildService;
 use App\AppCore\Domain\Service\Build\Unpack\UnpackService;
 use App\AppCore\Domain\Service\Command\BuildCommand;
@@ -13,6 +10,7 @@ use App\AppCore\Domain\Service\Command\CommandCollection;
 use App\AppCore\Domain\Service\Command\CommandFactory;
 use App\AppCore\Domain\Service\Command\CommandRunner;
 use App\AppCore\Domain\Service\Command\RunCommand;
+use App\Framework\Factory\EntityFactory;
 use App\Framework\Files\Dir;
 use App\Framework\Service\Command\Fetcher\Fetcher;
 use App\Framework\Service\UnpackAdapter;
@@ -84,9 +82,9 @@ class DeployApplicationTest extends \Codeception\Test\Unit
          *      - stosując zależność UnpackServiceInterface oraz Repo: rozpakuj (do nowej lokalizcji) i zapisz do bazy
          * 2. robić build
          */
-        $id = 'id';
+        $id = 1;
         // Given
-        $repo = new uServiceRepository(new PersistGateway(), new DomainEntityMapper());
+        $repo = new PersistGateway();
         $application = new DeployApplication(
             new UnpackService(new UnpackAdapter(new \ZipArchive())),
             $service,
@@ -96,7 +94,8 @@ class DeployApplicationTest extends \Codeception\Test\Unit
         ); //Framework
 
         // When
-        $repo->persist(new uService(self::DATA_DIR . self::PACKED_MICRO_SERVICE, self::DATA_DIR), $id);
+        $factory = new EntityFactory();
+        $repo->persist($factory->createService(self::DATA_DIR . self::PACKED_MICRO_SERVICE, self::DATA_DIR), $id);
         if(!\file_exists($newDir)){
             \mkdir($newDir);
         }
@@ -105,7 +104,7 @@ class DeployApplicationTest extends \Codeception\Test\Unit
 
         // Then
         $this->tester->assertFileExists($newDir . '/' . self::MICRO_SERVICE_1_DOCKERFILE);
-        $this->tester->assertEquals($newDir, $repo->find($id)->unpacked());
+        $this->tester->assertEquals($newDir, $repo->find($id)->getUnpacked());
         $this->tester->runShellCommand("docker inspect -f '{{.State.Running}}' $(docker ps --filter 'name=$containerPrefix' --format '{{.Image}} {{.Names}}')", false);
         $this->tester->seeInShellOutput('true'); ///-- DZIAŁA!!!
         $this->tester->runShellCommand("docker inspect -f '{{.State.Running}}' $(docker ps --filter 'name=$containerPrefix' --format '{{.Image}} {{.Names}}' -a) | wc -l", false);

@@ -2,8 +2,7 @@
 
 namespace App\Framework\Entity;
 
-use App\AppCore\Domain\Repository\EntityInterface;
-use App\AppCore\Domain\Repository\uServiceEntity;
+use App\AppCore\Domain\Repository\uServiceEntityInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\PersistentCollection;
@@ -12,7 +11,7 @@ use Doctrine\ORM\PersistentCollection;
  * @ORM\Entity(repositoryClass="App\Framework\Repository\UServiceRepository")
  * @ORM\Table(name="u_service")
  */
-class UService implements EntityInterface
+class UService implements uServiceEntityInterface
 {
     /**
      * @ORM\Id()
@@ -54,26 +53,6 @@ class UService implements EntityInterface
     }
 
     /**
-     * @param uServiceEntity $uServiceEntity
-     * @param UService|null  $frameworkEntity
-     *
-     * @return UService|null
-     */
-    public static function fromDomainEntity(uServiceEntity $uServiceEntity, ?self $frameworkEntity = null)
-    {
-        $entity = $frameworkEntity;
-        if(null === $frameworkEntity){
-            $entity = new self();
-        }
-        $entity->setFile($uServiceEntity->file());
-        $entity->setMovedToDir($uServiceEntity->movedToDir());
-        $entity->setId($uServiceEntity->id());
-        $entity->setUnpacked($uServiceEntity->unpacked());
-        $entity->setUuid($uServiceEntity->uuid());
-        return $entity;
-    }
-
-    /**
      * @param mixed $id
      */
     public function setId($id): void
@@ -108,11 +87,6 @@ class UService implements EntityInterface
         $this->movedToDir = $movedToDir;
 
         return $this;
-    }
-
-    public function id()
-    {
-        // TODO: Implement id() method.
     }
 
     public function getUnpacked(): ?string

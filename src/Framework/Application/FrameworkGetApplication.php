@@ -25,6 +25,6 @@ class FrameworkGetApplication
 
     public function getFile(int $param)
     {
-        return new \SplFileInfo($this->service->getService((string)$param)->movedToDir().'/'.$this->service->getService((string)$param)->file());
+        return new \SplFileInfo($this->service->getService((string)$param)->getMovedToDir().'/'.$this->service->getService((string)$param)->getFile());
     }
 }

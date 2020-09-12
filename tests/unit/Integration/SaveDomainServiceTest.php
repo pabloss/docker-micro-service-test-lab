@@ -1,8 +1,7 @@
 <?php namespace Integration;
 
-use App\AppCore\Domain\Repository\DomainEntityMapper;
-use App\AppCore\Domain\Repository\uServiceRepository;
 use App\AppCore\Domain\Service\Save\SaveDomainService;
+use App\Framework\Factory\EntityFactory;
 use Codeception\Util\Autoload;
 use Integration\Stubs\PersistGateway;
 
@@ -28,9 +27,9 @@ class SaveDomainServiceTest extends \Codeception\Test\Unit
         // Given
         $id = 'id';
         $file = 'test.txt';
-        $movedToDir = 'parentDirName/dirName';
-        $repo = new uServiceRepository(new PersistGateway(), new DomainEntityMapper());
-        $domainService = new SaveDomainService($movedToDir, $repo);
+        $movedToDir = 'dirName';
+        $repo = new PersistGateway();
+        $domainService = new SaveDomainService($movedToDir, $repo, new EntityFactory());
 
         // When
         $domainService->save($file);
@@ -46,36 +45,7 @@ class SaveDomainServiceTest extends \Codeception\Test\Unit
             $matches = ['/'];
         }
         // Then
-        $this->tester->assertEquals($movedToDir,\end($all)->movedToDir());
-        $this->tester->assertEquals($file, \end($all)->file());
-        $this->tester->assertEquals($matches[0], \end($all)->uuid());
-    }
-
-    // tests
-    public function testOneLevelDirTreee()
-    {
-        // Given
-        $id = 'id';
-        $file = 'test.txt';
-        $movedToDir = '/';
-        $repo = new uServiceRepository(new PersistGateway(), new DomainEntityMapper());
-        $domainService = new SaveDomainService($movedToDir, $repo);
-
-        // When
-        $domainService->save($file);
-        /**
-         * When I looked for last saved entity id I got also dir suffix
-         */
-        $all = $repo->all();
-
-        \preg_match('/(\w+)$/', $movedToDir, $matches);
-
-        if(\count($matches) < 2){
-            $matches = ['/'];
-        }
-        // Then
-        $this->tester->assertEquals($movedToDir,\end($all)->movedToDir());
-        $this->tester->assertEquals($file, \end($all)->file());
-        $this->tester->assertEquals($matches[0], \end($all)->uuid());
+        $this->tester->assertEquals($movedToDir,\end($all)->getMovedToDir());
+        $this->tester->assertEquals($file, \end($all)->getFile());
     }
 }
