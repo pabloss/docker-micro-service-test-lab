@@ -2,6 +2,8 @@
 
 namespace App\Framework\Repository;
 
+use App\AppCore\Domain\Actors\uServiceInterface;
+use App\AppCore\Domain\Repository\uServiceRepositoryInterface;
 use App\Framework\Entity\UService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -12,11 +14,22 @@ use Doctrine\Common\Persistence\ManagerRegistry;
  * @method UService[]    findAll()
  * @method UService[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class UServiceRepository extends ServiceEntityRepository
+class UServiceRepository extends ServiceEntityRepository implements uServiceRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, UService::class);
+    }
+
+    public function persist(uServiceInterface $domain, ?string $id)
+    {
+        $this->getEntityManager()->persist($domain);
+        $this->getEntityManager()->flush();
+    }
+
+    public function all()
+    {
+        return $this->findAll();
     }
 
     // /**

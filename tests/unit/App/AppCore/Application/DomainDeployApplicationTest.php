@@ -2,8 +2,7 @@
 
 namespace App\AppCore\Application;
 
-use App\AppCore\Domain\Actors\uServiceInterface;
-use App\AppCore\Domain\Repository\uServiceRepository;
+use App\AppCore\Domain\Repository\uServiceEntityInterface;
 use App\AppCore\Domain\Repository\uServiceRepositoryInterface;
 use App\AppCore\Domain\Service\Build\BuildServiceInterface;
 use App\AppCore\Domain\Service\Build\Unpack\UnpackServiceInterface;
@@ -27,7 +26,7 @@ class DomainDeployApplicationTest extends \Codeception\Test\Unit
         $id = 'id';
         $unpackedDir = 'unpacked';
 
-        $uService = $this->prophesize(uServiceInterface::class);
+        $uService = $this->prophesize(uServiceEntityInterface::class);
         $unpackService = $this->prophesize(UnpackServiceInterface::class);
         $unpackService->unpack($uService->reveal(), $unpackedDir . $id)->will(function ($args) use (
             $uService

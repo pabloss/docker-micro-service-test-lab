@@ -5,5 +5,5 @@ namespace App\AppCore\Domain\Repository;
 
 interface EntityInterface
 {
-    public function id();
+    public function getId();
 }

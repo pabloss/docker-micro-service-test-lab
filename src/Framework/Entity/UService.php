@@ -2,8 +2,6 @@
 
 namespace App\Framework\Entity;
 
-use App\AppCore\Domain\Repository\EntityInterface;
-use App\AppCore\Domain\Repository\uServiceEntity;
 use App\AppCore\Domain\Repository\uServiceEntityInterface;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -34,25 +32,6 @@ class UService implements uServiceEntityInterface
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $unpacked;
-
-    /**
-     * @param uServiceEntity $uServiceEntity
-     * @param UService|null  $frameworkEntity
-     *
-     * @return UService|null
-     */
-    public static function fromDomainEntity(uServiceEntity $uServiceEntity, ?self $frameworkEntity = null)
-    {
-        $entity = $frameworkEntity;
-        if(null === $frameworkEntity){
-            $entity = new self();
-        }
-        $entity->setFile($uServiceEntity->getFile());
-        $entity->setMovedToDir($uServiceEntity->getMovedToDir());
-        $entity->setId($uServiceEntity->id());
-        $entity->setUnpacked($uServiceEntity->getUnpacked());
-        return $entity;
-    }
 
     /**
      * @param mixed $id
@@ -89,11 +68,6 @@ class UService implements uServiceEntityInterface
         $this->movedToDir = $movedToDir;
 
         return $this;
-    }
-
-    public function id()
-    {
-        // TODO: Implement id() method.
     }
 
     public function getUnpacked(): ?string

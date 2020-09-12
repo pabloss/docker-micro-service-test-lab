@@ -3,16 +3,17 @@
 namespace Integration\Framework\Application;
 
 
-use App\AppCore\Domain\Repository\DomainEntityMapper;
 use App\AppCore\Domain\Repository\PersistGatewayInterface;
-use App\AppCore\Domain\Repository\uServiceRepository;
 use App\AppCore\Domain\Service\GetFileService;
 use App\AppCore\Domain\Service\Save\SaveDomainService;
 use App\Framework\Application\FrameworkGetApplication;
 use App\Framework\Application\FrameworkSaveApplication;
+use App\Framework\Entity\UService;
+use App\Framework\Factory\EntityFactory;
 use App\Framework\Persistence\PersistGatewayAdapter;
 use App\Framework\Service\SaveToFileSystemService;
 use Codeception\Util\Autoload;
+use Doctrine\ORM\EntityManagerInterface;
 use Integration\Stubs\File;
 
 class FrameworkGetApplicationTest extends \Codeception\Test\Unit
@@ -40,15 +41,18 @@ class FrameworkGetApplicationTest extends \Codeception\Test\Unit
          * do bazy
          * i na dysk
          */
+        /** @var EntityManagerInterface $em */
         $em =
             $this->tester->grabService('doctrine.orm.entity_manager');;
         $this->gateway = new PersistGatewayAdapter($em);
-        $this->repo = new uServiceRepository($this->gateway, new DomainEntityMapper());
+        $this->repo = $em->getRepository(UService::class);
+        $factory = new EntityFactory();
         $application = new FrameworkSaveApplication(
             new \App\AppCore\Application\Save\SaveApplication(
                 new SaveToFileSystemService(), new SaveDomainService(
                     $this->targetDir,
-                    $this->repo
+                    $this->repo,
+                    $factory
                 )
             )
         );

@@ -1,8 +1,7 @@
 <?php namespace Integration;
 
-use App\AppCore\Domain\Repository\DomainEntityMapper;
-use App\AppCore\Domain\Repository\uServiceRepository;
 use App\AppCore\Domain\Service\Save\SaveDomainService;
+use App\Framework\Factory\EntityFactory;
 use Codeception\Util\Autoload;
 use Integration\Stubs\PersistGateway;
 
@@ -29,8 +28,8 @@ class SaveDomainServiceTest extends \Codeception\Test\Unit
         $id = 'id';
         $file = 'test.txt';
         $movedToDir = 'dirName';
-        $repo = new uServiceRepository(new PersistGateway(), new DomainEntityMapper());
-        $domainService = new SaveDomainService($movedToDir, $repo);
+        $repo = new PersistGateway();
+        $domainService = new SaveDomainService($movedToDir, $repo, new EntityFactory());
 
         // When
         $domainService->save($file);

@@ -5,8 +5,8 @@ namespace App\Framework\Persistence;
 
 use App\AppCore\Domain\Repository\EntityInterface;
 use App\AppCore\Domain\Repository\PersistGatewayInterface;
-use App\AppCore\Domain\Repository\uServiceEntity;
 use App\Framework\Entity\UService;
+use App\Framework\Factory\EntityFactory;
 use Doctrine\ORM\EntityManagerInterface;
 
 class PersistGatewayAdapter implements PersistGatewayInterface
@@ -34,27 +34,14 @@ class PersistGatewayAdapter implements PersistGatewayInterface
 
     public function persist(EntityInterface $uServiceEntity)
     {
-        if(null === $uServiceEntity->id()){
-            $UService = UService::fromDomainEntity($uServiceEntity, null);
-        } else{
-            $UService = $this->entityManager->getRepository(UService::class)->find($uServiceEntity->id());
-            $UService->setUnpacked($uServiceEntity->getUnpacked());
-        }
-        $this->entityManager->persist($UService);
+        $factory = new EntityFactory();
+        $this->entityManager->persist($factory->createService($uServiceEntity->getFile(), $uServiceEntity->getMovedToDir()));
         $this->entityManager->flush();
     }
 
     public function find(string $id)
     {
-        $uServiceEntity = new uServiceEntity(
-            $this->entityManager->getRepository(UService::class)->find($id)->getMovedToDir(),
-            $this->entityManager->getRepository(UService::class)->find($id)->getFile(),
-            $id
-        );
-        if($unpackedLocation = $this->entityManager->getRepository(UService::class)->find($id)->getUnpacked()){
-            $uServiceEntity->setUnpacked($unpackedLocation);
-        }
-        return $uServiceEntity;
+        return $this->entityManager->getRepository(UService::class)->find($id);
     }
 
     public function findByHash(string $hash)
