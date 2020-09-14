@@ -95,7 +95,10 @@ class DeployApplicationTest extends \Codeception\Test\Unit
 
         // When
         $factory = new EntityFactory();
-        $repo->persist($factory->createService(self::DATA_DIR . self::PACKED_MICRO_SERVICE, self::DATA_DIR), $id);
+
+        $repo->persist($factory->createService(self::DATA_DIR . self::PACKED_MICRO_SERVICE, self::DATA_DIR)->addTest(
+            $factory->createTest('', '', '', '', '', '')
+        ), $id);
         if(!\file_exists($newDir)){
             \mkdir($newDir);
         }

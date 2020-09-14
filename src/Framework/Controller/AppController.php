@@ -6,12 +6,13 @@ namespace App\Framework\Controller;
 use App\AppCore\Application\DeployApplication;
 use App\AppCore\Application\GetMicroServiceApplication;
 use App\AppCore\Application\Save\SaveTestApplication;
+use App\AppCore\Domain\Repository\TestRepositoryInterface;
+use App\AppCore\Domain\Repository\uServiceRepositoryInterface;
 use App\AppCore\Domain\Service\Trigger;
 use App\AppCore\Hub;
 use App\Framework\Application\FrameworkSaveApplication;
 use App\Framework\Files\Dir;
 use App\Framework\Files\UploadedFileAdapter;
-use App\Framework\Persistence\PersistGatewayAdapter;
 use App\Framework\Repository\TestRepository;
 use App\Framework\Repository\UServiceRepository;
 use App\Framework\Service\MakeConnection;
@@ -42,9 +43,9 @@ class AppController extends AbstractController
      */
     private $deployApplication;
     /**
-     * @var PersistGatewayAdapter
+     * @var TestRepositoryInterface
      */
-    private $gatewayAdapter;
+    private $testRepository;
     /**
      * @var Dir
      */
@@ -67,13 +68,17 @@ class AppController extends AbstractController
      * @var Hub $hub
      */
     private $hub;
+    /**
+     * @var uServiceRepositoryInterface
+     */
+    private $serviceRepository;
 
     /**
      * AppController constructor.
      *
      * @param FrameworkSaveApplication $saveApplication
      * @param DeployApplication        $deployApplication
-     * @param PersistGatewayAdapter    $gatewayAdapter
+     * @param TestRepositoryInterface  $testRepository
      * @param Trigger                  $trigger
      * @param Dir                      $dir
      * @param MakeConnection           $makeConnection
@@ -83,7 +88,8 @@ class AppController extends AbstractController
     public function __construct(
         FrameworkSaveApplication $saveApplication,
         DeployApplication $deployApplication,
-        PersistGatewayAdapter $gatewayAdapter,
+        TestRepositoryInterface $testRepository,
+        uServiceRepositoryInterface $serviceRepository,
         Trigger $trigger,
         Dir $dir,
         MakeConnection $makeConnection,
@@ -92,12 +98,13 @@ class AppController extends AbstractController
     ) {
         $this->saveApplication = $saveApplication;
         $this->deployApplication = $deployApplication;
-        $this->gatewayAdapter = $gatewayAdapter;
+        $this->testRepository = $testRepository;
         $this->dir = $dir;
         $this->trigger = $trigger;
         $this->makeConnection = $makeConnection;
         $this->context = $context;
         $this->hub = $hub;
+        $this->serviceRepository = $serviceRepository;
     }
 
     /**
@@ -212,7 +219,7 @@ class AppController extends AbstractController
     {
         $uniqid = $request->getContent();
 
-        $this->deployApplication->deploy((string)($this->gatewayAdapter->findByHash($uniqid)->getId()),
+        $this->deployApplication->deploy((string)($this->serviceRepository->findOneBy(['uuid' => $uniqid])->getId()),
             $this->dir->sureTargetDirExists($this->getParameter('unpacked_directory') . '/' . $uniqid),
             self::IMAGE_PREFIX,
             self::CONTAINER_PREFIX);
@@ -235,6 +242,6 @@ class AppController extends AbstractController
      */
     private function findDockerFileDir(string $uuid): string
     {
-        return $this->dir->findParentDir($this->gatewayAdapter->findByHash($uuid)->getUnpacked(), 'Dockerfile');
+        return $this->dir->findParentDir($this->testRepository->findByHash($uuid)->getUnpacked(), 'Dockerfile');
     }
 }

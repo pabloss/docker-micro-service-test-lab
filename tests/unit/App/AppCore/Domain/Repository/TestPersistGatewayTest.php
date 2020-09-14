@@ -1,5 +1,6 @@
 <?php namespace App\AppCore\Domain\Repository;
 
+use App\Framework\Factory\EntityFactory;
 use Codeception\Util\Autoload;
 use Integration\Stubs\TestPersistGateway;
 
@@ -26,13 +27,15 @@ class TestPersistGatewayTest extends \Codeception\Test\Unit
         $id = 'id';
         $uuid = 'uuid';
         $requestedBody = 'test_body';
-        $testEntity = new TestEntity($uuid, $requestedBody, $id);
+        $factory = new EntityFactory();
+        $testEntity = $factory->createTest($uuid, $requestedBody, $requestedBody,  'header', 'url', 'script');
+        $testEntity->setId($id);
 
         $gateway = new TestPersistGateway();
 
         // When
-        $gateway->persist($testEntity);
-        $all = $gateway->getAll();
+        $gateway->persist($testEntity, $id);
+        $all = $gateway->all();
 
         // Then
         $this->tester->assertEquals($testEntity, \end($all));

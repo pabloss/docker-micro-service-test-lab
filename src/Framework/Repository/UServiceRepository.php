@@ -23,6 +23,7 @@ class UServiceRepository extends ServiceEntityRepository implements uServiceRepo
 
     public function persist(uServiceInterface $domain, ?string $id)
     {
+        $domain->setUuid($this->getUuidFromDir(\dirname($domain->getFile())));
         $this->getEntityManager()->persist($domain);
         $this->getEntityManager()->flush();
     }
@@ -32,6 +33,25 @@ class UServiceRepository extends ServiceEntityRepository implements uServiceRepo
         return $this->findAll();
     }
 
+    public function findByHash(string $hash)
+    {
+        return $this->findOneBy(['uuid' =>$hash]);
+    }
+
+    /**
+     * @param string $dirPath
+     *
+     * @return string
+     */
+    private function getUuidFromDir(string $dirPath): string
+    {
+        \preg_match('/(\w+)$/', $dirPath, $matches);
+        if (\count($matches) < 2) {
+            $matches = ['/'];
+        }
+
+        return $matches[0];
+    }
     // /**
     //  * @return UService[] Returns an array of UService objects
     //  */

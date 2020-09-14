@@ -1,9 +1,7 @@
 <?php namespace Integration\Repository;
 
-use App\AppCore\Domain\Actors\Test;
-use App\AppCore\Domain\Repository\TestDomainEntityMapper;
-use App\AppCore\Domain\Repository\TestEntity;
-use App\AppCore\Domain\Repository\TestRepository;
+use App\AppCore\Domain\Repository\TestRepositoryInterface;
+use App\Framework\Entity\Test;
 use Codeception\Util\Autoload;
 use Integration\Stubs\TestPersistGateway;
 
@@ -30,23 +28,24 @@ class TestRepositoryTest extends \Codeception\Test\Unit
 
         $uuid = '111';
         $requestedBody = 'test_body';
-        $gateway = new TestPersistGateway();
-        $mapper = new TestDomainEntityMapper();
-        $repo = new TestRepository($gateway, $mapper);
-        $domain = new Test($uuid, $requestedBody);
+        $repo = new TestPersistGateway();
+        $domain = new Test();
+        $domain->setUuid($uuid);
+        $domain->setRequestedBody($requestedBody);
 
         // When
-        $repo->persist($domain, $gateway->nextId());
+        $repo->persist($domain, $repo->nextId());
         $all = $repo->all();
         $lastEntity = \end($all);
 
         // Then
-        $this->tester->assertInstanceOf(TestEntity::class, $lastEntity);
-        $this->tester->assertNotEmpty($lastEntity->id());
-        $this->tester->assertEquals($uuid, $lastEntity->uuid());
-        $this->tester->assertEquals($requestedBody, $lastEntity->requestedBody());
+        $this->tester->assertInstanceOf(TestRepositoryInterface::class, $repo);
+        $this->tester->assertInstanceOf(Test::class, $lastEntity);
+        $this->tester->assertNotEmpty($lastEntity->getId());
+        $this->tester->assertEquals($uuid, $lastEntity->getUuid());
+        $this->tester->assertEquals($requestedBody, $lastEntity->getRequestedBody());
 
-        $this->tester->assertEquals($domain, $repo->find($gateway->nextId()));
+        $this->tester->assertEquals($domain, $repo->find($repo->nextId()));
         $this->tester->assertEquals($domain, $repo->findByHash($uuid));
     }
 }

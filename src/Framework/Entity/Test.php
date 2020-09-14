@@ -2,14 +2,13 @@
 
 namespace App\Framework\Entity;
 
-use App\AppCore\Domain\Repository\TestEntity;
-use App\AppCore\Domain\Actors\Test as DomainTest;
+use App\AppCore\Domain\Repository\TestEntityInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Framework\Repository\TestRepository")
  */
-class Test
+class Test implements TestEntityInterface
 {
     /**
      * @ORM\Id()
@@ -19,7 +18,7 @@ class Test
     private $id;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     private $uuid;
 
@@ -50,28 +49,8 @@ class Test
      */
     private $UService;
 
-    public static function fromDomainEntity(TestEntity $testEntity, ?self $frameworkEntity = null)
-    {
-        $entity = $frameworkEntity;
-        if(null === $frameworkEntity){
-            $entity = new self();
-        }
-        $entity->setId($testEntity->id());
-        $entity->setUuid($testEntity->uuid());
-        $entity->setRequestedBody($testEntity->requestedBody());
-        $entity->setBody($testEntity->body());
-        $entity->setHeader($testEntity->header());
-        $entity->setUrl($testEntity->url());
-        $entity->setScript($testEntity->script());
-        return $entity;
-    }
 
-    public static function asDomainEntity(self $entity)
-    {
-        return new TestEntity($entity->getUuid(), $entity->getRequestedBody(), $entity->getBody(), $entity->getHeader(), $entity->getScript(), $entity->getUrl(), $entity->getId());
-    }
-
-    public function getId(): ?int
+    public function getId()
     {
         return $this->id;
     }
@@ -87,7 +66,7 @@ class Test
         return $this;
     }
 
-    public function getUuid(): ?string
+    public function getUuid(): string
     {
         return $this->uuid;
     }
@@ -99,7 +78,7 @@ class Test
         return $this;
     }
 
-    public function getRequestedBody(): ?string
+    public function getRequestedBody(): string
     {
         return $this->requestedBody;
     }
@@ -133,7 +112,7 @@ class Test
     /**
      * @return mixed
      */
-    public function getBody()
+    public function getBody(): string
     {
         return $this->body;
     }
@@ -152,7 +131,7 @@ class Test
     /**
      * @return mixed
      */
-    public function getHeader()
+    public function getHeader(): string
     {
         return $this->header;
     }
@@ -171,7 +150,7 @@ class Test
     /**
      * @return mixed
      */
-    public function getUrl()
+    public function getUrl(): string
     {
         return $this->url;
     }
@@ -190,7 +169,7 @@ class Test
     /**
      * @return mixed
      */
-    public function getScript()
+    public function getScript(): string
     {
         return $this->script;
     }
@@ -204,5 +183,22 @@ class Test
     {
         $this->script = $script;
         return $this;
+    }
+
+    /**
+     * @param Test $test
+     *
+     * @return array
+     */
+    public static function asArray(self $test)
+    {
+        return [
+            'uuid' => $test->getUuid(),
+            'url' => $test->getUrl(),
+            'script' => $test->getScript(),
+            'header' => $test->getHeader(),
+            'requested_body' => $test->getRequestedBody(),
+            'body' => $test->getBody(),
+        ];
     }
 }

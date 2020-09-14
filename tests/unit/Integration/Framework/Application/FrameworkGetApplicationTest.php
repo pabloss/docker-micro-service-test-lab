@@ -3,14 +3,15 @@
 namespace Integration\Framework\Application;
 
 
+use App\AppCore\Application\Save\SaveApplication;
 use App\AppCore\Domain\Repository\PersistGatewayInterface;
+use App\AppCore\Domain\Repository\TestRepositoryInterface;
 use App\AppCore\Domain\Service\GetFileService;
 use App\AppCore\Domain\Service\Save\SaveDomainService;
 use App\Framework\Application\FrameworkGetApplication;
 use App\Framework\Application\FrameworkSaveApplication;
 use App\Framework\Entity\UService;
 use App\Framework\Factory\EntityFactory;
-use App\Framework\Persistence\PersistGatewayAdapter;
 use App\Framework\Service\SaveToFileSystemService;
 use Codeception\Util\Autoload;
 use Doctrine\ORM\EntityManagerInterface;
@@ -27,6 +28,7 @@ class FrameworkGetApplicationTest extends \Codeception\Test\Unit
      * @var PersistGatewayInterface
      */
     private $gateway;
+    /** @var TestRepositoryInterface */
     private $repo;
     private $getFileService;
     private $targetDir;
@@ -44,11 +46,10 @@ class FrameworkGetApplicationTest extends \Codeception\Test\Unit
         /** @var EntityManagerInterface $em */
         $em =
             $this->tester->grabService('doctrine.orm.entity_manager');;
-        $this->gateway = new PersistGatewayAdapter($em);
         $this->repo = $em->getRepository(UService::class);
         $factory = new EntityFactory();
         $application = new FrameworkSaveApplication(
-            new \App\AppCore\Application\Save\SaveApplication(
+            new SaveApplication(
                 new SaveToFileSystemService(), new SaveDomainService(
                     $this->targetDir,
                     $this->repo,
@@ -77,8 +78,9 @@ class FrameworkGetApplicationTest extends \Codeception\Test\Unit
 
         //użyję get service by dostać domenową klasę i stamtąd będę miał \SpFileInfo
 
+        $all = $this->repo->all();
         $this->tester->assertEquals(
             '/home/pavulon/code/docker-micro-service-test-lab-new/tests/unit/Integration/Framework/Application/../../../../_data/target_dir//home/pavulon/code/docker-micro-service-test-lab-new/tests/unit/Integration/Framework/Application/../../../../_data/save_test'
-            , $application->getFile($this->gateway->nextId()-1)->getPathName());
+            , $application->getFile(\end($all)->getId())->getPathName());
     }
 }

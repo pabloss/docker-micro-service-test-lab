@@ -1,9 +1,7 @@
 <?php namespace Integration;
 
-use App\AppCore\Domain\Actors\Test;
-use App\AppCore\Domain\Repository\TestDomainEntityMapper;
-use App\AppCore\Domain\Repository\TestRepository;
 use App\AppCore\Domain\Service\SaveDomainTestService;
+use App\Framework\Factory\EntityFactory;
 use Codeception\Util\Autoload;
 use Integration\Stubs\TestPersistGateway;
 
@@ -29,8 +27,9 @@ class SaveDomainTestTest extends \Codeception\Test\Unit
         // Given
         $uuid = '111111';
         $requestedBody = 'requestedBody';
-        $test = new Test($uuid, $requestedBody);
-        $repo = new TestRepository(new TestPersistGateway(), new TestDomainEntityMapper());
+        $factory = new EntityFactory();
+        $test = $factory->createTest($uuid, $requestedBody, '', '', '', '');
+        $repo = new TestPersistGateway();
         $domainService = new SaveDomainTestService($repo);
 
         // When
@@ -40,8 +39,8 @@ class SaveDomainTestTest extends \Codeception\Test\Unit
         $all = $repo->all();
 
         $last = \end($all);
-        $this->tester->assertEquals($test->getRequestedBody(), $last->requestedBody());
-        $this->tester->assertEquals($test->getUuid(), $last->uuid());
+        $this->tester->assertEquals($test->getRequestedBody(), $last->getRequestedBody());
+        $this->tester->assertEquals($test->getUuid(), $last->getUuid());
 
     }
 
@@ -49,11 +48,12 @@ class SaveDomainTestTest extends \Codeception\Test\Unit
     public function testSavingWithId()
     {
         // Given
-        $id = 'IDD';
+        $id = 'id';
         $uuid = '111111';
         $requestedBody = 'requestedBody';
-        $test = new Test($uuid, $requestedBody);
-        $repo = new TestRepository(new TestPersistGateway(), new TestDomainEntityMapper());
+        $factory = new EntityFactory();
+        $test = $factory->createTest($uuid, $requestedBody, '', '', '', '');
+        $repo = new TestPersistGateway();
         $domainService = new SaveDomainTestService($repo);
 
         // When
@@ -63,9 +63,9 @@ class SaveDomainTestTest extends \Codeception\Test\Unit
         $all = $repo->all();
 
         $last = \end($all);
-        $this->tester->assertEquals($id, $last->id());
-        $this->tester->assertEquals($test->getRequestedBody(), $last->requestedBody());
-        $this->tester->assertEquals($test->getUuid(), $last->uuid());
+        $this->tester->assertEquals($id, $last->getId());
+        $this->tester->assertEquals($test->getRequestedBody(), $last->getRequestedBody());
+        $this->tester->assertEquals($test->getUuid(), $last->getUuid());
 
     }
 }

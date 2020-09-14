@@ -6,6 +6,8 @@ namespace Integration\Stubs;
 use App\AppCore\Domain\Actors\uServiceInterface;
 use App\AppCore\Domain\Repository\EntityInterface;
 use App\AppCore\Domain\Repository\uServiceRepositoryInterface;
+use App\Framework\Entity\Test;
+use App\Framework\Entity\UService;
 use App\Framework\Factory\EntityFactory;
 
 class PersistGateway implements uServiceRepositoryInterface
@@ -33,10 +35,15 @@ class PersistGateway implements uServiceRepositoryInterface
         }
         $factory =new EntityFactory();
         if(null === $uServiceEntity->getId()){
+            $test = $uServiceEntity->getTests()->first();
             $uServiceEntity = $factory->createService($uServiceEntity->getFile(), $uServiceEntity->getMovedToDir());
+            if($test instanceof Test){
+                $uServiceEntity->addTest($test);
+            }
             $uServiceEntity->setId(1);
         }
 
+        $uServiceEntity->setUuid($this->getUuidFromDir(\dirname($uServiceEntity->getFile())));
         if(0 === \count($this->filterCollectionById((string)$uServiceEntity->getId()))){
             $this->collection[] = $uServiceEntity;
         }
@@ -70,8 +77,8 @@ class PersistGateway implements uServiceRepositoryInterface
      */
     private function filterCollectionByHash(string $hash): array
     {
-        return \array_filter($this->collection, function (uServiceEntity $entity) use ($hash) {
-            return $hash === $entity->uuid();
+        return \array_filter($this->collection, function (UService $entity) use ($hash) {
+            return $hash === $entity->getUuid();
         });
     }
 
@@ -92,22 +99,22 @@ class PersistGateway implements uServiceRepositoryInterface
         return $matches[0];
     }
 
-    /**
-     * @param EntityInterface $uServiceEntity
-     *
-     * @return uServiceEntity
-     */
-    private function createNewEntity(EntityInterface $uServiceEntity): uServiceEntity
-    {
-        $newUServiceEntity = new uServiceEntity(
-            $uServiceEntity->movedToDir(),
-            $uServiceEntity->file(),
-            $this->getUuidFromDir($uServiceEntity->movedToDir()), $this->nextId()
-        );
-        if(null !== $uServiceEntity->getTest()){
-            $newUServiceEntity->setTest( $uServiceEntity->getTest());
-        }
-        return $newUServiceEntity;
-    }
+//    /**
+//     * @param EntityInterface $uServiceEntity
+//     *
+//     * @return UService
+//     */
+//    private function createNewEntity(EntityInterface $uServiceEntity): UService
+//    {
+//        $newUServiceEntity = new uServiceEntity(
+//            $uServiceEntity->movedToDir(),
+//            $uServiceEntity->file(),
+//            $this->getUuidFromDir($uServiceEntity->movedToDir()), $this->nextId()
+//        );
+//        if(null !== $uServiceEntity->getTest()){
+//            $newUServiceEntity->setTest( $uServiceEntity->getTest());
+//        }
+//        return $newUServiceEntity;
+//    }
 
 }

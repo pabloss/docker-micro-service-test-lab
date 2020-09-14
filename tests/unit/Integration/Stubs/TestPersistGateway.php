@@ -4,10 +4,10 @@ declare(strict_types=1);
 namespace Integration\Stubs;
 
 use App\AppCore\Domain\Repository\EntityInterface;
-use App\AppCore\Domain\Repository\PersistGatewayInterface;
-use App\AppCore\Domain\Repository\TestEntity;
+use App\AppCore\Domain\Repository\TestEntityInterface;
+use App\AppCore\Domain\Repository\TestRepositoryInterface;
 
-class TestPersistGateway implements PersistGatewayInterface
+class TestPersistGateway implements TestRepositoryInterface
 {
 
     /** @var array */
@@ -18,28 +18,27 @@ class TestPersistGateway implements PersistGatewayInterface
         return 'id';
     }
 
-    public function persist(EntityInterface $testEntity)
+    public function persist(TestEntityInterface $testEntity, ?string $nextId)
     {
         foreach ($this->collection as &$item){
-            /** @var TestEntity $item */
-            if($testEntity->id() === $item->id()){
+            if($testEntity->getId() === $item->getId()){
                 $item = $testEntity;
             }
         }
-        if(null === $testEntity->id()){
-            $testEntity = new TestEntity($testEntity->uuid(), $testEntity->requestedBody(), $this->nextId());
+        if(null === $testEntity->getId()){
+            $testEntity->setId($this->nextId());
         }
-        if(0 === \count($this->filterCollectionById($testEntity->id()))){
+        if(0 === \count($this->filterCollectionById($testEntity->getId()))){
             $this->collection[] = $testEntity;
         }
     }
 
-    public function getAll()
+    public function all()
     {
         return $this->collection;
     }
 
-    public function find(string $id)
+    public function find($id)
     {
         return $this->filterCollectionById($id)[0];
     }
@@ -52,14 +51,14 @@ class TestPersistGateway implements PersistGatewayInterface
     private function filterCollectionById(string $id): array
     {
         return \array_filter($this->collection, function (EntityInterface $entity) use ($id) {
-            return $id === $entity->id();
+            return $id === $entity->getId();
         });
     }
 
     public function findByHash(string $uuid)
     {
-        return \array_filter($this->collection, function (TestEntity $entity) use ($uuid) {
-            return $uuid === $entity->uuid();
+        return \array_filter($this->collection, function (TestEntityInterface $entity) use ($uuid) {
+            return $uuid === $entity->getUuid();
         })[0];
     }
 }

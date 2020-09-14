@@ -2,6 +2,8 @@
 
 namespace App\Framework\Repository;
 
+use App\AppCore\Domain\Repository\TestEntityInterface;
+use App\AppCore\Domain\Repository\TestRepositoryInterface;
 use App\Framework\Entity\Test;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -12,11 +14,22 @@ use Doctrine\Common\Persistence\ManagerRegistry;
  * @method Test[]    findAll()
  * @method Test[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class TestRepository extends ServiceEntityRepository
+class TestRepository extends ServiceEntityRepository implements TestRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Test::class);
+    }
+
+    public function persist(TestEntityInterface $domain, ?string $nextId)
+    {
+        $this->getEntityManager()->persist($domain);
+        $this->getEntityManager()->flush();
+    }
+
+    public function all()
+    {
+        return $this->findAll();
     }
 
     // /**

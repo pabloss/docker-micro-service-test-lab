@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\AppCore\Application\Save;
 
-use App\AppCore\Domain\Actors\Test;
 use App\AppCore\Domain\Service\SaveDomainTestService;
+use App\Framework\Factory\EntityFactory;
 use App\Framework\Repository\TestRepository;
 
 class SaveTestApplication
@@ -17,19 +17,31 @@ class SaveTestApplication
      * @var TestRepository
      */
     private $testRepository;
+    /**
+     * @var EntityFactory
+     */
+    private $entityFactory;
 
-    public function __construct(SaveDomainTestService $service, TestRepository $testRepository)
+    /**
+     * SaveTestApplication constructor.
+     *
+     * @param SaveDomainTestService $service
+     * @param TestRepository        $testRepository
+     * @param EntityFactory         $entityFactory
+     */
+    public function __construct(SaveDomainTestService $service, TestRepository $testRepository, EntityFactory $entityFactory)
     {
         $this->service = $service;
         $this->testRepository = $testRepository;
+        $this->entityFactory = $entityFactory;
     }
 
     public function save(array $data)
     {
         if(null === ($testEntity = $this->testRepository->findOneBy(['uuid' => $data['uuid']]))) {
-            $this->service->save(new Test($data['uuid'], $data['test'], $data['body'], $data['header'], $data['script'], $data['url']), null);
+            $this->service->save($this->entityFactory->createTest($data['uuid'], $data['test'], $data['body'], $data['header'], $data['url'], $data['script']), null);
         } else {
-            $this->service->save(new Test($data['uuid'], $data['test'], $data['body'], $data['header'], $data['script'], $data['url']), (string) $testEntity->getId());
+            $this->service->save($this->entityFactory->createTest($data['uuid'], $data['test'], $data['body'], $data['header'], $data['url'], $data['script']), (string) $testEntity->getId());
         }
 
 

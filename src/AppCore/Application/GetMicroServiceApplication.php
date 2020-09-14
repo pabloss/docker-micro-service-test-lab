@@ -3,10 +3,9 @@ declare(strict_types=1);
 
 namespace App\AppCore\Application;
 
-use App\AppCore\Domain\Actors\Test;
-use App\AppCore\Domain\Actors\uService;
-use App\AppCore\Domain\Repository\TestRepository;
+use App\AppCore\Domain\Repository\TestRepositoryInterface;
 use App\AppCore\Domain\Repository\uServiceRepositoryInterface;
+use App\Framework\Entity\Test;
 
 class GetMicroServiceApplication
 {
@@ -15,7 +14,7 @@ class GetMicroServiceApplication
      */
     private $repository;
     /**
-     * @var TestRepository
+     * @var TestRepositoryInterface
      */
     private $testRepository;
 
@@ -23,9 +22,9 @@ class GetMicroServiceApplication
      * GetMicroService constructor.
      *
      * @param uServiceRepositoryInterface $repository
-     * @param TestRepository              $testRepository
+     * @param TestRepositoryInterface     $testRepository
      */
-    public function __construct(uServiceRepositoryInterface $repository, TestRepository $testRepository)
+    public function __construct(uServiceRepositoryInterface $repository, TestRepositoryInterface $testRepository)
     {
         $this->repository = $repository;
         $this->testRepository = $testRepository;
@@ -38,7 +37,7 @@ class GetMicroServiceApplication
 
     public function getTestRequestedBody(string $uuid)
     {
-        return $this->repository->findByHash($uuid)->getTest()->getRequestedBody();
+        return $this->repository->findByHash($uuid)->getTests()->first()->getRequestedBody();
     }
 
     public function getAll()
@@ -48,8 +47,8 @@ class GetMicroServiceApplication
 
     public function getAllAsArray()
     {
-        return \array_map(function (uService $uService) {
-            return Test::asArray($uService->getTest());
+        return \array_map(function (\App\Framework\Entity\UService $uService) {
+            return Test::asArray($uService->getTests()->last());
         }, $this->getAll());
     }
 }
