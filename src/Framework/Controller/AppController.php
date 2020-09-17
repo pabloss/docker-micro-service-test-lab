@@ -76,14 +76,15 @@ class AppController extends AbstractController
     /**
      * AppController constructor.
      *
-     * @param FrameworkSaveApplication $saveApplication
-     * @param DeployApplication        $deployApplication
-     * @param TestRepositoryInterface  $testRepository
-     * @param Trigger                  $trigger
-     * @param Dir                      $dir
-     * @param MakeConnection           $makeConnection
-     * @param WrappedContext           $context
-     * @param Hub                      $hub
+     * @param FrameworkSaveApplication    $saveApplication
+     * @param DeployApplication           $deployApplication
+     * @param TestRepositoryInterface     $testRepository
+     * @param uServiceRepositoryInterface $serviceRepository
+     * @param Trigger                     $trigger
+     * @param Dir                         $dir
+     * @param MakeConnection              $makeConnection
+     * @param WrappedContext              $context
+     * @param Hub                         $hub
      */
     public function __construct(
         FrameworkSaveApplication $saveApplication,

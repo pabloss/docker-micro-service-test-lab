@@ -2,8 +2,7 @@
 
 namespace App\Framework\Repository;
 
-use App\AppCore\Domain\Repository\StatusEntity;
-use App\AppCore\Domain\Service\StatusRepositoryInterface;
+use App\AppCore\Domain\Repository\StatusRepositoryInterface;
 use App\Framework\Entity\Status;
 use App\Framework\Entity\UService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -22,14 +21,10 @@ class StatusRepository extends ServiceEntityRepository implements StatusReposito
         parent::__construct($registry, Status::class);
     }
 
-    public function save(StatusEntity $entity)
+    public function save(Status $entity)
     {
-        $statusEntity = new Status();
-        $statusEntity->setStatusName($entity->statusString());
-        $statusEntity->setUuid($entity->uuid());
-        $statusEntity->setCreated($entity->when());
-        $statusEntity->setUService($this->getEntityManager()->getRepository(UService::class)->findOneBy(['uuid' => $entity->uuid()]));
-        $this->getEntityManager()->persist($statusEntity);
+        $entity->setUService($this->getEntityManager()->getRepository(UService::class)->findOneBy(['uuid' => $entity->getUuid()]));
+        $this->getEntityManager()->persist($entity);
     }
 
 

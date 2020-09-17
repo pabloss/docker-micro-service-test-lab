@@ -1,5 +1,7 @@
 <?php namespace App\AppCore\Domain\Repository;
 
+use App\Framework\Entity\Status;
+
 class StatusEntityTest extends \Codeception\Test\Unit
 {
     /**
@@ -20,18 +22,22 @@ class StatusEntityTest extends \Codeception\Test\Unit
     public function testSomeFeature()
     {
         // Given
-        $id = 'ID';
+        $id = '10';
         $uuid = 'uuid';
         $statusString = 'test_status';
         $when = new \DateTime('2020-08-14 12:33:45');
 
         // When
-        $entity = new StatusEntity($uuid, $statusString, $when, $id);
+        $entity = new Status();
+        $entity->setId((int) $id);
+        $entity->setUuid($uuid);
+        $entity->setStatusName($statusString);
+        $entity->setCreated($when);
 
         // Then
-        $this->tester->assertEquals($id, $entity->id());
-        $this->tester->assertEquals($uuid, $entity->uuid());
-        $this->tester->assertEquals($statusString, $entity->statusString());
-        $this->tester->assertEquals($when, $entity->when());
+        $this->tester->assertEquals($id, $entity->getId());
+        $this->tester->assertEquals($uuid, $entity->getUuid());
+        $this->tester->assertEquals($statusString, $entity->getStatusName());
+        $this->tester->assertEquals($when, $entity->getCreated());
     }
 }

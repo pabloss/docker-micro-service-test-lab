@@ -1,8 +1,9 @@
-<?php namespace App\AppCore\Domain\Service;
+<?php
+namespace App\AppCore\Domain\Service;
 
-
-use App\AppCore\Domain\Repository\StatusEntity;
-use App\AppCore\Domain\Service\Factory\EntityFactoryInterface;
+use App\AppCore\Domain\Repository\StatusRepositoryInterface;
+use App\Framework\Entity\Status;
+use App\Framework\Factory\EntityFactory;
 
 class SaveStatusTest extends \Codeception\Test\Unit
 {
@@ -27,10 +28,10 @@ class SaveStatusTest extends \Codeception\Test\Unit
         $uServiceId = 1;
         $now = new \DateTime('2020-08-14 12:33:45');
 
-        $statusEntity = $this->prophesize(StatusEntity::class);
+        $statusEntity = $this->prophesize(Status::class);
         $statusEntity->willBeConstructedWith([$uuid, $statusString, $now, $uServiceId]);
 
-        $entityFactory = $this->prophesize(EntityFactoryInterface::class);
+        $entityFactory = $this->prophesize(EntityFactory::class);
         $entityFactory->createStatusEntity($uuid, $statusString, $now)->willReturn($statusEntity->reveal())->shouldBeCalled();
 
         $statusRepo = $this->prophesize(StatusRepositoryInterface::class);
@@ -39,5 +40,6 @@ class SaveStatusTest extends \Codeception\Test\Unit
         $service = new SaveStatus($statusRepo->reveal(), $entityFactory->reveal());
 
         $service->save($uuid, $statusString, $now);
+
     }
 }

@@ -5,6 +5,7 @@ namespace App\Framework\Factory;
 
 use App\AppCore\Domain\Repository\TestEntityInterface;
 use App\AppCore\Domain\Repository\uServiceEntityInterface;
+use App\Framework\Entity\Status;
 use App\Framework\Entity\Test;
 use App\Framework\Entity\UService;
 
@@ -43,5 +44,14 @@ class EntityFactory
         $test->setUrl($url);
         $test->setScript($script);
         return $test;
+    }
+
+    public function createStatusEntity(string $uuid, string $statusString, \DateTime $now)
+    {
+        $status = new Status();
+        $status->setUuid($uuid);
+        $status->setStatusName($statusString);
+        $status->setCreated($now);
+        return $status;
     }
 }
