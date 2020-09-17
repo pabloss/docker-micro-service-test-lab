@@ -11,14 +11,18 @@ use App\AppCore\Domain\Repository\uServiceRepositoryInterface;
 use App\AppCore\Domain\Service\Trigger;
 use App\AppCore\Hub;
 use App\Framework\Application\FrameworkSaveApplication;
+use App\Framework\Entity\Status;
+use App\Framework\Factory\EntityFactory;
 use App\Framework\Files\Dir;
 use App\Framework\Files\UploadedFileAdapter;
 use App\Framework\Repository\TestRepository;
 use App\Framework\Repository\UServiceRepository;
 use App\Framework\Service\MakeConnection;
 use App\Framework\Service\WebSockets\Context\WrappedContext;
+use App\Framework\Subscriber\Event\SaveStatusEvent;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse as RedirectResponseAlias;
 use Symfony\Component\HttpFoundation\Request;
@@ -73,6 +77,10 @@ class AppController extends AbstractController
      */
     private $serviceRepository;
 
+    /** @var EventDispatcherInterface */
+    private $eventDispatcher;
+    private $entityFactory;
+
     /**
      * AppController constructor.
      *
@@ -85,6 +93,8 @@ class AppController extends AbstractController
      * @param MakeConnection              $makeConnection
      * @param WrappedContext              $context
      * @param Hub                         $hub
+     * @param EventDispatcherInterface    $eventDispatcher
+     * @param EntityFactory               $entityFactory
      */
     public function __construct(
         FrameworkSaveApplication $saveApplication,
@@ -95,7 +105,9 @@ class AppController extends AbstractController
         Dir $dir,
         MakeConnection $makeConnection,
         WrappedContext $context,
-        Hub $hub
+        Hub $hub,
+        EventDispatcherInterface $eventDispatcher,
+        EntityFactory $entityFactory
     ) {
         $this->saveApplication = $saveApplication;
         $this->deployApplication = $deployApplication;
@@ -106,6 +118,8 @@ class AppController extends AbstractController
         $this->context = $context;
         $this->hub = $hub;
         $this->serviceRepository = $serviceRepository;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->entityFactory = $entityFactory;
     }
 
     /**
@@ -224,6 +238,14 @@ class AppController extends AbstractController
             $this->dir->sureTargetDirExists($this->getParameter('unpacked_directory') . '/' . $uniqid),
             self::IMAGE_PREFIX,
             self::CONTAINER_PREFIX);
+        $this->eventDispatcher->dispatch(
+            new SaveStatusEvent($this->entityFactory->createStatusEntity(
+                $uniqid,
+                'service_deployed',
+                new \DateTime()
+            )),
+            SaveStatusEvent::NAME
+        );
         return new Response();
     }
 

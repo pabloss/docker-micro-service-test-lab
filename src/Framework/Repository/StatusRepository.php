@@ -23,8 +23,8 @@ class StatusRepository extends ServiceEntityRepository implements StatusReposito
 
     public function save(Status $entity)
     {
-        $entity->setUService($this->getEntityManager()->getRepository(UService::class)->findOneBy(['uuid' => $entity->getUuid()]));
         $this->getEntityManager()->persist($entity);
+        $this->getEntityManager()->flush();
     }
 
 
