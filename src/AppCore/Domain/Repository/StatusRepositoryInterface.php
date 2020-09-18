@@ -8,4 +8,7 @@ use App\Framework\Entity\Status;
 interface StatusRepositoryInterface
 {
     public function save(Status $entity);
+
+    public function get(int $id);
+    public function findByHash(string $hash);
 }

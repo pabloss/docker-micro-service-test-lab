@@ -8,6 +8,7 @@ use App\AppCore\Application\GetMicroServiceApplication;
 use App\AppCore\Application\Save\SaveTestApplication;
 use App\AppCore\Domain\Repository\TestRepositoryInterface;
 use App\AppCore\Domain\Repository\uServiceRepositoryInterface;
+use App\AppCore\Domain\Service\GetStatus;
 use App\AppCore\Domain\Service\Trigger;
 use App\AppCore\Hub;
 use App\Framework\Application\FrameworkSaveApplication;
@@ -247,6 +248,30 @@ class AppController extends AbstractController
             SaveStatusEvent::NAME
         );
         return new Response();
+    }
+
+    /**
+     * @Route("/get_status", name="get_status")
+     * @param Request   $request
+     *
+     * @param GetStatus $getStatus
+     *
+     * @return JsonResponse
+     */
+    public function getStatus(Request $request, GetStatus $getStatus)
+    {
+        $uniqid = $request->getContent();
+
+        return new JsonResponse(
+            \array_map(
+                function (Status $entity) {
+                    return $entity->asArray();
+                    },
+                $getStatus->getByHash($uniqid)
+            )
+        );
+
+
     }
 
     /**

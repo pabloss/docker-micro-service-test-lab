@@ -2,12 +2,13 @@
 
 namespace App\Framework\Entity;
 
+use App\AppCore\Domain\Actors\StatusEntityInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Framework\Repository\StatusRepository")
  */
-class Status
+class Status implements StatusEntityInterface
 {
     /**
      * @ORM\Id()
@@ -96,5 +97,13 @@ class Status
         return $this;
     }
 
+    public function asArray(): array
+    {
+        return [
+            'uuid' => $this->getUuid(),
+            'status_name' => $this->getStatusName(),
+            'created' => $this->getCreated(),
+        ];
+    }
 
 }

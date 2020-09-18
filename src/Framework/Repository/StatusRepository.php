@@ -27,6 +27,20 @@ class StatusRepository extends ServiceEntityRepository implements StatusReposito
         $this->getEntityManager()->flush();
     }
 
+    public function get(int $id)
+    {
+        return $this->find($id);
+    }
+
+    public function findByHash(string $hash)
+    {
+        return $this->findBy([
+            'uuid' => $hash
+        ]);
+    }
+
+
+
 
     // /**
     //  * @return Status[] Returns an array of Status objects
