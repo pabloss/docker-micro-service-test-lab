@@ -20,6 +20,7 @@ use App\Framework\Repository\TestRepository;
 use App\Framework\Repository\UServiceRepository;
 use App\Framework\Service\MakeConnection;
 use App\Framework\Service\WebSockets\Context\WrappedContext;
+use App\Framework\Subscriber\Event\AfterSavingService;
 use App\Framework\Subscriber\Event\SaveStatusEvent;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -222,6 +223,7 @@ class AppController extends AbstractController
 
         $this->saveApplication->save(new UploadedFileAdapter($request->files->all()['files']),
             $this->dir->sureTargetDirExists($this->getParameter('uploaded_directory') . '/' . $uniqid));
+        $this->eventDispatcher->dispatch(new AfterSavingService($uniqid), AfterSavingService::NAME);
         return new Response($uniqid);
     }
 
@@ -247,6 +249,7 @@ class AppController extends AbstractController
             )),
             SaveStatusEvent::NAME
         );
+        $this->eventDispatcher->dispatch(new AfterSavingService($uniqid), AfterSavingService::NAME);
         return new Response();
     }
 
