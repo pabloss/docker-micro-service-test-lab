@@ -48,7 +48,18 @@ class GetMicroServiceApplication
     public function getAllAsArray()
     {
         return \array_map(function (\App\Framework\Entity\UService $uService) {
-            return Test::asArray($uService->getTests()->last());
+            return 0 === $uService->getTests()->count() ?
+                [
+                    'uuid' =>           $uService->getUuid(),
+                    'url' =>            '',
+                    'script' =>         '',
+                    'header' =>         '',
+                    'requested_body' => '',
+                    'body' =>           '',
+                ]
+                :
+                Test::asArray($uService->getTests()->last())
+                ;
         }, $this->getAll());
     }
 }
