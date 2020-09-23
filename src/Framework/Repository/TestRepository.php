@@ -32,6 +32,11 @@ class TestRepository extends ServiceEntityRepository implements TestRepositoryIn
         return $this->findAll();
     }
 
+    public function findByHash(string $uuid)
+    {
+        // TODO: Implement findByHash() method.
+    }
+
     // /**
     //  * @return Test[] Returns an array of Test objects
     //  */

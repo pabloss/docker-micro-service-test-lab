@@ -3,9 +3,10 @@ declare(strict_types=1);
 
 namespace App\AppCore\Application\Save;
 
+use App\AppCore\Domain\Actors\Factory\EntityFactoryInterface;
+use App\AppCore\Domain\Repository\TestRepositoryInterface;
 use App\AppCore\Domain\Service\SaveDomainTestService;
-use App\Framework\Factory\EntityFactory;
-use App\Framework\Repository\TestRepository;
+use App\AppCore\Domain\Service\UpdateTestService;
 
 class SaveTestApplication
 {
@@ -14,34 +15,43 @@ class SaveTestApplication
      */
     private $service;
     /**
-     * @var TestRepository
+     * @var TestRepositoryInterface
      */
     private $testRepository;
     /**
-     * @var EntityFactory
+     * @var EntityFactoryInterface
      */
     private $entityFactory;
+    /**
+     * @var UpdateTestService
+     */
+    private $updateTestService;
 
     /**
      * SaveTestApplication constructor.
      *
-     * @param SaveDomainTestService $service
-     * @param TestRepository        $testRepository
-     * @param EntityFactory         $entityFactory
+     * @param SaveDomainTestService   $service
+     * @param TestRepositoryInterface $testRepository
+     * @param EntityFactoryInterface  $entityFactory
+     * @param UpdateTestService       $updateTestService
      */
-    public function __construct(SaveDomainTestService $service, TestRepository $testRepository, EntityFactory $entityFactory)
+    public function __construct(SaveDomainTestService $service, TestRepositoryInterface $testRepository, EntityFactoryInterface $entityFactory, UpdateTestService $updateTestService)
     {
         $this->service = $service;
         $this->testRepository = $testRepository;
         $this->entityFactory = $entityFactory;
+        $this->updateTestService = $updateTestService;
     }
 
     public function save(array $data)
     {
-        if(null === ($testEntity = $this->testRepository->findOneBy(['uuid' => $data['uuid']]))) {
-            $this->service->save($this->entityFactory->createTest($data['uuid'], $data['test'], $data['body'], $data['header'], $data['url'], $data['script']), null);
+        if(null === ($testEntity = $this->testRepository->findByHash($data['uuid']))) {
+            $this->service->save($this->entityFactory->createTest($data['uuid'], $data['requested_body'], $data['body'], $data['header'], $data['url'], $data['script']), null);
         } else {
-            $this->service->save($this->entityFactory->createTest($data['uuid'], $data['test'], $data['body'], $data['header'], $data['url'], $data['script']), (string) $testEntity->getId());
+            $this->service->save(
+                $this->updateTestService->update($testEntity, $data),
+                (string) $testEntity->getId()
+            );
         }
 
 

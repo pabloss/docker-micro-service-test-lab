@@ -3,13 +3,15 @@ declare(strict_types=1);
 
 namespace App\Framework\Factory;
 
+use App\AppCore\Domain\Actors\Factory\EntityFactoryInterface;
+use App\AppCore\Domain\Actors\StatusEntityInterface;
 use App\AppCore\Domain\Repository\TestEntityInterface;
 use App\AppCore\Domain\Repository\uServiceEntityInterface;
 use App\Framework\Entity\Status;
 use App\Framework\Entity\Test;
 use App\Framework\Entity\UService;
 
-class EntityFactory
+class EntityFactory implements EntityFactoryInterface
 {
 
     /**
@@ -34,7 +36,7 @@ class EntityFactory
         string $header,
         string $url,
         string $script
-    ): Test {
+    ): TestEntityInterface {
         $test = new Test();
         $test->setUuid($uuid);
         $test->setRequestedBody($requestedBody);
@@ -46,7 +48,7 @@ class EntityFactory
         return $test;
     }
 
-    public function createStatusEntity(string $uuid, string $statusString, \DateTime $now)
+    public function createStatusEntity(string $uuid, string $statusString, \DateTime $now): StatusEntityInterface
     {
         $status = new Status();
         $status->setUuid($uuid);

@@ -10,4 +10,6 @@ interface TestRepositoryInterface
     public function all();
 
     public function find($nextId);
+
+    public function findByHash(string $uuid);
 }
