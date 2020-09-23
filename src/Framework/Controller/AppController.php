@@ -291,6 +291,6 @@ class AppController extends AbstractController
      */
     private function findDockerFileDir(string $uuid): string
     {
-        return $this->dir->findParentDir($this->testRepository->findByHash($uuid)->getUnpacked(), 'Dockerfile');
+        return $this->dir->findParentDir($this->testRepository->findByHash($uuid)->getUService()->getUnpacked(), 'Dockerfile');
     }
 }

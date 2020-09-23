@@ -46,7 +46,9 @@ class SaveTestApplication
     public function save(array $data)
     {
         if(null === ($testEntity = $this->testRepository->findByHash($data['uuid']))) {
-            $this->service->save($this->entityFactory->createTest($data['uuid'], $data['requested_body'], $data['body'], $data['header'], $data['url'], $data['script']), null);
+            $this->service->save(
+                $this->entityFactory->createTest($data['uuid'], $data['requested_body'], $data['body'], $data['header'], $data['url'], $data['script']), null
+            );
         } else {
             $this->service->save(
                 $this->updateTestService->update($testEntity, $data),
