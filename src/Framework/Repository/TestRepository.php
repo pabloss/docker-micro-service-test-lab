@@ -24,6 +24,7 @@ class TestRepository extends ServiceEntityRepository implements TestRepositoryIn
     public function persist(TestEntityInterface $domain, ?string $nextId)
     {
         $this->getEntityManager()->persist($domain);
+//        $this->getEntityManager()->persist($domain->getUService());
         $this->getEntityManager()->flush();
     }
 
@@ -34,7 +35,7 @@ class TestRepository extends ServiceEntityRepository implements TestRepositoryIn
 
     public function findByHash(string $uuid)
     {
-        // TODO: Implement findByHash() method.
+        return $this->findOneBy(['uuid' => $uuid]);
     }
 
     // /**

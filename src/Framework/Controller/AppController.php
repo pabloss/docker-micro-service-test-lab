@@ -16,13 +16,10 @@ use App\Framework\Entity\Status;
 use App\Framework\Factory\EntityFactory;
 use App\Framework\Files\Dir;
 use App\Framework\Files\UploadedFileAdapter;
-use App\Framework\Repository\TestRepository;
-use App\Framework\Repository\UServiceRepository;
 use App\Framework\Service\MakeConnection;
 use App\Framework\Service\WebSockets\Context\WrappedContext;
 use App\Framework\Subscriber\Event\AfterSavingService;
 use App\Framework\Subscriber\Event\SaveStatusEvent;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -83,6 +80,9 @@ class AppController extends AbstractController
     private $eventDispatcher;
     private $entityFactory;
 
+    /** @var SaveTestApplication */
+    private $application;
+
     /**
      * AppController constructor.
      *
@@ -97,6 +97,7 @@ class AppController extends AbstractController
      * @param Hub                         $hub
      * @param EventDispatcherInterface    $eventDispatcher
      * @param EntityFactory               $entityFactory
+     * @param SaveTestApplication         $saveTestApplication
      */
     public function __construct(
         FrameworkSaveApplication $saveApplication,
@@ -109,7 +110,8 @@ class AppController extends AbstractController
         WrappedContext $context,
         Hub $hub,
         EventDispatcherInterface $eventDispatcher,
-        EntityFactory $entityFactory
+        EntityFactory $entityFactory,
+        SaveTestApplication $saveTestApplication
     ) {
         $this->saveApplication = $saveApplication;
         $this->deployApplication = $deployApplication;
@@ -122,6 +124,7 @@ class AppController extends AbstractController
         $this->serviceRepository = $serviceRepository;
         $this->eventDispatcher = $eventDispatcher;
         $this->entityFactory = $entityFactory;
+        $this->application = $saveTestApplication;
     }
 
     /**
@@ -168,21 +171,13 @@ class AppController extends AbstractController
 
     /**
      * @Route("/save-test/{uuid}", name="saveTest")
-     * @param Request             $request
-     * @param SaveTestApplication $application
-     *
-     * @param UServiceRepository  $UServiceRepository
-     * @param TestRepository      $testRepository
+     * @param Request $request
      *
      * @return JsonResponse
      */
-    public function saveTest(Request $request, SaveTestApplication  $application, UServiceRepository $UServiceRepository, TestRepository $testRepository, EntityManagerInterface $entityManager)
+    public function saveTest(Request $request)
     {
-        $application->save(\json_decode($request->getContent(), true));
-        $UServiceRepository->findOneBy(['uuid' => \json_decode($request->getContent(), true)['uuid']])->addTest(
-            $testRepository->findOneBy(['uuid' => \json_decode($request->getContent(), true)['uuid']])
-        );
-        $entityManager->flush();
+        $this->application->save(\json_decode($request->getContent(), true));
         return new JsonResponse([]);
     }
 
