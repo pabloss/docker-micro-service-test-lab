@@ -76,3 +76,14 @@ services:
             $fetcher: '@App\AppCore\Application\Monitor\FetcherInterface'
             $outPut: '@App\Framework\Service\WebSockets\Context\WebSocketWatcherAdapter'
     App\AppCore\Domain\Repository\uServiceRepositoryInterface: '@App\Framework\Repository\UServiceRepository'
+    AMQPStreamConnection:
+        class: 'PhpAmqpLib\Connection\AMQPStreamConnection'
+        arguments:
+            $host: '%rabbit.host%'
+            $port: '%rabbit.port%'
+            $user: '%rabbit.user%'
+            $password: '%rabbit.password%'
+
+    App\Framework\Application\Consumer:
+        arguments:
+            $connection: '@AMQPStreamConnection'
