@@ -7,5 +7,5 @@ use App\AppCore\Domain\Actors\FileInterface;
 
 interface SaveToFileSystemInterface
 {
-    public function move(string $targetDir, FileInterface $domainUploadedFile): FileInterface;
+    public function move(string $targetDir, FileInterface $domainUploadedFile, \DateTime $when): FileInterface;
 }

@@ -43,8 +43,8 @@ class SaveApplication implements SaveApplicationInterface
     }
 
 
-    public function save(string $dir, FileInterface $file)
+    public function save(string $dir, FileInterface $file, \DateTime $when)
     {
-        $this->service->save($this->saveToFileSystem->move($dir, $file)->getPath());
+        $this->service->save($this->saveToFileSystem->move($dir, $file, $when)->getPath());
     }
 }

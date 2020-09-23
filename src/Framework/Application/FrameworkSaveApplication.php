@@ -23,8 +23,8 @@ class FrameworkSaveApplication
         $this->saveApplication = $saveApplication;
     }
 
-    public function save(FileInterface $fileToSave, string $targetDir)
+    public function save(FileInterface $fileToSave, string $targetDir, \DateTime $when)
     {
-        $this->saveApplication->save($targetDir, $fileToSave);
+        $this->saveApplication->save($targetDir, $fileToSave, $when);
     }
 }

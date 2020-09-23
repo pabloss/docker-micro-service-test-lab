@@ -3,6 +3,10 @@
 namespace App\Framework\Service;
 
 use App\AppCore\Domain\Actors\FileInterface;
+use App\AppCore\Domain\Repository\uServiceRepositoryInterface;
+use App\Framework\Entity\Status;
+use App\Framework\Factory\EntityFactory;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class SaveToFileSystemServiceTest extends \Codeception\Test\Unit
 {
@@ -15,9 +19,26 @@ class SaveToFileSystemServiceTest extends \Codeception\Test\Unit
     public function testMove()
     {
         $targetDir = 'test_dir';
-        $service = new SaveToFileSystemService();
+        $uuid = "11111";
+        $now = new \DateTime();
+        $statusString = "file_moved";
+        $uuidService = $this->prophesize(Uuid::class);
+        $entityFactory = $this->prophesize(EntityFactory::class);
+        $service = new SaveToFileSystemService(
+            $this->prophesize(EventDispatcherInterface::class)->reveal(),
+            $this->prophesize(uServiceRepositoryInterface::class)->reveal(),
+            $entityFactory->reveal(),
+            $uuidService->reveal(),
+        );
+        $status = new Status();
+        $status->setUuid($uuid);
+        $status->setStatusName($statusString);
+        $status->setCreated($now);
+        $entityFactory->createStatusEntity($uuid, $statusString, $now)->willReturn($status);
+        $uuidService->getUuidFromDir("{$uuid}/$targetDir")->willReturn($uuid);
         $file = $this->prophesize(FileInterface::class);
         $file->move($targetDir)->willReturn($file->reveal());
-        $this->tester->assertInstanceOf(FileInterface::class, $service->move($targetDir, $file->reveal()));
+        $file->getPath()->willReturn("{$uuid}/$targetDir/file.ext");
+        $this->tester->assertInstanceOf(FileInterface::class, $service->move($targetDir, $file->reveal(), $now));
     }
 }

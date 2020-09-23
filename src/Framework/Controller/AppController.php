@@ -221,8 +221,11 @@ class AppController extends AbstractController
     {
         $uniqid = \uniqid();
 
-        $this->saveApplication->save(new UploadedFileAdapter($request->files->all()['files']),
-            $this->dir->sureTargetDirExists($this->getParameter('uploaded_directory') . '/' . $uniqid));
+        $this->saveApplication->save(
+            new UploadedFileAdapter($request->files->all()['files']),
+            $this->dir->sureTargetDirExists($this->getParameter('uploaded_directory') . '/' . $uniqid),
+            new \DateTime()
+        );
         $this->eventDispatcher->dispatch(new AfterSavingService($uniqid), AfterSavingService::NAME);
         return new Response($uniqid);
     }

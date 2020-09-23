@@ -7,5 +7,5 @@ use App\AppCore\Domain\Actors\FileInterface;
 
 interface SaveApplicationInterface
 {
-    public function save(string $dir, FileInterface $file);
+    public function save(string $dir, FileInterface $file, \DateTime $when);
 }
