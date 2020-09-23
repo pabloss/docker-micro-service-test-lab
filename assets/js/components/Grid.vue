@@ -18,17 +18,17 @@
                 <span v-if="key === 'progress'">
                     <button v-if="entry['init']||entry['progress']=== entry['max']" @click="deploy(entry['uuid'])">{{buttonText(entry['progress'],entry['max'])}}</button>
                     <progress v-else-if="entry['progress']!== entry['max']" :value="entry['progress']" :max="entry['max']"></progress>
-                    <label for="script">Script</label>
-                    <input name="script" id="script" v-model="entry['script']"><br>
-                    <label for="url">Url</label>
-                    <input name="url" id="url" v-model="entry['url']"><br>
-                    <label for="body">body</label>
-                    <input name="body" id="body" v-model="entry['body']"><br>
-                    <label for="header">header</label>
-                    <input name="header" id="header" v-model="entry['header']"><br>
+                    <label :for="entry['uuid'] + 'script'">Script</label>
+                    <input name="script" :id="entry['uuid'] + 'script'" v-model="entry['script']"><br>
+                    <label :for="entry['uuid'] + 'url'">Url</label>
+                    <input name="url" :id="entry['uuid'] + 'url'" v-model="entry['url']"><br>
+                    <label :for="entry['uuid'] + 'body'">body</label>
+                    <input name="body" :id="entry['uuid'] + 'body'" v-model="entry['body']"><br>
+                    <label :for="entry['uuid'] + 'header'">header</label>
+                    <input name="header" :id="entry['uuid'] + 'header'" v-model="entry['header']"><br>
                     <button @click="test(entry['uuid'])">Test</button>
-                    <label for="requested_body">Requested body</label>
-                    <input name="requested_body" id="requested_body" v-model="entry['requested_body']">
+                    <label :for="entry['uuid'] + 'requested_body'">Requested body</label>
+                    <input name="requested_body" :id="entry['uuid'] + 'requested_body'" v-model="entry['requested_body']">
                     <br />
                     <button @click="save(entry['uuid'])">Save</button>
                 </span>
