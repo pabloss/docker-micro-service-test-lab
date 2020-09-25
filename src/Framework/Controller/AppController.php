@@ -6,6 +6,7 @@ namespace App\Framework\Controller;
 use App\AppCore\Application\DeployApplication;
 use App\AppCore\Application\GetMicroServiceApplication;
 use App\AppCore\Application\Save\SaveTestApplication;
+use App\AppCore\Domain\Actors\TestDTO;
 use App\AppCore\Domain\Repository\TestRepositoryInterface;
 use App\AppCore\Domain\Repository\uServiceRepositoryInterface;
 use App\AppCore\Domain\Service\GetStatus;
@@ -171,13 +172,14 @@ class AppController extends AbstractController
 
     /**
      * @Route("/save-test/{uuid}", name="saveTest")
-     * @param Request $request
+     *
+     * @param TestDTO $testDTO
      *
      * @return JsonResponse
      */
-    public function saveTest(Request $request)
+    public function saveTest(TestDTO $testDTO)
     {
-        $this->application->save(\json_decode($request->getContent(), true));
+        $this->application->save($testDTO);
         return new JsonResponse([]);
     }
 

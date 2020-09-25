@@ -5,6 +5,7 @@ namespace App\Framework\Factory;
 
 use App\AppCore\Domain\Actors\Factory\EntityFactoryInterface;
 use App\AppCore\Domain\Actors\StatusEntityInterface;
+use App\AppCore\Domain\Actors\TestDTO;
 use App\AppCore\Domain\Repository\TestEntityInterface;
 use App\AppCore\Domain\Repository\uServiceEntityInterface;
 use App\Framework\Entity\Status;
@@ -29,22 +30,15 @@ class EntityFactory implements EntityFactoryInterface
         return $UService;
     }
 
-    public function createTest(
-        string $uuid,
-        string $requestedBody,
-        string $body,
-        string $header,
-        string $url,
-        string $script
-    ): TestEntityInterface {
+    public function createTest(TestDTO $testDTO): TestEntityInterface
+    {
         $test = new Test();
-        $test->setUuid($uuid);
-        $test->setRequestedBody($requestedBody);
-        $test->setBody($body);
-        $test->setHeader($header);
-        $test->setRequestedBody($requestedBody);
-        $test->setUrl($url);
-        $test->setScript($script);
+        $test->setUuid($testDTO->getUuid());
+        $test->setRequestedBody($testDTO->getRequestedBody());
+        $test->setBody($testDTO->getBody());
+        $test->setHeader($testDTO->getHeader());
+        $test->setUrl($testDTO->getUrl());
+        $test->setScript($testDTO->getScript());
         return $test;
     }
 

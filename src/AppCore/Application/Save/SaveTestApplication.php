@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\AppCore\Application\Save;
 
 use App\AppCore\Domain\Actors\Factory\EntityFactoryInterface;
+use App\AppCore\Domain\Actors\TestDTO;
 use App\AppCore\Domain\Repository\TestRepositoryInterface;
 use App\AppCore\Domain\Service\SaveDomainTestService;
 use App\AppCore\Domain\Service\UpdateTestService;
@@ -43,15 +44,15 @@ class SaveTestApplication
         $this->updateTestService = $updateTestService;
     }
 
-    public function save(array $data)
+    public function save(TestDTO $testDTO)
     {
-        if(null === ($testEntity = $this->testRepository->findByHash($data['uuid']))) {
+        if(null === ($testEntity = $this->testRepository->findByHash($testDTO->getUuid()))) {
             $this->service->save(
-                $this->entityFactory->createTest($data['uuid'], $data['requested_body'], $data['body'], $data['header'], $data['url'], $data['script']), null
+                $this->entityFactory->createTest($testDTO), null
             );
         } else {
             $this->service->save(
-                $this->updateTestService->update($testEntity, $data),
+                $this->updateTestService->update($testEntity, $testDTO),
                 (string) $testEntity->getId()
             );
         }
