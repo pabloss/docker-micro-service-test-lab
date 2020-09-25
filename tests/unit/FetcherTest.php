@@ -1,8 +1,8 @@
 <?php
 
-use App\AppCore\Domain\Service\Command\WatcherInterface;
-use App\Framework\Service\Command\Fetcher\Fetcher;
-use App\Framework\Service\WebSockets\Context\WrappedContext;
+use App\AppCore\Domain\Service\Deploy\Command\WatcherInterface;
+use App\Framework\Service\Monitor\Command\Fetcher\Fetcher;
+use App\Framework\Service\Monitor\WebSockets\Context\WrappedContext;
 
 class FetcherTest extends \Codeception\Test\Unit
 {

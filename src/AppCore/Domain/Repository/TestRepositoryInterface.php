@@ -5,7 +5,7 @@ namespace App\AppCore\Domain\Repository;
 
 interface TestRepositoryInterface
 {
-    public function persist(TestEntityInterface $domain, ?string $nextId);
+    public function persist(TestEntityInterface $domain);
 
     public function all();
 

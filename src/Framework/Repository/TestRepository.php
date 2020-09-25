@@ -21,10 +21,9 @@ class TestRepository extends ServiceEntityRepository implements TestRepositoryIn
         parent::__construct($registry, Test::class);
     }
 
-    public function persist(TestEntityInterface $domain, ?string $nextId)
+    public function persist(TestEntityInterface $domain)
     {
         $this->getEntityManager()->persist($domain);
-//        $this->getEntityManager()->persist($domain->getUService());
         $this->getEntityManager()->flush();
     }
 

@@ -3,7 +3,7 @@ namespace App\AppCore\Domain\Service;
 
 use App\AppCore\Domain\Actors\StatusEntityInterface;
 use App\AppCore\Domain\Repository\StatusRepositoryInterface;
-use Doctrine\Common\Collections\ArrayCollection;
+use App\AppCore\Domain\Service\Status\GetStatus;
 
 class GetStatusTest extends \Codeception\Test\Unit
 {

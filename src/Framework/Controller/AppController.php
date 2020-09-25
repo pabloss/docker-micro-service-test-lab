@@ -3,24 +3,25 @@ declare(strict_types=1);
 
 namespace App\Framework\Controller;
 
-use App\AppCore\Application\DeployApplication;
+use App\AppCore\Application\Deploy\DeployApplication;
 use App\AppCore\Application\GetMicroServiceApplication;
 use App\AppCore\Application\Save\SaveTestApplication;
+use App\AppCore\Domain\Actors\Factory\EntityFactoryInterface;
 use App\AppCore\Domain\Actors\TestDTO;
 use App\AppCore\Domain\Repository\TestRepositoryInterface;
 use App\AppCore\Domain\Repository\uServiceRepositoryInterface;
-use App\AppCore\Domain\Service\GetStatus;
-use App\AppCore\Domain\Service\Trigger;
-use App\AppCore\Hub;
-use App\Framework\Application\FrameworkSaveApplication;
+use App\AppCore\Domain\Service\Status\GetStatus;
+use App\AppCore\Domain\Service\Test\Trigger;
+use App\Framework\Application\Monitor\Hub;
+use App\Framework\Application\Save\FrameworkSaveApplication;
 use App\Framework\Entity\Status;
-use App\Framework\Factory\EntityFactory;
-use App\Framework\Files\Dir;
-use App\Framework\Files\UploadedFileAdapter;
+use App\Framework\Service\Files\Dir;
+use App\Framework\Service\Files\UploadedFileAdapter;
 use App\Framework\Service\MakeConnection;
-use App\Framework\Service\WebSockets\Context\WrappedContext;
+use App\Framework\Service\Monitor\WebSockets\Context\WrappedContext;
 use App\Framework\Subscriber\Event\AfterSavingService;
 use App\Framework\Subscriber\Event\SaveStatusEvent;
+use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -28,6 +29,9 @@ use Symfony\Component\HttpFoundation\RedirectResponse as RedirectResponseAlias;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use function array_map;
+use function json_decode;
+use function uniqid;
 
 /**
  * Class AppController
@@ -79,6 +83,8 @@ class AppController extends AbstractController
 
     /** @var EventDispatcherInterface */
     private $eventDispatcher;
+
+    /** @var EntityFactoryInterface  */
     private $entityFactory;
 
     /** @var SaveTestApplication */
@@ -97,7 +103,7 @@ class AppController extends AbstractController
      * @param WrappedContext              $context
      * @param Hub                         $hub
      * @param EventDispatcherInterface    $eventDispatcher
-     * @param EntityFactory               $entityFactory
+     * @param EntityFactoryInterface      $entityFactory
      * @param SaveTestApplication         $saveTestApplication
      */
     public function __construct(
@@ -111,7 +117,7 @@ class AppController extends AbstractController
         WrappedContext $context,
         Hub $hub,
         EventDispatcherInterface $eventDispatcher,
-        EntityFactory $entityFactory,
+        EntityFactoryInterface $entityFactory,
         SaveTestApplication $saveTestApplication
     ) {
         $this->saveApplication = $saveApplication;
@@ -159,12 +165,12 @@ class AppController extends AbstractController
     public function test(string $uuid, Request $request, Hub $hub)
     {
         //./client.php 'http://service-test-lab-new.local/endpoint' 'Hej udało się 3425345!' 'Bars'
-        $uuid2 = \uniqid();
+        $uuid2 = uniqid();
         $this->trigger->runRequest(
             $this->findDockerFileDir($uuid),
             self::IMAGE_PREFIX . $uuid2,
             self::CONTAINER_PREFIX . $uuid2,
-            \json_decode($request->getContent(), true)
+            json_decode($request->getContent(), true)
         );
 
         return new Response($hub->compare($uuid));
@@ -216,12 +222,12 @@ class AppController extends AbstractController
      */
     public function upload(Request $request)
     {
-        $uniqid = \uniqid();
+        $uniqid = uniqid();
 
         $this->saveApplication->save(
             new UploadedFileAdapter($request->files->all()['files']),
             $this->dir->sureTargetDirExists($this->getParameter('uploaded_directory') . '/' . $uniqid),
-            new \DateTime()
+            new DateTime()
         );
         $this->eventDispatcher->dispatch(new AfterSavingService($uniqid), AfterSavingService::NAME);
         return new Response($uniqid);
@@ -245,7 +251,7 @@ class AppController extends AbstractController
             new SaveStatusEvent($this->entityFactory->createStatusEntity(
                 $uniqid,
                 'service_deployed',
-                new \DateTime()
+                new DateTime()
             )),
             SaveStatusEvent::NAME
         );
@@ -266,7 +272,7 @@ class AppController extends AbstractController
         $uniqid = $request->getContent();
 
         return new JsonResponse(
-            \array_map(
+            array_map(
                 function (Status $entity) {
                     return $entity->asArray();
                     },

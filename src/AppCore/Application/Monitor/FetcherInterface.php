@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\AppCore\Application\Monitor;
 
-use App\AppCore\Domain\Service\Command\WatcherInterface;
+use App\AppCore\Domain\Service\Deploy\Command\WatcherInterface;
 
 interface FetcherInterface
 {

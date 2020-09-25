@@ -49,21 +49,21 @@ class Test implements TestEntityInterface
      */
     private $UService;
 
-
-    public function getId()
-    {
-        return $this->id;
-    }
-
     /**
-     * @param mixed $id
+     * @param Test $test
      *
-     * @return Test
+     * @return array
      */
-    public function setId($id)
+    public static function asArray(self $test)
     {
-        $this->id = $id;
-        return $this;
+        return [
+            'uuid' => $test->getUuid(),
+            'url' => $test->getUrl(),
+            'script' => $test->getScript(),
+            'header' => $test->getHeader(),
+            'requested_body' => $test->getRequestedBody(),
+            'body' => $test->getBody(),
+        ];
     }
 
     public function getUuid(): string
@@ -75,75 +75,6 @@ class Test implements TestEntityInterface
     {
         $this->uuid = $uuid;
 
-        return $this;
-    }
-
-    public function getRequestedBody(): string
-    {
-        return $this->requestedBody;
-    }
-
-    public function setRequestedBody(string $requestedBody): self
-    {
-        $this->requestedBody = $requestedBody;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getUService()
-    {
-        return $this->UService;
-    }
-
-    /**
-     * @param mixed $UService
-     *
-     * @return Test
-     */
-    public function setUService($UService)
-    {
-        $this->UService = $UService;
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getBody(): string
-    {
-        return $this->body;
-    }
-
-    /**
-     * @param mixed $body
-     *
-     * @return Test
-     */
-    public function setBody($body)
-    {
-        $this->body = $body;
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getHeader(): string
-    {
-        return $this->header;
-    }
-
-    /**
-     * @param mixed $header
-     *
-     * @return Test
-     */
-    public function setHeader($header)
-    {
-        $this->header = $header;
         return $this;
     }
 
@@ -186,19 +117,87 @@ class Test implements TestEntityInterface
     }
 
     /**
-     * @param Test $test
-     *
-     * @return array
+     * @return mixed
      */
-    public static function asArray(self $test)
+    public function getHeader(): string
     {
-        return [
-            'uuid' => $test->getUuid(),
-            'url' => $test->getUrl(),
-            'script' => $test->getScript(),
-            'header' => $test->getHeader(),
-            'requested_body' => $test->getRequestedBody(),
-            'body' => $test->getBody(),
-        ];
+        return $this->header;
+    }
+
+    /**
+     * @param mixed $header
+     *
+     * @return Test
+     */
+    public function setHeader($header)
+    {
+        $this->header = $header;
+        return $this;
+    }
+
+    public function getRequestedBody(): string
+    {
+        return $this->requestedBody;
+    }
+
+    public function setRequestedBody(string $requestedBody): self
+    {
+        $this->requestedBody = $requestedBody;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBody(): string
+    {
+        return $this->body;
+    }
+
+    /**
+     * @param mixed $body
+     *
+     * @return Test
+     */
+    public function setBody($body)
+    {
+        $this->body = $body;
+        return $this;
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param mixed $id
+     *
+     * @return Test
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUService()
+    {
+        return $this->UService;
+    }
+
+    /**
+     * @param mixed $UService
+     *
+     * @return Test
+     */
+    public function setUService($UService)
+    {
+        $this->UService = $UService;
+        return $this;
     }
 }

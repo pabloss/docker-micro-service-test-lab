@@ -1,9 +1,9 @@
 <?php namespace AppCore\Application;
 
 use App\AppCore\Application\Monitor\MonitorApplication;
-use App\AppCore\Domain\Service\Command\CommandInterface;
-use App\AppCore\Domain\Service\Command\CommandRunnerInterface;
-use App\AppCore\Domain\Service\Command\CommandsCollectionInterface;
+use App\AppCore\Domain\Service\Deploy\Command\CommandInterface;
+use App\AppCore\Domain\Service\Deploy\Command\CommandRunnerInterface;
+use App\AppCore\Domain\Service\Deploy\Command\CommandsCollectionInterface;
 use App\AppCore\Domain\Service\PusherInterface;
 
 class MonitorApplicationTest extends \Codeception\Test\Unit

@@ -1,8 +1,8 @@
-<?php namespace App\Framework\Service\WebSockets;
+<?php namespace App\Framework\Service\Monitor\WebSockets;
 
-use App\Framework\Service\WebSockets\Context\Context;
-use App\Framework\Service\WebSockets\Context\WrappedContext;
-use App\Framework\Service\WebSockets\Context\Wrapper;
+use App\Framework\Service\Monitor\WebSockets\Context\Context;
+use App\Framework\Service\Monitor\WebSockets\Context\WrappedContext;
+use App\Framework\Service\Monitor\WebSockets\Context\Wrapper;
 use Codeception\Stub\Expected;
 
 class WrappedContextTest extends \Codeception\Test\Unit

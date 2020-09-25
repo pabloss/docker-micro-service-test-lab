@@ -6,7 +6,7 @@ namespace App\AppCore\Application\Save;
 use App\AppCore\Domain\Actors\Factory\EntityFactoryInterface;
 use App\AppCore\Domain\Actors\TestDTO;
 use App\AppCore\Domain\Repository\TestRepositoryInterface;
-use App\AppCore\Domain\Service\SaveDomainTestService;
+use App\AppCore\Domain\Service\Test\SaveDomainTestService;
 use App\AppCore\Domain\Service\UpdateTestService;
 
 class SaveTestApplication
@@ -36,8 +36,12 @@ class SaveTestApplication
      * @param EntityFactoryInterface  $entityFactory
      * @param UpdateTestService       $updateTestService
      */
-    public function __construct(SaveDomainTestService $service, TestRepositoryInterface $testRepository, EntityFactoryInterface $entityFactory, UpdateTestService $updateTestService)
-    {
+    public function __construct(
+        SaveDomainTestService $service,
+        TestRepositoryInterface $testRepository,
+        EntityFactoryInterface $entityFactory,
+        UpdateTestService $updateTestService
+    ) {
         $this->service = $service;
         $this->testRepository = $testRepository;
         $this->entityFactory = $entityFactory;
@@ -46,14 +50,13 @@ class SaveTestApplication
 
     public function save(TestDTO $testDTO)
     {
-        if(null === ($testEntity = $this->testRepository->findByHash($testDTO->getUuid()))) {
+        if (null === ($testEntity = $this->testRepository->findByHash($testDTO->getUuid()))) {
             $this->service->save(
-                $this->entityFactory->createTest($testDTO), null
+                $this->entityFactory->createTest($testDTO)
             );
         } else {
             $this->service->save(
-                $this->updateTestService->update($testEntity, $testDTO),
-                (string) $testEntity->getId()
+                $this->updateTestService->update($testEntity, $testDTO)
             );
         }
 

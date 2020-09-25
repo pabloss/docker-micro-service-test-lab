@@ -2,8 +2,9 @@
 namespace App\AppCore\Domain\Service;
 
 use App\AppCore\Domain\Repository\StatusRepositoryInterface;
+use App\AppCore\Domain\Service\Status\SaveStatus;
+use App\Framework\Entity\Factory\EntityFactory;
 use App\Framework\Entity\Status;
-use App\Framework\Factory\EntityFactory;
 
 class SaveStatusTest extends \Codeception\Test\Unit
 {

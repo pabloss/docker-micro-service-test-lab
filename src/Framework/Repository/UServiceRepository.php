@@ -21,7 +21,7 @@ class UServiceRepository extends ServiceEntityRepository implements uServiceRepo
         parent::__construct($registry, UService::class);
     }
 
-    public function persist(uServiceInterface $domain, ?string $id)
+    public function persist(uServiceInterface $domain)
     {
         $domain->setUuid($this->getUuidFromDir(\dirname($domain->getFile())));
         $this->getEntityManager()->persist($domain);

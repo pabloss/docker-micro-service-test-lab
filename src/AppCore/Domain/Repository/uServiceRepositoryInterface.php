@@ -7,8 +7,11 @@ use App\AppCore\Domain\Actors\uServiceInterface;
 
 interface uServiceRepositoryInterface
 {
-    public function persist(uServiceInterface $domain, ?string $id);
+    public function persist(uServiceInterface $domain);
+
     public function all();
+
     public function find(string $id);
+
     public function findByHash(string $hash);
 }

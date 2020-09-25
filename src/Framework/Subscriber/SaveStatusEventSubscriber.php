@@ -3,10 +3,11 @@ declare(strict_types=1);
 
 namespace App\Framework\Subscriber;
 
-use App\AppCore\Domain\Service\SaveStatus;
+use App\AppCore\Domain\Service\Status\SaveStatus;
 use App\Framework\Subscriber\Event\SaveStatusEvent;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class SaveStatusEventSubscriber implements \Symfony\Component\EventDispatcher\EventSubscriberInterface
+class SaveStatusEventSubscriber implements EventSubscriberInterface
 {
     /** @var SaveStatus */
     private $saveStatusService;

@@ -2,15 +2,16 @@
 
 namespace App\AppCore\Application;
 
+use App\AppCore\Application\Deploy\DeployApplication;
 use App\AppCore\Domain\Repository\uServiceEntityInterface;
 use App\AppCore\Domain\Repository\uServiceRepositoryInterface;
-use App\AppCore\Domain\Service\Build\BuildServiceInterface;
-use App\AppCore\Domain\Service\Build\Unpack\UnpackServiceInterface;
-use App\AppCore\Domain\Service\Command\BuildCommand;
-use App\AppCore\Domain\Service\Command\CommandFactoryInterface;
-use App\AppCore\Domain\Service\Command\CommandsCollectionInterface;
-use App\AppCore\Domain\Service\Command\RunCommand;
-use App\Framework\Files\Dir;
+use App\AppCore\Domain\Service\Deploy\Build\BuildServiceInterface;
+use App\AppCore\Domain\Service\Deploy\Build\Unpack\UnpackServiceInterface;
+use App\AppCore\Domain\Service\Deploy\Command\BuildCommand;
+use App\AppCore\Domain\Service\Deploy\Command\CommandFactoryInterface;
+use App\AppCore\Domain\Service\Deploy\Command\CommandsCollectionInterface;
+use App\AppCore\Domain\Service\Deploy\Command\RunCommand;
+use App\Framework\Service\Files\Dir;
 
 class DomainDeployApplicationTest extends \Codeception\Test\Unit
 {
@@ -37,7 +38,7 @@ class DomainDeployApplicationTest extends \Codeception\Test\Unit
 
         $repo = $this->prophesize(uServiceRepositoryInterface::class);
         $repo->find($id)->shouldBeCalled()->willReturn($uService->reveal());
-        $repo->persist($uService->reveal(), $id)->shouldBeCalled();
+        $repo->persist($uService->reveal())->shouldBeCalled();
 
         $buildService = $this->prophesize(BuildServiceInterface::class);
         $dir = $this->prophesize(Dir::class);
@@ -68,7 +69,7 @@ class DomainDeployApplicationTest extends \Codeception\Test\Unit
          *      - stosując zależność UnpackServiceInterface oraz Repo: rozpakuj (do nowej lokalizcji) i zapisz do bazy
          */
 
-        $repo->reveal()->persist($uService->reveal(), $id);
+        $repo->reveal()->persist($uService->reveal());
         $service->deploy($id, $unpackedDir . $id, 'imagePref', 'containerPref');
 
         $this->tester->assertEquals($unpackedDir . $id, $repo->reveal()->find($id)->getUnpacked());

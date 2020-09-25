@@ -4,9 +4,9 @@ declare(strict_types=1);
 namespace App\Framework\Service;
 
 use App\AppCore\Application\Save\SaveToFileSystemInterface;
+use App\AppCore\Domain\Actors\Factory\EntityFactoryInterface;
 use App\AppCore\Domain\Actors\FileInterface;
 use App\AppCore\Domain\Repository\uServiceRepositoryInterface;
-use App\Framework\Factory\EntityFactory;
 use App\Framework\Subscriber\Event\SaveStatusEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -25,11 +25,11 @@ class SaveToFileSystemService implements SaveToFileSystemInterface
      */
     private $uuid;
     /**
-     * @var EntityFactory
+     * @var EntityFactoryInterface
      */
     private $entityFactory;
 
-    public function __construct(EventDispatcherInterface $eventDispatcher, uServiceRepositoryInterface $serviceRepository, EntityFactory $entityFactory, Uuid $uuid)
+    public function __construct(EventDispatcherInterface $eventDispatcher, uServiceRepositoryInterface $serviceRepository, EntityFactoryInterface $entityFactory, Uuid $uuid)
     {
         $this->eventDispatcher = $eventDispatcher;
         $this->serviceRepository = $serviceRepository;

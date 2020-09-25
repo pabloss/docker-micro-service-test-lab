@@ -2,11 +2,10 @@
 
 namespace App\AppCore\Domain\Service;
 
-use App\AppCore\Domain\Actors\uServiceInterface;
 use App\AppCore\Domain\Repository\uServiceEntityInterface;
-use App\AppCore\Domain\Service\Build\Unpack\UnpackInterface;
-use App\AppCore\Domain\Service\Build\Unpack\UnpackService;
-use App\AppCore\Domain\Service\Build\Unpack\UnpackServiceInterface;
+use App\AppCore\Domain\Service\Deploy\Build\Unpack\UnpackInterface;
+use App\AppCore\Domain\Service\Deploy\Build\Unpack\UnpackService;
+use App\AppCore\Domain\Service\Deploy\Build\Unpack\UnpackServiceInterface;
 
 class UnpackServiceTest extends \Codeception\Test\Unit
 {

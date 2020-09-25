@@ -4,8 +4,8 @@ namespace App\Framework\Service;
 
 use App\AppCore\Domain\Actors\FileInterface;
 use App\AppCore\Domain\Repository\uServiceRepositoryInterface;
+use App\Framework\Entity\Factory\EntityFactory;
 use App\Framework\Entity\Status;
-use App\Framework\Factory\EntityFactory;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class SaveToFileSystemServiceTest extends \Codeception\Test\Unit

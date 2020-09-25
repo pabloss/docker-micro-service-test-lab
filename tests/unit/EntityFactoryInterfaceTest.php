@@ -3,8 +3,8 @@
 namespace App\Tests;
 
 use App\AppCore\Domain\Actors\TestDTO;
+use App\Framework\Entity\Factory\EntityFactory;
 use App\Framework\Entity\Test;
-use App\Framework\Factory\EntityFactory;
 
 class EntityFactoryInterfaceTest extends \Codeception\Test\Unit
 {

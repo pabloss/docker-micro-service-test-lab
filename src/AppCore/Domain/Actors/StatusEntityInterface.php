@@ -5,10 +5,15 @@ namespace App\AppCore\Domain\Actors;
 
 interface StatusEntityInterface
 {
-public function asArray();
-public function getCreated();
-public function getId();
-public function getStatusName();
-public function getUService();
-public function getUuid();
+    public function asArray();
+
+    public function getCreated();
+
+    public function getId();
+
+    public function getStatusName();
+
+    public function getUService();
+
+    public function getUuid();
 }

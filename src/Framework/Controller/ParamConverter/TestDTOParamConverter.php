@@ -25,6 +25,6 @@ class TestDTOParamConverter implements ParamConverterInterface
      */
     public function supports(ParamConverter $configuration)
     {
-        return true;
+        return TestDTO::class === $configuration->getClass();
     }
 }

@@ -2,7 +2,7 @@
 <?php
 declare(strict_types=1);
 
-use App\Framework\Service\WebSockets\Pusher;
+use App\Framework\Service\Monitor\WebSockets\Pusher;
 use Ratchet\Http\HttpServer;
 use Ratchet\Server\IoServer;
 use Ratchet\WebSocket\WsServer;

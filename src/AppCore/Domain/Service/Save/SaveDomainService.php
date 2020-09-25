@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\AppCore\Domain\Service\Save;
 
+use App\AppCore\Domain\Actors\Factory\EntityFactoryInterface;
 use App\AppCore\Domain\Repository\uServiceRepositoryInterface;
-use App\Framework\Factory\EntityFactory;
 
 class SaveDomainService implements SaveDomainServiceInterface
 {
@@ -17,7 +17,7 @@ class SaveDomainService implements SaveDomainServiceInterface
      */
     private $repo;
     /**
-     * @var EntityFactory
+     * @var EntityFactoryInterface
      */
     private $factory;
 
@@ -26,9 +26,9 @@ class SaveDomainService implements SaveDomainServiceInterface
      *
      * @param string                      $dirName
      * @param uServiceRepositoryInterface $repo
-     * @param EntityFactory               $factory
+     * @param EntityFactoryInterface      $factory
      */
-    public function __construct(string $dirName, uServiceRepositoryInterface $repo, EntityFactory $factory)
+    public function __construct(string $dirName, uServiceRepositoryInterface $repo, EntityFactoryInterface $factory)
     {
         $this->dirName = $dirName;
         $this->repo = $repo;
@@ -38,7 +38,7 @@ class SaveDomainService implements SaveDomainServiceInterface
     public function save(string $file)
     {
         $domain = $this->factory->createService($file, $this->dirName);
-        $this->repo->persist($domain, null);
+        $this->repo->persist($domain);
         return $domain;
     }
 }

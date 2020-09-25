@@ -4,7 +4,6 @@ namespace App\Framework\Repository;
 
 use App\AppCore\Domain\Repository\StatusRepositoryInterface;
 use App\Framework\Entity\Status;
-use App\Framework\Entity\UService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 

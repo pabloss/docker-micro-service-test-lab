@@ -7,7 +7,7 @@ use App\AppCore\Domain\Actors\Factory\EntityFactoryInterface;
 use App\AppCore\Domain\Actors\TestDTO;
 use App\AppCore\Domain\Repository\TestEntityInterface;
 use App\AppCore\Domain\Repository\TestRepositoryInterface;
-use App\AppCore\Domain\Service\SaveDomainTestService;
+use App\AppCore\Domain\Service\Test\SaveDomainTestService;
 use App\AppCore\Domain\Service\UpdateTestService;
 use App\Framework\Entity\Test;
 
@@ -23,17 +23,8 @@ class SaveTestApplicationTest extends \Codeception\Test\Unit
         $header = 'test_header';
         $url = 'test_url';
         $script = 'test_script';
-        $data = [
-            'uuid' => $uuid,
-            'requested_body' => $requestedBody,
-            'body' => $body,
-            'header' => $header,
-            'url' => $url,
-            'script' => $script,
-        ];
         $testEntity = $this->prophesize(Test::class);
         $testEntity->willImplement(TestEntityInterface::class);
-        $testEntity->getId()->willReturn($id)->shouldBeCalled();
         $testEntity->setUrl($url)->shouldBeCalled();
         $testEntity->setUuid($uuid)->shouldBeCalled();
         $testEntity->setScript($script)->shouldBeCalled();
@@ -71,13 +62,13 @@ class SaveTestApplicationTest extends \Codeception\Test\Unit
         $factory->createTest($testDTO->reveal())->willReturn($testEntity->reveal())->shouldBeCalled();
 
         $saveDomainTestService = $this->prophesize(SaveDomainTestService::class);
-        $saveDomainTestService->save($testEntity->reveal(), $id)->shouldBeCalled();
+        $saveDomainTestService->save($testEntity->reveal())->shouldBeCalled();
         $application = new SaveTestApplication($saveDomainTestService->reveal(), $testRepository->reveal(), $factory->reveal(), $updateTestService->reveal());
 
         $application->save($testDTO->reveal());
 
         $testRepository->findByHash($uuid)->willReturn(null)->shouldBeCalled();
-        $saveDomainTestService->save($testEntity->reveal(), null)->shouldBeCalled();
+        $saveDomainTestService->save($testEntity->reveal())->shouldBeCalled();
         $application->save($testDTO->reveal());
     }
 }

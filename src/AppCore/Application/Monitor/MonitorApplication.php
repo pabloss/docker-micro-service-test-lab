@@ -3,13 +3,13 @@ declare(strict_types=1);
 
 namespace App\AppCore\Application\Monitor;
 
-use App\AppCore\Domain\Service\Command\CommandRunnerInterface;
-use App\AppCore\Domain\Service\Command\CommandsCollectionInterface;
+use App\AppCore\Domain\Service\Deploy\Command\CommandRunnerInterface;
+use App\AppCore\Domain\Service\Deploy\Command\CommandsCollectionInterface;
 
 class MonitorApplication
 {
     /**
-     * @var \App\AppCore\Domain\Service\Command\CommandRunnerInterface
+     * @var CommandRunnerInterface
      */
     private $commandRunner;
 

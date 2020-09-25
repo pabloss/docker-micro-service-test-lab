@@ -3,6 +3,7 @@
 namespace App\Framework\Entity;
 
 use App\AppCore\Domain\Actors\StatusEntityInterface;
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -42,6 +43,34 @@ class Status implements StatusEntityInterface
         return $this->id;
     }
 
+    public function setId(int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    public function getUService(): ?UService
+    {
+        return $this->UService;
+    }
+
+    public function setUService(?UService $UService): self
+    {
+        $this->UService = $UService;
+
+        return $this;
+    }
+
+    public function asArray(): array
+    {
+        return [
+            'uuid' => $this->getUuid(),
+            'status_name' => $this->getStatusName(),
+            'created' => $this->getCreated(),
+        ];
+    }
+
     public function getUuid(): ?string
     {
         return $this->uuid;
@@ -66,44 +95,16 @@ class Status implements StatusEntityInterface
         return $this;
     }
 
-    public function getCreated(): ?\DateTimeInterface
+    public function getCreated(): ?DateTimeInterface
     {
         return $this->created;
     }
 
-    public function setCreated(\DateTimeInterface $created): self
+    public function setCreated(DateTimeInterface $created): self
     {
         $this->created = $created;
 
         return $this;
-    }
-
-    public function getUService(): ?UService
-    {
-        return $this->UService;
-    }
-
-    public function setUService(?UService $UService): self
-    {
-        $this->UService = $UService;
-
-        return $this;
-    }
-
-    public function setId(int $id): self
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    public function asArray(): array
-    {
-        return [
-            'uuid' => $this->getUuid(),
-            'status_name' => $this->getStatusName(),
-            'created' => $this->getCreated(),
-        ];
     }
 
 }

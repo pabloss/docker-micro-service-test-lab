@@ -39,7 +39,7 @@ services:
     ZMQContext:
         class: 'ZMQContext'
 
-    App\Framework\Service\WebSockets\WebSocketProcessor:
+    App\Framework\Service\Monitor\WebSockets\WebSocketProcessor:
         arguments:
             $bindHost: '%bind_host%'
             $bindPort: '%bind_port%'
@@ -55,26 +55,28 @@ services:
             $dirName: '%uploaded_directory%'
     ZipArchive:
         class: ZipArchive
-    App\Framework\Service\UnpackAdapter:
+    App\Framework\Service\Deploy\UnpackAdapter:
         arguments:
             $zipArchive: '@ZipArchive'
 
-    App\Framework\Service\WebSockets\Context\Context:
+    App\Framework\Service\Monitor\WebSockets\Context\Context:
         arguments:
             $context: '@ZMQContext'
             $bindHost: '%bind_host%'
             $bindPort: '%bind_port%'
 
-    App\Framework\Service\WebSockets\Context\ContextInterface: '@App\Framework\Service\WebSockets\Context\Context'
-    App\Framework\Service\WebSockets\Context\WrappedContext: ~
-    App\Framework\Service\Command\Fetcher\Fetcher: ~
-    App\Framework\Service\WebSockets\Context\WrappedContextInterface: '@App\Framework\Service\WebSockets\Context\WrappedContext'
-    App\AppCore\Application\Monitor\FetcherInterface: '@App\Framework\Service\Command\Fetcher\Fetcher'
-    App\Framework\Service\WebSockets\Context\WebSocketWatcherAdapter: ~
-    App\AppCore\Domain\Service\Command\CommandRunner:
+    App\Framework\Entity\Factory\EntityFactory: ~
+    App\AppCore\Domain\Actors\Factory\EntityFactoryInterface: '@App\Framework\Entity\Factory\EntityFactory'
+    App\Framework\Service\Monitor\WebSockets\Context\ContextInterface: '@App\Framework\Service\Monitor\WebSockets\Context\Context'
+    App\Framework\Service\Monitor\WebSockets\Context\WrappedContext: ~
+    App\Framework\Service\Monitor\Command\Fetcher\Fetcher: ~
+    App\Framework\Service\Monitor\WebSockets\Context\WrappedContextInterface: '@App\Framework\Service\Monitor\WebSockets\Context\WrappedContext'
+    App\AppCore\Application\Monitor\FetcherInterface: '@App\Framework\Service\Monitor\Command\Fetcher\Fetcher'
+    App\Framework\Service\Monitor\WebSockets\Context\WebSocketWatcherAdapter: ~
+    App\AppCore\Domain\Service\Deploy\Command\CommandRunner:
         arguments:
             $fetcher: '@App\AppCore\Application\Monitor\FetcherInterface'
-            $outPut: '@App\Framework\Service\WebSockets\Context\WebSocketWatcherAdapter'
+            $outPut: '@App\Framework\Service\Monitor\WebSockets\Context\WebSocketWatcherAdapter'
     App\AppCore\Domain\Repository\uServiceRepositoryInterface: '@App\Framework\Repository\UServiceRepository'
     AMQPStreamConnection:
         class: 'PhpAmqpLib\Connection\AMQPStreamConnection'
@@ -84,6 +86,6 @@ services:
             $user: '%rabbit.user%'
             $password: '%rabbit.password%'
 
-    App\Framework\Application\Consumer:
+    App\Framework\Application\Monitor\Consumer:
         arguments:
             $connection: '@AMQPStreamConnection'

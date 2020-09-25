@@ -15,6 +15,8 @@ class MakeConnection
 
     /**
      * MakeConnection constructor.
+     *
+     * @param EntityManagerInterface $entityManager
      */
     public function __construct(EntityManagerInterface $entityManager)
     {
