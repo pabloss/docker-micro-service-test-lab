@@ -207,10 +207,17 @@ class AppController extends AbstractController
      * @param Request $request
      *
      * @return Response
+     * @throws \Exception
      */
-    public function endpoint(Request $request, Hub $hub)
+    public function endpoint(Request $request)
     {
-        $hub->receive($request->getContent(), $request->headers->get('X-Foo'));
+        $entity = new \App\Framework\Entity\Request();
+        $entity->setContent($request->getContent());
+        $entity->setHeader($request->headers->get('X-Foo'));
+
+        $this->getDoctrine()->getManager()->persist($entity);
+        $this->getDoctrine()->getManager()->flush();
+
         return new Response();
     }
 
