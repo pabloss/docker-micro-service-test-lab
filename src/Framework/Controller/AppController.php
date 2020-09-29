@@ -162,7 +162,7 @@ class AppController extends AbstractController
      *
      * @return Response
      */
-    public function test(string $uuid, Request $request, Hub $hub)
+    public function test(string $uuid, Request $request)
     {
         //./client.php 'http://service-test-lab-new.local/endpoint' 'Hej udało się 3425345!' 'Bars'
         $uuid2 = uniqid();
@@ -173,7 +173,7 @@ class AppController extends AbstractController
             json_decode($request->getContent(), true)
         );
 
-        return new Response($hub->compare($uuid));
+        return new Response($this->hub->compare($uuid));
     }
 
     /**
