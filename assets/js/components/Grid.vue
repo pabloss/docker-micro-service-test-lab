@@ -32,6 +32,7 @@
                       header <input name="header" :id="entry['uuid'] + 'header'" v-model="entry['header']">
                     </label><br>
                     <button @click="test(entry['uuid'])">Test</button><br>
+                    {{ entry['test'] }}
                     <label :for="entry['uuid'] + 'requested_body'">
                       Requested body <input name="requested_body" :id="entry['uuid'] + 'requested_body'" v-model="entry['requested_body']">
                     </label><br>
@@ -71,7 +72,7 @@
                 ) {
                     console.log('Failed!!')
                 }
-            }
+            },
         },
         data: function () {
             const sortOrders = {};
@@ -80,7 +81,8 @@
             });
             return {
                 sortKey: '',
-                sortOrders: sortOrders
+                sortOrders: sortOrders,
+                testResult: {},
             }
         },
         computed: {
@@ -124,16 +126,24 @@
                     }
                 );
             },
+            getRow: function (uuid) {
+              return _.find(this.filteredHeroes, function (row) {
+                return row['uuid'] === uuid
+              });
+            },
             test: function(uuid){
-                const url = `http://${this.$BASE_HOST}/test/`;
-                this.axios.post(url + uuid,
-                    JSON.stringify(_.find(this.filteredHeroes, function(row) { return row['uuid'] === uuid}))
-                ).then(x => x.data);
+                let that =this;
+                this.axios.post(
+                    `http://${this.$BASE_HOST}/test/${uuid}`,
+                    JSON.stringify(this.getRow(uuid))
+                ).then(
+                    x => {that.filteredHeroes[_.findIndex(that.filteredHeroes, function (o) {return o.uuid === uuid})].test = x.data}
+                );
             },
             save: function(uuid){
-                const url = `http://${this.$BASE_HOST}/save-test/`;
-                this.axios.post(url + uuid,
-                    JSON.stringify(_.find(this.filteredHeroes, function(row) { return row['uuid'] === uuid})),
+                this.axios.post(
+                    `http://${this.$BASE_HOST}/save-test/${uuid}`,
+                    JSON.stringify(this.getRow(uuid)),
                     {
                       headers: {'Content-Type': 'application/json'}
                     }
