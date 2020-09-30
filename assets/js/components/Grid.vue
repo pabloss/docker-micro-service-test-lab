@@ -57,6 +57,9 @@
                                 <button class="app-form-button"  @click="save(entry['uuid'])">Save</button>
                                 <button class="app-form-button"  @click="test(entry['uuid'])">Test</button>
                               </div>
+                              <div class="">
+                                {{ entry['test'] }}
+                              </div>
                             </div>
                           </div>
                         </div>
