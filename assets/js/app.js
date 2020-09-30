@@ -24,7 +24,7 @@ const vue = new Vue({
         return {
             log: null,
             searchQuery: '',
-            gridColumns: [this.$uuid, this.$progressKey],
+            gridColumns: [this.$uuid, this.$progressKey, this.$created, this.$updated],
             gridData: [],
             testData: [],
             uuid: '',

@@ -19,6 +19,8 @@
     },
     "dependencies": {
         "axios": "^0.18.0",
+        "bootstrap": "^4.5.2",
+        "bootstrap-icons": "^1.0.0",
         "core-js": "2",
         "lodash": "^4.17.15",
         "vue-axios": "^2.1.4",

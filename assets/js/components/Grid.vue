@@ -15,30 +15,55 @@
         <tr v-for="entry in filteredHeroes">
             <td v-for="key in columns">
                 <span v-if="key !== 'progress'">{{entry[key]}}</span>
-                <span v-if="key === 'progress'">
-                    <button v-if="entry['init']||entry['progress']=== entry['max']" @click="deploy(entry['uuid'])">{{buttonText(entry['progress'],entry['max'])}}</button>
-                    <progress v-else-if="entry['progress']!== entry['max']" :value="entry['progress']" :max="entry['max']"></progress>
-                    <br>
-                    <label :for="entry['uuid'] + 'script'">
-                      Script <input name="script" :id="entry['uuid'] + 'script'" v-model="entry['script']"><br>
-                    </label>
-                    <label :for="entry['uuid'] + 'url'">
-                      Url <input name="url" :id="entry['uuid'] + 'url'" v-model="entry['url']">
-                    </label><br>
-                    <label :for="entry['uuid'] + 'body'">
-                      body <input name="body" :id="entry['uuid'] + 'body'" v-model="entry['body']">
-                    </label><br>
-                    <label :for="entry['uuid'] + 'header'">
-                      header <input name="header" :id="entry['uuid'] + 'header'" v-model="entry['header']">
-                    </label><br>
-                    <button @click="test(entry['uuid'])">Test</button><br>
-                    {{ entry['test'] }}
-                    <label :for="entry['uuid'] + 'requested_body'">
-                      Requested body <input name="requested_body" :id="entry['uuid'] + 'requested_body'" v-model="entry['requested_body']">
-                    </label><br>
-                    <br />
-                    <button @click="save(entry['uuid'])">Save</button>
-                </span>
+                <div v-if="key === 'progress'">
+                    <div class="background">
+                    <div class="container">
+                      <div class="screen">
+                        <div class="screen-body">
+                          <div class="screen-body-item">
+                            <div class="app-form">
+                              <div class="app-form-group">
+                                  <label class="app-title" :for="entry['uuid'] + 'script'">
+                                    Script
+                                  </label>
+                                  <input class="app-form-control" placeholder="Script" name="script" :id="entry['uuid'] + 'script'" v-model="entry['script']">
+                              </div>
+                              <div class="app-form-group">
+                                <label class="app-title" :for="entry['uuid'] + 'url'">
+                                  Url
+                                </label>
+                                <input class="app-form-control" placeholder="Url" name="url" :id="entry['uuid'] + 'url'" v-model="entry['url']">
+                              </div>
+                              <div class="app-form-group">
+                                <label class="app-title" :for="entry['uuid'] + 'body'">
+                                  Body
+                                </label>
+                                <input class="app-form-control" placeholder="body"  name="body" :id="entry['uuid'] + 'body'" v-model="entry['body']">
+                              </div>
+                              <div class="app-form-group">
+                                <label class="app-title" :for="entry['uuid'] + 'header'">
+                                  Header
+                                </label>
+                                <input class="app-form-control" placeholder="header" name="header" :id="entry['uuid'] + 'header'" v-model="entry['header']">
+                              </div>
+                              <div class="app-form-group">
+                                <label class="app-title" :for="entry['uuid'] + 'requested_body'">
+                                  Requested body
+                                </label>
+                                <input class="app-form-control" placeholder="Requested body"  name="requested_body" :id="entry['uuid'] + 'requested_body'" v-model="entry['requested_body']">
+                              </div>
+                              <div class="app-form-group buttons">
+                                <button class="app-form-button" v-if="entry['init']||entry['progress']=== entry['max']" @click="deploy(entry['uuid'])">{{buttonText(entry['progress'],entry['max'])}}</button>
+                                <button class="app-form-button"  @click="save(entry['uuid'])">Save</button>
+                                <button class="app-form-button"  @click="test(entry['uuid'])">Test</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
             </td>
         </tr>
         </tbody>
