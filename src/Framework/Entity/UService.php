@@ -4,6 +4,7 @@ namespace App\Framework\Entity;
 
 use App\AppCore\Domain\Repository\uServiceEntityInterface;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\PersistentCollection;
 
@@ -46,6 +47,16 @@ class UService implements uServiceEntityInterface
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $uuid;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $created;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $updated;
 
     public function __construct()
     {
@@ -102,18 +113,13 @@ class UService implements uServiceEntityInterface
     }
 
     /**
-     * @return ArrayCollection
+     * @return Collection|Test[]
      */
-    public function getTests(): ArrayCollection
+    public function getTests(): Collection
     {
-        return new ArrayCollection($this->tests->toArray());
+        return $this->tests;
     }
 
-    /**
-     * @param Test $test
-     *
-     * @return $this
-     */
     public function addTest(Test $test): self
     {
         if (!$this->tests->contains($test)) {
@@ -124,37 +130,52 @@ class UService implements uServiceEntityInterface
         return $this;
     }
 
-    /**
-     * @param Test $product
-     *
-     * @return $this
-     */
-    public function removeTest(Test $product): self
+    public function removeTest(Test $test): self
     {
-        if ($this->tests->contains($product)) {
-            $this->tests->removeElement($product);
+        if ($this->tests->contains($test)) {
+            $this->tests->removeElement($test);
             // set the owning side to null (unless already changed)
-            if ($product->getUService() === $this) {
-                $product->setUService(null);
+            if ($test->getUService() === $this) {
+                $test->setUService(null);
             }
         }
 
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getUuid()
+    public function getUuid(): ?string
     {
         return $this->uuid;
     }
 
-    /**
-     * @param mixed $uuid
-     */
-    public function setUuid($uuid): void
+    public function setUuid(?string $uuid): self
     {
         $this->uuid = $uuid;
+
+        return $this;
+    }
+
+    public function getCreated(): ?\DateTimeInterface
+    {
+        return $this->created;
+    }
+
+    public function setCreated(\DateTimeInterface $created): self
+    {
+        $this->created = $created;
+
+        return $this;
+    }
+
+    public function getUpdated(): ?\DateTimeInterface
+    {
+        return $this->updated;
+    }
+
+    public function setUpdated(?\DateTimeInterface $updated): self
+    {
+        $this->updated = $updated;
+
+        return $this;
     }
 }
