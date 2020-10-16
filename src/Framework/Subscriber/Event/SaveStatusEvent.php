@@ -4,8 +4,9 @@ declare(strict_types=1);
 namespace App\Framework\Subscriber\Event;
 
 use App\Framework\Entity\Status;
+use Symfony\Contracts\EventDispatcher\Event;
 
-class SaveStatusEvent extends \Symfony\Contracts\EventDispatcher\Event
+class SaveStatusEvent extends Event
 {
     const NAME = 'save.status';
 

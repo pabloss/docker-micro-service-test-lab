@@ -20,6 +20,7 @@ use App\Framework\Service\Files\UploadedFileAdapter;
 use App\Framework\Service\MakeConnection;
 use App\Framework\Service\Monitor\WebSockets\Context\WrappedContext;
 use App\Framework\Subscriber\Event\AfterSavingService;
+use App\Framework\Subscriber\Event\AfterSavingTestEvent;
 use App\Framework\Subscriber\Event\SaveStatusEvent;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -186,6 +187,7 @@ class AppController extends AbstractController
     public function saveTest(TestDTO $testDTO)
     {
         $this->application->save($testDTO);
+        $this->eventDispatcher->dispatch(new AfterSavingTestEvent($testDTO->getUuid()), AfterSavingTestEvent::NAME);
         return new JsonResponse([]);
     }
 

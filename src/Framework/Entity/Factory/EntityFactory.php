@@ -20,6 +20,7 @@ class EntityFactory implements EntityFactoryInterface
         $UService = new UService();
         $UService->setFile($file);
         $UService->setMovedToDir($movedToDir);
+        $UService->setCreated(new DateTime());
         return $UService;
     }
 
