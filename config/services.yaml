@@ -85,7 +85,3 @@ services:
             $port: '%rabbit.port%'
             $user: '%rabbit.user%'
             $password: '%rabbit.password%'
-
-    App\Framework\Application\Monitor\Consumer:
-        arguments:
-            $connection: '@AMQPStreamConnection'

@@ -34,6 +34,9 @@ class UpdateTestEventSubscriber  implements EventSubscriberInterface
 
         if(null !== $test && null !== $uService) {
             $test->setUService($uService);
+            $this->em->persist($uService);
+            $this->em->persist($test);
+            $this->em->flush();
         }
     }
 }

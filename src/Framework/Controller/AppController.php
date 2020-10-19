@@ -213,13 +213,9 @@ class AppController extends AbstractController
      */
     public function endpoint(Request $request)
     {
-        $entity = new \App\Framework\Entity\Request();
-        $entity->setContent($request->getContent());
-        $entity->setHeader($request->headers->get('X-Foo'));
-
-        $this->getDoctrine()->getManager()->persist($entity);
-        $this->getDoctrine()->getManager()->flush();
-
+        $redis = new \Redis();
+        $redis->pconnect('127.0.0.1');
+        $redis->set($request->headers->get('X-Foo'), $request->getContent());
         return new Response();
     }
 

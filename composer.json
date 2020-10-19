@@ -40,7 +40,8 @@
         "symfony/webpack-encore-bundle": "^1.7",
         "symfony/yaml": "4.3.*",
         "thruway/pawl-transport": "^0.5.1",
-        "voryx/thruway": "^0.5.3"
+        "voryx/thruway": "^0.5.3",
+        "ext-redis": "*"
     },
     "require-dev": {
         "codeception/c3": "^2.4",
