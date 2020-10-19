@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Framework\Service\Files;
 
+use App\AppCore\Domain\Service\DirInterface;
+
 class Dir implements DirInterface
 {
     /**

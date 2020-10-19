@@ -7,7 +7,7 @@ use App\AppCore\Domain\Repository\uServiceRepositoryInterface;
 use App\AppCore\Domain\Service\Deploy\Build\BuildServiceInterface;
 use App\AppCore\Domain\Service\Deploy\Build\Unpack\UnpackServiceInterface;
 use App\AppCore\Domain\Service\Deploy\Command\CommandFactoryInterface;
-use App\Framework\Service\Files\Dir;
+use App\AppCore\Domain\Service\DirInterface;
 
 class DeployApplication
 {
@@ -25,7 +25,7 @@ class DeployApplication
      */
     private $buildService;
     /**
-     * @var Dir
+     * @var DirInterface
      */
     private $dir;
     /**
@@ -38,14 +38,14 @@ class DeployApplication
      *
      * @param UnpackServiceInterface      $service
      * @param BuildServiceInterface       $buildService
-     * @param Dir                         $dir
+     * @param DirInterface                $dir
      * @param CommandFactoryInterface     $commandFactory
      * @param uServiceRepositoryInterface $repository
      */
     public function __construct(
         UnpackServiceInterface $service,
         BuildServiceInterface $buildService,
-        Dir $dir,
+        DirInterface $dir,
         CommandFactoryInterface $commandFactory,
         uServiceRepositoryInterface $repository
     ) {
