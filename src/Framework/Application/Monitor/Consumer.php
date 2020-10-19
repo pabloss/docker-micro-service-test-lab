@@ -31,7 +31,7 @@ class Consumer
 
     public function consume(string $exchangeName)
     {
-        $this->corr_id = $exchangeName;
+        $this->corr_id = \uniqid();
         list($callbackQueue, , ) = $this->channel->queue_declare("", false, false, true, false);
         $this->channel->basic_consume($callbackQueue, '', false, true, false, false, [$this, 'onResponse']);
         $msg = new AMQPMessage(
