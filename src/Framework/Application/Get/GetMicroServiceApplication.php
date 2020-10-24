@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\AppCore\Application;
+namespace App\Framework\Application\Get;
 
 use App\AppCore\Domain\Repository\TestRepositoryInterface;
 use App\AppCore\Domain\Repository\uServiceRepositoryInterface;
@@ -11,6 +11,8 @@ use App\Framework\Entity\UService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use function array_map;
+
+const DB_DATE_TIME_FORMAT = 'Y-m-d H:i:s';
 
 class GetMicroServiceApplication
 {
@@ -63,8 +65,8 @@ class GetMicroServiceApplication
             return 0 === $uService->getTests()->count() ?
                 [
                     'uuid' => $uService->getUuid(),
-                    'created' => $uService->getCreated()->format('Y-m-d H:i:s'),
-                    'updated' => $status ? $status->getCreated()->format('Y-m-d H:i:s'): '',
+                    'created' => $uService->getCreated()->format(DB_DATE_TIME_FORMAT),
+                    'updated' => $status ? $status->getCreated()->format(DB_DATE_TIME_FORMAT): '',
                     'url' => '',
                     'script' => '',
                     'header' => '',
@@ -75,8 +77,8 @@ class GetMicroServiceApplication
                 \array_merge(
                     Test::asArray($uService->getTests()->last()),
                     [
-                        'created' => $uService->getCreated()->format('Y-m-d H:i:s'),
-                        'updated' => $status ? $status->getCreated()->format('Y-m-d H:i:s'): '',
+                        'created' => $uService->getCreated()->format(DB_DATE_TIME_FORMAT),
+                        'updated' => $status ? $status->getCreated()->format(DB_DATE_TIME_FORMAT): '',
                     ]
                 );
         }, $this->getAll());
