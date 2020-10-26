@@ -1,7 +1,7 @@
 <template>
   <div>
-    <label>UUID list</label>
-    <select name="uuid-list" v-model="selectedUuid">
+    <label :for="createId('select_uuid')">UUID list</label>
+    <select name="uuid-list" v-model="selectedUuid" :id="createId('select_uuid')">
       <option v-for="uuidItem in uuidList" :value="uuidItem">{{ uuidItem }}</option>
     </select>
     <button @click="save()">Save Connection</button>
@@ -30,6 +30,10 @@ export default {
       ;
   },
   methods: {
+    createId(field) {
+      const separator = "_";
+      return this.uuid + separator + field;
+    },
     save() {
         this.axios.get(`http://${this.$BASE_HOST}/connect/${this.uuid}/${this.selectedUuid}`);
     },
