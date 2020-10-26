@@ -5,7 +5,7 @@ import axios from 'axios';
 import vueAxios from 'vue-axios';
 import Upload from './components/Upload';
 import Terminal from './components/Terminal';
-import Grid from "./components/Grid";
+import MicroServiceList from "./components/MicroServiceList";
 
 import './service/autobahn';
 import './config/consts';
@@ -19,12 +19,12 @@ Vue.use(vueAxios, axios);
  */
 const vue = new Vue({
     el: '#app',
-    components: {Upload, Terminal, Grid},
+    components: {Upload, Terminal, MicroServiceList},
     data() {
         return {
             log: null,
             searchQuery: '',
-            gridColumns: [this.$uuid, this.$progressKey, this.$created, this.$updated],
+            gridColumns: [this.$uuid, this.$progressKey, this.$created, this.$updated, this.$connectWith],
             gridData: [],
             testData: [],
             uuid: '',
@@ -75,6 +75,14 @@ const vue = new Vue({
             if(!_.find(vue.gridData, function(row) { return row[vue.$indexKey] === data[vue.$indexKey] })){
                 vue.gridData.push(vue.init(data));
             }
+        },
+        deleteRow: function (uuid) {
+            console.log(uuid);
+            _.remove(vue.gridData, function (o) {
+                    console.log(o.uuid === uuid);
+                    return o.uuid === uuid
+                }
+            );
         },
         updateRow: function (data) {
             vue.gridData = _.map(vue.gridData, function(row) {

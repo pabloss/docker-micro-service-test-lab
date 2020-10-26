@@ -4,6 +4,7 @@ Vue.prototype.$targetFileKey = 'target_file';
 Vue.prototype.$targetDirKey = 'target_dir';
 Vue.prototype.$progressKey = 'progress';
 Vue.prototype.$uuid = 'uuid';
+Vue.prototype.$connectWith = 'connect_with';
 Vue.prototype.$created = 'created';
 Vue.prototype.$updated = 'updated';
 Vue.prototype.$initKey = 'init';

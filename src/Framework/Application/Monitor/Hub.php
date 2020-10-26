@@ -3,40 +3,57 @@ declare(strict_types=1);
 
 namespace App\Framework\Application\Monitor;
 
-use App\AppCore\Domain\Repository\TestRepositoryInterface;
-use PhpAmqpLib\Connection\AMQPStreamConnection;
+use App\AppCore\Domain\Actors\TestDTO;
+use App\Framework\Service\Test\Connection;
 
 class Hub
 {
+    const REDIS_HOST = '127.0.0.1';
     /**
-     * @var TestRepositoryInterface
-     */
-    private $testRepository;
-    /**
-     * @var AMQPStreamConnection
+     * @var Consumer
      */
     private $consumer;
+    /**
+     * @var Connection
+     */
+    private $connection;
 
     /**
      * Hub constructor.
      *
-     * @param TestRepositoryInterface $testRepository
-     * @param Consumer                $consumer
+     * @param Consumer   $consumer
+     * @param Connection $connection
      */
-    public function __construct(TestRepositoryInterface $testRepository, Consumer $consumer)
+    public function __construct(Consumer $consumer, Connection $connection)
     {
-        $this->testRepository = $testRepository;
         $this->consumer = $consumer;
+        $this->connection = $connection;
     }
 
     /**
      * Porównanie to odpytanie z kolejki
-     * @param string $uuid
+     *
+     * @param TestDTO $testDTO
      *
      * @return string
      */
-    public function compare(string $uuid)
+    public function compare(TestDTO $testDTO)
     {
-        return $this->testRepository->findByHash($uuid)->getRequestedBody() === $this->consumer->consume($uuid) ? 'PASSED': 'FAILED';
+        return $testDTO->getRequestedBody() === $this->consumer->consume($this->chooseUuid($testDTO)) ? 'PASSED': 'FAILED';
+    }
+
+    public function receiveRequest(string $header, string $content): void
+    {
+        $redis = new \Redis();
+        $redis->pconnect(self::REDIS_HOST);
+        $redis->set($header, $content);
+    }
+
+    private function chooseUuid(TestDTO $testDTO)
+    {
+        if(!(empty($nextUuid = $this->connection->getNextUuid($testDTO->getUuid())))){
+            return $nextUuid;
+        }
+        return $testDTO->getUuid();
     }
 }

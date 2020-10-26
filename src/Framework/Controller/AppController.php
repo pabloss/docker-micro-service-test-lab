@@ -6,6 +6,7 @@ namespace App\Framework\Controller;
 use App\AppCore\Application\Deploy\DeployApplication;
 use App\AppCore\Application\Save\SaveTestApplication;
 use App\AppCore\Domain\Actors\Factory\EntityFactoryInterface;
+use App\AppCore\Domain\Actors\Factory\TestDTOFactoryInterface;
 use App\AppCore\Domain\Actors\TestDTO;
 use App\AppCore\Domain\Repository\TestRepositoryInterface;
 use App\AppCore\Domain\Repository\uServiceRepositoryInterface;
@@ -17,8 +18,8 @@ use App\Framework\Application\Save\FrameworkSaveApplication;
 use App\Framework\Entity\Status;
 use App\Framework\Service\Files\Dir;
 use App\Framework\Service\Files\UploadedFileAdapter;
-use App\Framework\Service\MakeConnection;
-use App\Framework\Service\Monitor\WebSockets\Context\WrappedContext;
+use App\Framework\Service\Test\Connection;
+use App\Framework\Service\Test\Docker;
 use App\Framework\Subscriber\Event\AfterSavingService;
 use App\Framework\Subscriber\Event\AfterSavingTestEvent;
 use App\Framework\Subscriber\Event\SaveStatusEvent;
@@ -31,7 +32,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use function array_map;
-use function json_decode;
 use function uniqid;
 
 /**
@@ -41,8 +41,6 @@ use function uniqid;
  */
 class AppController extends AbstractController
 {
-    const IMAGE_PREFIX = 'image_prefix';
-    const CONTAINER_PREFIX = 'container_prefix';
     /**
      * @var FrameworkSaveApplication
      */
@@ -64,16 +62,6 @@ class AppController extends AbstractController
      */
     private $trigger;
     /**
-     * @var MakeConnection
-     */
-    private $makeConnection;
-
-    /**
-     * @var WrappedContext $context
-     */
-    private $context;
-
-    /**
      * @var Hub $hub
      */
     private $hub;
@@ -89,7 +77,19 @@ class AppController extends AbstractController
     private $entityFactory;
 
     /** @var SaveTestApplication */
-    private $application;
+    private $saveTestApplication;
+    /**
+     * @var TestDTOFactoryInterface
+     */
+    private $testDTOFactory;
+    /**
+     * @var Docker
+     */
+    private $docker;
+    /**
+     * @var Connection
+     */
+    private $connection;
 
     /**
      * AppController constructor.
@@ -100,12 +100,13 @@ class AppController extends AbstractController
      * @param uServiceRepositoryInterface $serviceRepository
      * @param Trigger                     $trigger
      * @param Dir                         $dir
-     * @param MakeConnection              $makeConnection
-     * @param WrappedContext              $context
      * @param Hub                         $hub
      * @param EventDispatcherInterface    $eventDispatcher
      * @param EntityFactoryInterface      $entityFactory
      * @param SaveTestApplication         $saveTestApplication
+     * @param TestDTOFactoryInterface     $testDTOFactory
+     * @param Docker                      $docker
+     * @param Connection                  $connection
      */
     public function __construct(
         FrameworkSaveApplication $saveApplication,
@@ -114,25 +115,27 @@ class AppController extends AbstractController
         uServiceRepositoryInterface $serviceRepository,
         Trigger $trigger,
         Dir $dir,
-        MakeConnection $makeConnection,
-        WrappedContext $context,
         Hub $hub,
         EventDispatcherInterface $eventDispatcher,
         EntityFactoryInterface $entityFactory,
-        SaveTestApplication $saveTestApplication
+        SaveTestApplication $saveTestApplication,
+        TestDTOFactoryInterface $testDTOFactory,
+        Docker $docker,
+        Connection $connection
     ) {
         $this->saveApplication = $saveApplication;
+        $this->saveTestApplication = $saveTestApplication;
         $this->deployApplication = $deployApplication;
-        $this->testRepository = $testRepository;
         $this->dir = $dir;
         $this->trigger = $trigger;
-        $this->makeConnection = $makeConnection;
-        $this->context = $context;
         $this->hub = $hub;
-        $this->serviceRepository = $serviceRepository;
         $this->eventDispatcher = $eventDispatcher;
         $this->entityFactory = $entityFactory;
-        $this->application = $saveTestApplication;
+        $this->testDTOFactory = $testDTOFactory;
+        $this->docker = $docker;
+        $this->serviceRepository = $serviceRepository;
+        $this->testRepository = $testRepository;
+        $this->connection = $connection;
     }
 
     /**
@@ -155,26 +158,35 @@ class AppController extends AbstractController
         return new JsonResponse($application->getAllAsArray());
     }
 
+    /**
+     * @Route("/get-all-uuids", name="get_all_uuids")
+     * @param GetMicroServiceApplication $application
+     *
+     * @return JsonResponse
+     */
+    public function getAllUuids(GetMicroServiceApplication  $application)
+    {
+        return new JsonResponse($application->getAllUuids());
+    }
 
     /**
-     * @Route("/test/{uuid}", name="test")
-     * @param string  $uuid
-     * @param Request $request
+     * @Route("/test", name="test")
+     * @param TestDTO $testDTO
      *
      * @return Response
      */
-    public function test(string $uuid, Request $request)
+    public function test(TestDTO $testDTO)
     {
         //./client.php 'http://service-test-lab-new.local/endpoint' 'Hej udało się 3425345!' 'Bars'
-        $uuid2 = uniqid();
+        $uuid = uniqid();
         $this->trigger->runRequest(
-            $this->findDockerFileDir($uuid),
-            self::IMAGE_PREFIX . $uuid2,
-            self::CONTAINER_PREFIX . $uuid2,
-            json_decode($request->getContent(), true)
+            $this->docker->findDockerFileDir($testDTO->getUuid()),
+            $this->docker->createImagePrefix($uuid),
+            $this->docker->createContainerPrefix($uuid),
+            $testDTO
         );
 
-        return new Response($this->hub->compare($uuid));
+        return new Response($this->hub->compare($testDTO));
     }
 
     /**
@@ -186,7 +198,7 @@ class AppController extends AbstractController
      */
     public function saveTest(TestDTO $testDTO)
     {
-        $this->application->save($testDTO);
+        $this->saveTestApplication->save($testDTO);
         $this->eventDispatcher->dispatch(new AfterSavingTestEvent($testDTO->getUuid()), AfterSavingTestEvent::NAME);
         return new JsonResponse([]);
     }
@@ -200,7 +212,7 @@ class AppController extends AbstractController
      */
     public function connect(string $uuid1, string $uuid2)
     {
-        $this->makeConnection->make($uuid1, $uuid2);
+        $this->connection->make($uuid1, $uuid2);
         return new Response();
     }
 
@@ -209,13 +221,22 @@ class AppController extends AbstractController
      * @param Request $request
      *
      * @return Response
-     * @throws \Exception
      */
     public function endpoint(Request $request)
     {
-        $redis = new \Redis();
-        $redis->pconnect('127.0.0.1');
-        $redis->set($request->headers->get('X-Foo'), $request->getContent());
+        $this->hub->receiveRequest($request->headers->get('X-Foo'), $request->getContent());
+
+        $uuid = uniqid();
+
+        if(!empty($uuid2 = $this->connection->getNextUuid($request->headers->get('X-Foo')))) {
+            $this->trigger->runRequest(
+                $this->docker->findDockerFileDir($uuid2),
+                $this->docker->createImagePrefix($uuid),
+                $this->docker->createContainerPrefix($uuid),
+                $this->testDTOFactory->create($this->testRepository->findByHash($uuid2), $request->getContent())
+            );
+        }
+
         return new Response();
     }
 
@@ -227,15 +248,15 @@ class AppController extends AbstractController
      */
     public function upload(Request $request)
     {
-        $uniqid = uniqid();
+        $uuid = uniqid();
 
         $this->saveApplication->save(
             new UploadedFileAdapter($request->files->all()['files']),
-            $this->dir->sureTargetDirExists($this->getParameter('uploaded_directory') . '/' . $uniqid),
+            $this->dir->sureTargetDirExists($this->getParameter('uploaded_directory') . '/' . $uuid),
             new DateTime()
         );
-        $this->eventDispatcher->dispatch(new AfterSavingService($uniqid), AfterSavingService::NAME);
-        return new Response($uniqid);
+        $this->eventDispatcher->dispatch(new AfterSavingService($uuid), AfterSavingService::NAME);
+        return new Response($uuid);
     }
 
     /**
@@ -246,21 +267,20 @@ class AppController extends AbstractController
      */
     public function deploy(Request $request)
     {
-        $uniqid = $request->getContent();
-
-        $this->deployApplication->deploy((string)($this->serviceRepository->findOneBy(['uuid' => $uniqid])->getId()),
-            $this->dir->sureTargetDirExists($this->getParameter('unpacked_directory') . '/' . $uniqid),
-            self::IMAGE_PREFIX,
-            self::CONTAINER_PREFIX);
+        $this->deployApplication->deploy(
+            (string)$this->serviceRepository->findByHash($request->getContent())->getId(),
+            $this->dir->sureTargetDirExists($this->getParameter('unpacked_directory') . '/' . $request->getContent()),
+            Docker::IMAGE_PREFIX,
+            Docker::CONTAINER_PREFIX
+        );
         $this->eventDispatcher->dispatch(
-            new SaveStatusEvent($this->entityFactory->createStatusEntity(
-                $uniqid,
-                'service_deployed',
-                new DateTime()
-            )),
+            new SaveStatusEvent($this->entityFactory->createStatusEntity($request->getContent(), 'service_deployed', new DateTime())),
             SaveStatusEvent::NAME
         );
-        $this->eventDispatcher->dispatch(new AfterSavingService($uniqid), AfterSavingService::NAME);
+        $this->eventDispatcher->dispatch(
+            new AfterSavingService($request->getContent()),
+            AfterSavingService::NAME
+        );
         return new Response();
     }
 
@@ -274,36 +294,24 @@ class AppController extends AbstractController
      */
     public function getStatus(Request $request, GetStatus $getStatus)
     {
-        $uniqid = $request->getContent();
-
         return new JsonResponse(
             array_map(
                 function (Status $entity) {
                     return $entity->asArray();
                     },
-                $getStatus->getByHash($uniqid)
+                $getStatus->getByHash($request->getContent())
             )
         );
-
-
     }
 
     /**
      * @Route("/c3/report/{suffix}", name="c3")
+     * @param string $suffix
+     *
      * @return Response
      */
     public function c3(string $suffix)
     {
         return new Response();
-    }
-
-    /**
-     * @param string $uuid
-     *
-     * @return string
-     */
-    private function findDockerFileDir(string $uuid): string
-    {
-        return $this->dir->findParentDir($this->testRepository->findByHash($uuid)->getUService()->getUnpacked(), 'Dockerfile');
     }
 }

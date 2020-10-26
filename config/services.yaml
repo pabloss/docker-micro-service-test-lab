@@ -66,7 +66,9 @@ services:
             $bindPort: '%bind_port%'
 
     App\Framework\Entity\Factory\EntityFactory: ~
+    App\Framework\Entity\Factory\TestDTOFactory: ~
     App\AppCore\Domain\Actors\Factory\EntityFactoryInterface: '@App\Framework\Entity\Factory\EntityFactory'
+    App\AppCore\Domain\Actors\Factory\TestDTOFactoryInterface: '@App\Framework\Entity\Factory\TestDTOFactory'
     App\Framework\Service\Monitor\WebSockets\Context\ContextInterface: '@App\Framework\Service\Monitor\WebSockets\Context\Context'
     App\Framework\Service\Monitor\WebSockets\Context\WrappedContext: ~
     App\Framework\Service\Monitor\Command\Fetcher\Fetcher: ~

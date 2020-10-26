@@ -84,6 +84,13 @@ class GetMicroServiceApplication
         }, $this->getAll());
     }
 
+    public function getAllUuids()
+    {
+        return array_map(function (UService $uService){
+            return $uService->getUuid();
+        }, $this->getAll());
+    }
+
     public function getAll()
     {
         return $this->repository->all();

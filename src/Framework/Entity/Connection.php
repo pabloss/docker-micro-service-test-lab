@@ -5,7 +5,7 @@ namespace App\Framework\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\ConnectionRepository")
+ * @ORM\Entity(repositoryClass="App\Framework\Repository\ConnectionRepository")
  */
 class Connection
 {
