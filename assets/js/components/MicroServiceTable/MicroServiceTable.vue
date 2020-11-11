@@ -12,19 +12,17 @@
         </tr>
         </thead>
         <tbody>
-          <micro-service-item v-for="entry in filteredHeroes" :columns="columns" :entry="entry"  v-bind:key="entry.uuid"></micro-service-item>
+          <Row v-for="entry in filteredHeroes" :entry="entry" v-bind:key="entry.uuid" ></Row>
         </tbody>
     </table>
 </template>
 
 <script>
     import _ from "lodash";
-    import MicroServiceItem from "./MicroServiceItem";
-
-
+    import Row from "./Row";
     export default {
-      name: "MicroServiceList",
-      components: {MicroServiceItem},
+      name: "micro-service-table",
+      components: {Row},
       props: {
             testData: Array,
             heroes: Array,

@@ -2,6 +2,7 @@
  {% block stylesheets %}
      {{ parent() }}
      <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap" rel="stylesheet">
+     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital@1&display=swap" rel="stylesheet">
  {% endblock %}
 
 
@@ -9,12 +10,16 @@
     <h1>Adding a new product</h1>
     <div id="app">
         <upload  @upload="onUpload"></upload>
-
-        <div id="demo">
+        <div>
+            <micro-service-lab></micro-service-lab>
+        </div>
+        <div id="demo" style="clear: both;">
             <form id="search">
-                Search <input name="query" v-model="searchQuery">
+                <label>Search
+                    <input name="query" v-model="searchQuery">
+                </label>
             </form>
-            <micro-service-list
+            <micro-service-table
                     :heroes="gridData"
                     :columns="gridColumns"
                     :filter-key="searchQuery"
@@ -22,7 +27,7 @@
                     :uuid="uuid"
                     @delete-row="deleteRow"
             >
-            </micro-service-list>
+            </micro-service-table>
         </div>
 
         <terminal :prompt="' '" :show-initial-cd="false" :show-help-message="false" :show-header="false" :greeting="false" :log="log"></terminal>

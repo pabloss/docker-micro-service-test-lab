@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+ {% block stylesheets %}
+     {{ parent() }}
+     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap" rel="stylesheet">
+ {% endblock %}
+
+
+{% block content %}
+    <h1>Test micro service: {{ uuid }}</h1>
+    <div id="app">
+        <TestDefinition uuid="{{ uuid }}"></TestDefinition>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ encore_entry_script_tags('microservice/app') }}
+{% endblock %}

@@ -1,6 +1,5 @@
 <template>
         <div class="container">
-        <button @click="deploy" id="deploy">Deploy</button>
             <!--UPLOAD-->
             <form id="upload" enctype="multipart/form-data" novalidate v-if="isInitial || isSaving">
                 <h1>Upload images</h1>
@@ -150,4 +149,5 @@
         text-align: center;
         padding: 50px 0;
     }
+
 </style>

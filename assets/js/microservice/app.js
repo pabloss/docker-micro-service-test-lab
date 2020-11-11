@@ -1,57 +1,41 @@
-import '../css/app.css';
+import '../../css/app.css';
 
 import Vue from 'vue';
 
 // config
-import './config/consts';
+import '../config/consts';
 
 // libs
 import axios from 'axios';
 import vueAxios from 'vue-axios';
-import VueKonva from 'vue-konva';
-import drag from 'v-drag';
 import _ from 'lodash';
 
 // components
-import Upload from './components/Module/Upload';
-import Terminal from './components/Terminal';
-import MicroServiceTable from "./components/MicroServiceTable/MicroServiceTable";
-import TestDefinition from "./components/MicroServiceLab/MicroServiceList/Test/TestDefinition";
-import MicroServiceLab from "./components/MicroServiceLab/MicroServiceLab";
+import Upload from '../components/Module/Upload';
+import Terminal from '../components/Terminal';
+import MicroServiceTable from "../components/MicroServiceTable/MicroServiceTable";
+import TestDefinition from "../components/MicroServiceLab/MicroServiceList/Test/TestDefinition";
 
 // services
-import './service/autobahn';
+import '../service/autobahn';
 
-Vue.use(vueAxios,axios);
-Vue.use(VueKonva);
-Vue.use(drag);
+Vue.use(vueAxios, axios);
 
 /**
  * Create a fresh Vue Application instance
  */
 const vue = new Vue({
     el: '#app',
-    components: {Upload, Terminal, MicroServiceTable, TestDefinition, MicroServiceLab},
+    components: {Upload, Terminal, MicroServiceTable, TestDefinition},
     data() {
         return {
             log: null,
             searchQuery: '',
-            gridColumns: [this.$uuid, this.$created, this.$updated],
+            gridColumns: [this.$uuid, this.$progressKey, this.$created, this.$updated, this.$connectWith],
             gridData: [],
             testData: [],
             uuid: '',
         }
-    },
-    created() {
-        const url = `http://${this.$BASE_HOST}/api/get-grid-content/`;
-        this.axios.get(url).then(
-            x =>  {
-                x.data.forEach(function (row) {
-                    vue.insertRow(row);
-                });
-                console.log(x.data);
-            }
-        );
     },
     mounted() {
         const conn = new ab.Session('ws://'+this.$BASE_HOST+':'+this.$WS_PORT,
@@ -113,7 +97,7 @@ const vue = new Vue({
         },
         saveUuid: function (event) {
             console.log(event)
-        },
+        }
     }
 });
 console.log('Hello Webpack Encore! Edit me in assets/js/app.js');

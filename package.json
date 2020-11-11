@@ -22,9 +22,12 @@
         "bootstrap": "^4.5.2",
         "bootstrap-icons": "^1.0.0",
         "core-js": "2",
+        "konva": "^7.1.4",
         "lodash": "^4.17.15",
+        "v-drag": "^2.1.3",
         "vue-axios": "^2.1.4",
         "vue-bash": "^2.0.2",
+        "vue-konva": "^2.1.6",
         "vue-router": "^3.0.1",
         "vue-terminal": "^1.1.0",
         "vue-terminal-unix": "^1.0.10"
