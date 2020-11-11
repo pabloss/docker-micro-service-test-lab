@@ -6,7 +6,7 @@
         <request :request="expectedRequest" :uuid="uuid" :legend="'Expected Request'" :disabled="'disabled'"></request>
       </div>
       <button v-on:click.stop.prevent="save()" id="save-test">Save Test</button>
-      <input type="submit" name="Test" value="Test"/>
+      <input type="submit" name="Test" value="Test" @click.prevent.stop="test()" :class="testResult" />
     </form>
   </div>
 </template>
@@ -29,6 +29,7 @@ export default {
         header: '',
         body: '',
       },
+      testResult: '',
     };
   },
   props: {
@@ -68,6 +69,27 @@ export default {
         console.log(x.data);
       });
     },
+    test: function () {
+      this.axios.post(
+          `http://${this.$BASE_HOST}/test`,
+          JSON.stringify(
+              {
+                uuid: this.uuid,
+                script: this.setRequest.script,
+                url: this.setRequest.url,
+                body: this.setRequest.body,
+                header: this.setRequest.header,
+                requested_body: this.expectedRequest.body,
+              }
+          ),
+          {
+            headers: {'Content-Type': 'application/json'}
+          }
+      ).then(x => {
+        // x.data
+        this.testResult = x.data.toString().toLowerCase();
+      });
+    },
   },
 }
 </script>
@@ -93,6 +115,14 @@ input[name="Test"], button#save-test {
 input[name="Test"] {
   background-color: #2980b9;
 }
+
+input[name="Test"].failed {
+  background-color: #f11313;
+}
+input[name="Test"].passed {
+  background-color: #228d29;
+}
+
 button#save-test {
   background-color: black;
 }
