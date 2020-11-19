@@ -15,9 +15,8 @@ import _ from 'lodash';
 // components
 import Upload from './components/Module/Upload';
 import Terminal from './components/Terminal';
-import MicroServiceTable from "./components/MicroServiceTable/MicroServiceTable";
-import TestDefinition from "./components/MicroServiceLab/MicroServiceList/Test/TestDefinition";
-import MicroServiceLab from "./components/MicroServiceLab/MicroServiceLab";
+import MicroServiceTableContainer from "./components/MicroServiceTable/MicroServiceTableContainer";
+import MicroServiceLabContainer from "./components/MicroServiceLab/MicroServiceLabContainer";
 
 // services
 import './service/autobahn';
@@ -26,19 +25,24 @@ Vue.use(vueAxios,axios);
 Vue.use(VueKonva);
 Vue.use(drag);
 
+Vue.filter('capitalize', function (value) {
+    if (!value) return ''
+    value = value.toString()
+    return value.charAt(0).toUpperCase() + value.slice(1)
+})
+
 /**
  * Create a fresh Vue Application instance
  */
 const vue = new Vue({
     el: '#app',
-    components: {Upload, Terminal, MicroServiceTable, TestDefinition, MicroServiceLab},
+    components: {Upload, Terminal, "micro-service-table-container": MicroServiceTableContainer, "micro-service-lab-container":MicroServiceLabContainer},
     data() {
         return {
             log: null,
             searchQuery: '',
             gridColumns: [this.$uuid, this.$created, this.$updated],
             gridData: [],
-            testData: [],
             uuid: '',
         }
     },
@@ -77,10 +81,6 @@ const vue = new Vue({
         updateTerminal: function(data){
             if(data.log){
                 vue.log = data.log;
-            }
-            if(data.request && data.headers && _.find(vue.gridData, function(row) { return row['uuid'] === data.headers})){
-                vue.testData.push(data);
-                vue.uuid = data.headers;
             }
         },
         insertRow: function(data){

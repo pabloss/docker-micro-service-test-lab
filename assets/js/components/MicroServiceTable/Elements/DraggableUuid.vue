@@ -8,14 +8,8 @@
 
 <script>
 export default {
-  name: "Uuid",
   props: {
-    microServiceUuid: String
-  },
-  data() {
-    return {
-      uuid: this.microServiceUuid,
-    }
+    uuid: String
   },
   methods: {
     handleDragStart(e) {

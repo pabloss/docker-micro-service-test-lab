@@ -9,28 +9,36 @@
 {% block content %}
     <h1>Adding a new product</h1>
     <div id="app">
-        <upload  @upload="onUpload"></upload>
         <div>
-            <micro-service-lab></micro-service-lab>
-        </div>
-        <div id="demo" style="clear: both;">
-            <form id="search">
-                <label>Search
-                    <input name="query" v-model="searchQuery">
-                </label>
-            </form>
-            <micro-service-table
-                    :heroes="gridData"
-                    :columns="gridColumns"
-                    :filter-key="searchQuery"
-                    :test-data="testData"
-                    :uuid="uuid"
-                    @delete-row="deleteRow"
-            >
-            </micro-service-table>
+            <Upload  @upload="onUpload" />
         </div>
 
-        <terminal :prompt="' '" :show-initial-cd="false" :show-help-message="false" :show-header="false" :greeting="false" :log="log"></terminal>
+        <div>
+            <micro-service-lab-container />
+        </div>
+
+        <div id="micro-service-table" style="clear: both;">
+            <form id="search">
+                <label for="query">Search</label>
+                <input name="query" id="query" v-model="searchQuery">
+            </form>
+            <micro-service-table-container
+                    :grid-data="gridData"
+                    :columns="gridColumns"
+                    :filter-key="searchQuery"
+                    :uuid="uuid"
+                    @delete-row="deleteRow"
+            />
+        </div>
+
+        <Terminal
+                :prompt="' '"
+                :show-initial-cd="false"
+                :show-help-message="false"
+                :show-header="false"
+                :greeting="false"
+                :log="log"
+        />
     </div>
 {% endblock %}
 {% block javascripts %}

@@ -63,7 +63,6 @@
 <script>
 
     export default {
-        name: 'Terminal',
         watch: {
             // whenever question changes, this function will run
             log: function (newLog, oldLog) {

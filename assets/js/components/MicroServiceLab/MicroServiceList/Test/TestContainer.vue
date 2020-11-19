@@ -1,100 +1,40 @@
 <template>
-  <transition name="modal">
-      <div class="modal-wrapper">
-        <div class="modal-container">
-
-          <div class="modal-header">
-            <slot name="header">
-              <button class="modal-default-button" @click="close">
-                &times;
-              </button>
-            </slot>
-          </div>
-
-          <div class="modal-body">
-            <slot name="body">
-              <TestDefinition :uuid="uuid"/>
-            </slot>
-          </div>
-
-          <div class="modal-footer">
-            <slot name="footer">
-            </slot>
-          </div>
-        </div>
-      </div>
-  </transition>
+    <div class="test-container" @contextmenu.prevent="handleRightClick">
+        <DraggableBaseComponent :x="x" :y="y" :unique-id="uniqueId">
+            {{ uniqueId }}
+            <ModalBaseComponent v-if="showModal" @close="showModal = false" >
+                <template v-slot:body>
+                    <TestDefinition :uuid="uniqueId"/>
+                </template>
+            </ModalBaseComponent>
+        </DraggableBaseComponent>
+    </div>
 </template>
 
 <script>
+import DraggableBaseComponent from "../../../BaseComponents/DraggableBaseComponent";
+import ModalBaseComponent from "../../../BaseComponents/ModalBaseComponent";
 import TestDefinition from "./TestDefinition";
+
 export default {
-  components: {TestDefinition},
-  props: {
-    uuid: String,
-  },
-  methods: {
-    close: function (){
-      this.$emit('close');
+    components: {DraggableBaseComponent, ModalBaseComponent, TestDefinition},
+    props: {
+        uniqueId: String,
+        x: Number,
+        y: Number,
     },
-  },
+    data() {
+        return {
+            showModal: false,
+        }
+    },
+    methods: {
+        handleRightClick(e) {
+            this.showModal = true;
+        },
+    },
 }
 </script>
 
 <style scoped>
-.modal-wrapper {
-  display: table-cell;
-  vertical-align: middle;
-}
-
-.modal-container {
-  margin: 0 auto;
-  padding: 5px;
-  background-color: #fff;
-  border-radius: 2px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
-  transition: all 0.3s ease;
-  font-family: Helvetica, Arial, sans-serif;
-  position: relative;
-  top: -305px;
-  left: 90px;
-  font-size: 0.5em;
-}
-
-.modal-header h3 {
-  margin-top: 0;
-  color: #42b983;
-}
-
-.modal-body {
-  margin: 18px 0 0;
-}
-
-.modal-default-button {
-  float: right;
-}
-
-/*
- * The following styles are auto-applied to elements with
- * transition="modal" when their visibility is toggled
- * by Vue.js.
- *
- * You can easily play with the modal transition by editing
- * these styles.
- */
-
-.modal-enter {
-  opacity: 0;
-}
-
-.modal-leave-active {
-  opacity: 0;
-}
-
-.modal-enter .modal-container,
-.modal-leave-active .modal-container {
-  -webkit-transform: scale(1.1);
-  transform: scale(1.1);
-}
-
 </style>

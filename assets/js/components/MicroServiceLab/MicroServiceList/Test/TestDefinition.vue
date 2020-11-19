@@ -2,8 +2,8 @@
   <div class="test-definition">
     <form >
       <div class="container">
-        <request :request="setRequest" :uuid="uuid" :legend="'Set Request'" :disabled="null"></request>
-        <request :request="expectedRequest" :uuid="uuid" :legend="'Expected Request'" :disabled="'disabled'"></request>
+        <RequestContainer :request="setRequest" :uuid="uuid" :legend="'Set Request'" :disabled="null"></RequestContainer>
+        <RequestContainer :request="expectedRequest" :uuid="uuid" :legend="'Expected Request'" :disabled="'disabled'"></RequestContainer>
       </div>
       <button v-on:click.stop.prevent="save()" id="save-test">Save Test</button>
       <input type="submit" name="Test" value="Test" @click.prevent.stop="test()" :class="testResult" />
@@ -12,9 +12,9 @@
 </template>
 
 <script>
-import Request from "./Request";
+import RequestContainer from "../Requests/RequestContainer";
 export default {
-  components: {Request},
+  components: {RequestContainer},
   data() {
     return {
       setRequest: {
