@@ -1,10 +1,10 @@
 <template>
     <div
             :style="positionStyle"
-            @click="handleDrawLineStart"
             draggable="true"
-            @dragover.prevent
+            @click="handleDrawLineStart"
             @dragstart="handleDragStart"
+            @dragover.prevent
     >
         <slot></slot>
     </div>

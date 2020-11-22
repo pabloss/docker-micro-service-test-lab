@@ -9,7 +9,7 @@ export default {
     },
     methods: {
         deploy: function () {
-            this.axios.post(`http://${this.$BASE_HOST}/deploy`, this.uuid).then(
+            this.axios.post(`http://${this.Constants.BASE_HOST}/deploy`, this.uuid).then(
                     x => {
                         console.log(x.data);
                     }

@@ -1,6 +1,8 @@
+import _ from 'lodash';
+
 class LabAddMicroservice {
     add(microServiceList, id, x, y) {
-        if(!this._getMicroService(microServiceList, x, y)){
+        if(!this._getMicroService(microServiceList, id)){
             this._addMicroServiceConfig(microServiceList, id, x, y);
         }
     }

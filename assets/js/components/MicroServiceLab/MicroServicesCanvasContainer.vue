@@ -2,13 +2,13 @@
     <div id="canvas-micro-services">
         <v-stage ref="stage" :config="{width: 1200, height: 500, }">
             <v-layer ref="layer">
-                <v-line ref="line" v-for="(line, index) in lines" :config="{
+                <v-line v-for="(line, index) in lines" :key="index" ref="line" :config="{
             points: line,
             stroke: 'red',
             strokeWidth: 8,
             lineCap: 'round',
             lineJoin: 'round',
-          }" :key="index">
+          }">
                 </v-line>
             </v-layer>
         </v-stage>
@@ -17,7 +17,7 @@
 
 <script>
 export default {
-    props:  {
+    props: {
         lines: Array,
         points: Array,
         connectedMicroServices: Array,

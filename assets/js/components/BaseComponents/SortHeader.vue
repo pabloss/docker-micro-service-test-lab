@@ -1,10 +1,10 @@
 <template>
     <tr>
         <th v-for="key in columns"
-            @click="sortBy(key)"
-            :class="{ active: sortKey == key }">
+            :class="{ active: sortKey == key }"
+            @click="sortBy(key)">
             {{ key | capitalize }}
-            <span class="arrow" :class="sortOrders[key] > 0 ? 'asc' : 'dsc'"></span>
+            <span :class="sortOrders[key] > 0 ? 'asc' : 'dsc'" class="arrow"></span>
         </th>
     </tr>
 </template>
@@ -62,6 +62,7 @@ th, td {
     min-width: 120px;
     padding: 10px 20px;
 }
+
 th, td {
     min-width: 120px;
     padding: 10px 20px;

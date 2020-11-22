@@ -9,36 +9,7 @@
 {% block content %}
     <h1>Adding a new product</h1>
     <div id="app">
-        <div>
-            <Upload  @upload="onUpload" />
-        </div>
 
-        <div>
-            <micro-service-lab-container />
-        </div>
-
-        <div id="micro-service-table" style="clear: both;">
-            <form id="search">
-                <label for="query">Search</label>
-                <input name="query" id="query" v-model="searchQuery">
-            </form>
-            <micro-service-table-container
-                    :grid-data="gridData"
-                    :columns="gridColumns"
-                    :filter-key="searchQuery"
-                    :uuid="uuid"
-                    @delete-row="deleteRow"
-            />
-        </div>
-
-        <Terminal
-                :prompt="' '"
-                :show-initial-cd="false"
-                :show-help-message="false"
-                :show-header="false"
-                :greeting="false"
-                :log="log"
-        />
     </div>
 {% endblock %}
 {% block javascripts %}

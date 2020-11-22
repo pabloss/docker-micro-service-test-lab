@@ -1,17 +1,17 @@
 <template>
-    <div id="micro-service-lab" @dragover.prevent @drop="handleDrop">
+    <div id="micro-service-lab" @drop="handleDrop" @dragover.prevent>
         <MicroServicesCanvasContainer
                 :clicks="clicks"
+                :connectedMicroServices="connectedMicroServices"
                 :lines="lines"
                 :points="points"
-                :connectedMicroServices="connectedMicroServices"
         />
-        <TestContainer @pointed="handleDrawLineStart"
-                        v-for="(chosenMicroService, index) in microServiceList"
-                :unique-id="chosenMicroService.id"
-                :x="chosenMicroService.x"
-                :y="chosenMicroService.y"
-                v-bind:key="chosenMicroService.id"
+        <TestContainer v-for="(chosenMicroService, index) in microServiceList"
+                       v-bind:key="chosenMicroService.id"
+                       :unique-id="chosenMicroService.id"
+                       :x="chosenMicroService.x"
+                       :y="chosenMicroService.y"
+                       @pointed="handleDrawLineStart"
         />
     </div>
 
@@ -36,7 +36,7 @@ export default {
         }
     },
     created() {
-        this.handler = DrawLineHandler(this.clicks, this.lines, this.points, this.connectedMicroServices);
+        this.handler = DrawLineHandler(this.Constants, this.clicks, this.lines, this.points, this.connectedMicroServices);
     },
     methods: {
         handleDrop(e) {

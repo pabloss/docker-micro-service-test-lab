@@ -1,6 +1,8 @@
 import axios from 'axios';
+
 class DrawLineHandler {
-    constructor(clicks, lines, points, connectedMicroServices) {
+    constructor(config, clicks, lines, points, connectedMicroServices) {
+        this.config = config;
         this.clicks = clicks;
         this.lines = lines;
         this.points = points;
@@ -23,7 +25,7 @@ class DrawLineHandler {
     }
 
     _saveConnection () {
-        axios.get(`http://${this.$BASE_HOST}/api/connect/${this.connectedMicroServices[0]}/${this.connectedMicroServices[1]}`)
+        axios.get(`http://${this.config.BASE_HOST}/api/connect/${this.connectedMicroServices[0]}/${this.connectedMicroServices[1]}`)
             .then(x => {
                 console.log(x.data);
             })
@@ -54,6 +56,6 @@ class DrawLineHandler {
     }
 }
 
-export default (clicks, lines, points, connectedMicroServices) => {
-    return new DrawLineHandler(clicks, lines, points, connectedMicroServices)
+export default (config, clicks, lines, points, connectedMicroServices) => {
+    return new DrawLineHandler(config, clicks, lines, points, connectedMicroServices)
 }

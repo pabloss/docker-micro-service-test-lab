@@ -1,8 +1,8 @@
 <template>
     <div class="test-container" @contextmenu.prevent="handleRightClick">
-        <DraggableBaseComponent :x="x" :y="y" :unique-id="uniqueId">
+        <DraggableBaseComponent :unique-id="uniqueId" :x="x" :y="y">
             {{ uniqueId }}
-            <ModalBaseComponent v-if="showModal" @close="showModal = false" >
+            <ModalBaseComponent v-if="showModal" @close="showModal = false">
                 <template v-slot:body>
                     <TestDefinition :uuid="uniqueId"/>
                 </template>
